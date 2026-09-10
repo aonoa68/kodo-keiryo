@@ -1,0 +1,276 @@
+---
+title: "第15回　まとめと習熟度確認（3）：これまでの学習内容の統合"
+subtitle: "行動計量学（Rではじめるデータ分析入門）"
+author: "小野原 彩香"
+date: "令和8年度"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
+                      fig.width = 7, fig.height = 4)
+library(tidyverse)
+```
+
+---
+
+## 本日の流れ
+
+1. **総復習（前半）**：全15回の内容を俯瞰する
+2. **習熟度確認テスト（第3回・後半）**：RStudioで総合課題に取り組む
+
+---
+
+## 総復習：15回で学んだこと
+
+### フェーズ1：環境構築とRの基本（第1〜2回）
+
+- R / RStudio のインストールと画面構成
+- 四則演算，変数，ベクトル，基本統計関数
+- パッケージのインストール（`install.packages()`）と読み込み（`library()`）
+
+### フェーズ2：データの可視化（第3〜4回）
+
+- `ggplot2` のレイヤー構造：`ggplot() + aes() + geom_xxx()`
+- 散布図，ヒストグラム，棒グラフ，箱ひげ図
+- `theme_bw()` / `theme_classic()` などテーマの適用
+- `ggsave()` によるグラフの保存
+
+### フェーズ3：データの加工（第5〜6回）
+
+- `dplyr` の基本動詞：`filter()`, `select()`, `mutate()`, `arrange()`
+- `group_by()` + `summarise()` によるグループ別集計
+- `count()` による頻度集計
+- パイプ演算子 `|>` による処理の連結
+
+### フェーズ4：推測統計（第8〜11回）
+
+| 手法 | 使う場面 | R関数 |
+|------|---------|-------|
+| 相関分析 | 2連続変数の直線関係 | `cor.test()` |
+| カイ二乗検定 | 2カテゴリ変数の関連 | `chisq.test()` |
+| 独立t検定 | 異なる2群の平均比較 | `t.test()` |
+| 対応t検定 | 同一人の2時点比較 | `t.test(..., paired=TRUE)` |
+
+### フェーズ5：分散分析（第13〜14回）
+
+- 一元配置分散分析：`aov()` + `summary()`
+- 多重比較（Tukey HSD）：`TukeyHSD()`
+- 効果量 η²
+
+---
+
+## 分析方法の選択フローチャート
+
+```
+比較・関連を調べたい
+        │
+        ├── 連続変数 × 連続変数 ──→ 相関分析 (cor.test)
+        │
+        ├── カテゴリ × カテゴリ ──→ カイ二乗検定 (chisq.test)
+        │
+        └── カテゴリ（グループ）× 連続変数
+                │
+                ├── 2群
+                │     ├── 対応なし ──→ 独立t検定 (t.test)
+                │     └── 対応あり ──→ 対応t検定 (t.test, paired=TRUE)
+                │
+                └── 3群以上
+                      └── 一元配置ANOVA (aov) → TukeyHSD
+```
+
+---
+
+## 報告フォーマットのまとめ
+
+### 相関分析
+> 〇〇と〇〇の間には〇〇な相関が認められた，*r*(df) = .〇〇, *p* < .〇〇。
+
+### t検定
+> 〇〇群（*M* = 〇〇, *SD* = 〇〇）と〇〇群（*M* = 〇〇, *SD* = 〇〇）の間に有意差が認められた，*t*(df) = 〇〇, *p* = .〇〇, *d* = 〇〇。
+
+### カイ二乗検定
+> 〇〇と〇〇の間に有意な関連が認められた，χ²(df, N = 〇〇) = 〇〇, *p* < .〇〇。
+
+### 分散分析
+> 〇〇の主効果が有意であった，*F*(df1, df2) = 〇〇, *p* < .〇〇, η² = .〇〇。
+> Tukey HSD の結果，〇〇と〇〇（*p* < .001）の間に有意差が認められた。
+
+---
+
+## 習熟度確認テスト（第3回）：総合課題
+
+**以下の課題を RStudio で実行し，スクリプトを提出してください。**
+
+ファイル名：`習熟度確認3_学籍番号.R`
+
+---
+
+### 【データ】
+
+今回は `PlantGrowth` データセット（R 組み込み）を使います。
+
+```{r}
+head(PlantGrowth)
+str(PlantGrowth)
+```
+
+変数の説明：
+- `weight`：植物の乾燥重量
+- `group`：処置群（`ctrl` = 対照群，`trt1` = 処置1，`trt2` = 処置2）
+
+---
+
+### 課題1：データの確認と記述統計（20点）
+
+1. 各群（`group`）の `weight` の平均・標準偏差・サンプルサイズを表示してください
+2. 箱ひげ図と散布点（`geom_jitter()`）を組み合わせてグラフを作成してください
+   - `fill = group`，`theme_bw()`，日本語ラベル付き
+
+```{r, eval=FALSE}
+# 1. 集計
+PlantGrowth |>
+  group_by(___) |>
+  summarise(n = ___, M = mean(___), SD = sd(___))
+
+# 2. グラフ
+ggplot(PlantGrowth, aes(x = ___, y = ___, fill = ___)) +
+  geom_boxplot(alpha = 0.6) +
+  geom_jitter(width = 0.1, alpha = 0.5) +
+  labs(title = "___", x = "___", y = "___") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+---
+
+### 課題2：一元配置分散分析（25点）
+
+1. 等分散性を Bartlett 検定で確認してください
+2. 一元配置分散分析を実行してください（`aov()`）
+3. F値・自由度・p値を読み取り，帰無仮説を棄却するか判断してください
+
+```{r, eval=FALSE}
+# 等分散性の確認
+bartlett.test(___ ~ ___, data = PlantGrowth)
+
+# 分散分析
+result_anova <- aov(___ ~ ___, data = PlantGrowth)
+summary(result_anova)
+```
+
+---
+
+### 課題3：多重比較（25点）
+
+課題2の分散分析結果を使って，Tukey HSD 法による多重比較を実行してください。
+
+1. `TukeyHSD()` を実行する
+2. どのペア間に有意差があるかを特定する
+3. 信頼区間のプロットを作成する
+
+```{r, eval=FALSE}
+result_tukey <- TukeyHSD(result_anova)
+result_tukey
+
+# 可視化（オプション）
+tukey_df <- as.data.frame(result_tukey$group)
+tukey_df$comparison <- rownames(tukey_df)
+ggplot(tukey_df, aes(x = comparison, y = diff)) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = lwr, ymax = upr), width = 0.1) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  coord_flip() +
+  theme_bw()
+```
+
+---
+
+### 課題4：効果量と結果の記述（30点）
+
+1. η²（イータ二乗）を計算してください（`summary(result_anova)` の出力から SS を読み取る）
+2. 以下のテンプレートに沿って，分析結果を論文の「結果」の節として記述してください
+
+**記述テンプレート：**
+
+> 3群（対照群，処置1群，処置2群）の植物乾燥重量を一元配置分散分析によって比較した。
+> 群の主効果は〔有意であった・有意でなかった〕，
+> *F*(__,__) = __.__, *p* __ .05, η² = .___。
+>
+> （有意だった場合）Tukey HSD 法による多重比較の結果，
+> 〇〇群と〇〇群の間に有意差が認められた（*p* __ .05）。
+
+---
+
+## この授業で身についたこと
+
+この授業を通じて，以下のスキルが身につきました：
+
+```{r, eval=FALSE}
+# ───────────────────────────────────
+# あなたが今できること
+# ───────────────────────────────────
+
+library(tidyverse)
+
+# 1. データを読み込む
+data <- read_csv("my_data.csv")
+
+# 2. データを整形する
+data_clean <- data |>
+  filter(!is.na(score)) |>
+  mutate(score_z = scale(score)) |>
+  arrange(group, desc(score))
+
+# 3. グループ別に集計する
+data_summary <- data_clean |>
+  group_by(group) |>
+  summarise(n = n(), M = mean(score), SD = sd(score))
+
+# 4. グラフを作る
+ggplot(data_clean, aes(x = group, y = score, fill = group)) +
+  geom_boxplot() + theme_bw()
+
+# 5. 統計検定を実行する
+aov(score ~ group, data = data_clean) |>
+  summary()
+```
+
+---
+
+## 今後の学習のために
+
+### 次のステップ
+
+| 学びたいこと | 推奨リソース |
+|------------|------------|
+| より進んだデータ加工 | 参考書：RユーザのためのRStudio実践入門 |
+| 回帰分析・重回帰分析 | 教科書の後半章 |
+| 共分散分析・反復測定ANOVA | 統計的方法論の発展的授業 |
+| レポート作成（R Markdown） | RStudio の R Markdown 入門 |
+| 機械学習 | `tidymodels` パッケージ |
+
+---
+
+## 本日のまとめ
+
+- 15回の授業で学んだ内容（環境構築・可視化・加工・推測統計）を統合した
+- 分析方法の選択フローチャートで，場面に応じた検定を選べるようになった
+- 今後のデータ分析の足がかりとなるRの基礎スキルを習得した
+
+---
+
+## 授業を通じてお疲れ様でした
+
+Rを使ったデータ分析は，最初は難しく感じるかもしれませんが，
+繰り返し使うことで自然と身についていきます。
+
+ここで学んだスキルは，卒業論文・研究・仕事の様々な場面で活きてきます。
+
+ぜひ，今後も積極的にRを使い続けてください！

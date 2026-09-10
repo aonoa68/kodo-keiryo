@@ -1,0 +1,232 @@
+---
+title: "第3回　データの可視化（1）：ggplot2によるグラフ作成の基礎"
+subtitle: "行動計量学（Rではじめるデータ分析入門）"
+author: "小野原 彩香"
+date: "令和8年度"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
+                      fig.width = 7, fig.height = 4)
+```
+
+---
+
+## 本日の目標
+
+1. `ggplot2` の基本的な考え方（レイヤー構造）を理解する
+2. 散布図・ヒストグラム・棒グラフを作成できる
+3. `aes()` による変数のマッピングを理解する
+
+---
+
+## 1. ggplot2とは
+
+`ggplot2` は，Rで最も広く使われているグラフ作成パッケージです。
+
+### ggplot2の特徴
+
+- **文法に基づいたグラフ作成**（Grammar of Graphics）
+- レイヤーを重ねてグラフを組み立てる
+- 美しいデフォルトデザイン
+- 高度なカスタマイズが可能
+
+```{r}
+# tidyverse を読み込む（ggplot2が含まれる）
+library(tidyverse)
+```
+
+---
+
+## 2. ggplot2の基本構造
+
+### レイヤー構造
+
+ggplot2では，グラフを**レイヤー（層）を重ねる**ように作ります。
+
+```{r, eval=FALSE}
+ggplot(data = データ, aes(x = x軸の変数, y = y軸の変数)) +
+  geom_xxx()   # グラフの種類を指定
+```
+
+| 要素 | 説明 |
+|------|------|
+| `ggplot()` | キャンバスを準備する |
+| `aes()` | 変数とグラフ要素のマッピングを指定 |
+| `geom_xxx()` | グラフの種類（散布図・棒グラフなど） |
+
+---
+
+## 3. 練習用データの準備
+
+今日は R に最初から入っているデータセット `iris` を使います。
+
+```{r}
+# データの確認
+head(iris)      # 最初の6行を表示
+```
+
+```{r}
+# データの概要
+str(iris)
+```
+
+```{r}
+# 基本統計量
+summary(iris)
+```
+
+`iris` データの説明：アヤメ（花）の測定データ
+- `Sepal.Length`：がく片の長さ
+- `Sepal.Width`：がく片の幅
+- `Petal.Length`：花びらの長さ
+- `Petal.Width`：花びらの幅
+- `Species`：種（setosa / versicolor / virginica）
+
+---
+
+## 4. 散布図（Scatter Plot）
+
+```{r}
+ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length)) +
+  geom_point()
+```
+
+### 色で種類を区別する
+
+```{r}
+ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point()
+```
+
+---
+
+## 5. ヒストグラム（Histogram）
+
+```{r}
+ggplot(data = iris, aes(x = Sepal.Length)) +
+  geom_histogram()
+```
+
+### ビンの幅を調整する
+
+```{r}
+ggplot(data = iris, aes(x = Sepal.Length)) +
+  geom_histogram(binwidth = 0.3, fill = "steelblue", color = "white")
+```
+
+---
+
+## 6. 棒グラフ（Bar Plot）
+
+種ごとのデータ件数を棒グラフで表示します。
+
+```{r}
+ggplot(data = iris, aes(x = Species)) +
+  geom_bar()
+```
+
+### 色を付ける
+
+```{r}
+ggplot(data = iris, aes(x = Species, fill = Species)) +
+  geom_bar()
+```
+
+---
+
+## 7. 箱ひげ図（Box Plot）
+
+グループ間の分布を比較するのに便利です。
+
+```{r}
+ggplot(data = iris, aes(x = Species, y = Sepal.Length)) +
+  geom_boxplot()
+```
+
+---
+
+## 8. タイトルと軸ラベルの追加
+
+```{r}
+ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point() +
+  labs(
+    title = "がく片の長さと花びらの長さの関係",
+    x = "がく片の長さ (cm)",
+    y = "花びらの長さ (cm)",
+    color = "種"
+  )
+```
+
+---
+
+## 9. aes() のよく使うマッピング
+
+| 引数 | 役割 | 例 |
+|------|------|-----|
+| `x` | x軸の変数 | `x = Sepal.Length` |
+| `y` | y軸の変数 | `y = Petal.Length` |
+| `color` | 色（線・点） | `color = Species` |
+| `fill` | 塗りつぶし色 | `fill = Species` |
+| `size` | 点・線の大きさ | `size = Petal.Width` |
+| `shape` | 点の形 | `shape = Species` |
+
+---
+
+## 演習
+
+### 演習1：散布図
+
+`iris` データを使って，`Petal.Length`（x軸）と `Petal.Width`（y軸）の
+散布図を作成し，`Species` で色分けしてください。
+
+```{r, eval=FALSE}
+ggplot(data = iris, aes(x = ___, y = ___, color = ___)) +
+  geom_point()
+```
+
+### 演習2：ヒストグラム
+
+`Petal.Width` のヒストグラムを作成し，適切なタイトルと軸ラベルを付けてください。
+
+```{r, eval=FALSE}
+ggplot(data = iris, aes(x = ___)) +
+  geom_histogram(binwidth = ___, fill = "___", color = "white") +
+  labs(title = "___", x = "___", y = "___")
+```
+
+### 演習3：箱ひげ図
+
+種（`Species`）ごとに `Petal.Length` の分布を箱ひげ図で比較してください。
+`fill = Species` を追加してカラフルにしてみましょう。
+
+```{r, eval=FALSE}
+ggplot(data = iris, aes(x = ___, y = ___, fill = ___)) +
+  geom_boxplot() +
+  labs(title = "___")
+```
+
+---
+
+## 本日のまとめ
+
+- `ggplot2` はレイヤーを重ねてグラフを作る
+- `ggplot() + aes() + geom_xxx()` が基本の構造
+- 散布図（`geom_point()`），ヒストグラム（`geom_histogram()`），棒グラフ（`geom_bar()`），箱ひげ図（`geom_boxplot()`）を作れるようになった
+- `labs()` でタイトル・軸ラベルを追加できる
+
+---
+
+## 宿題・予習
+
+- 今日作ったグラフをスクリプトファイルに保存しておく
+- 次回は **グラフのカスタマイズと保存** を学びます
+- 教科書の可視化に関する章を読んでおくと理解が深まります

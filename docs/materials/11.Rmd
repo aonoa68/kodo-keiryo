@@ -1,0 +1,253 @@
+---
+title: "第11回　データを分析する（4）：対応のあるt検定とデータ構造"
+subtitle: "行動計量学（Rではじめるデータ分析入門）"
+author: "小野原 彩香"
+date: "令和8年度"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
+                      fig.width = 7, fig.height = 4)
+library(tidyverse)
+```
+
+---
+
+## 本日の目標
+
+1. 対応のあるデータと対応のないデータの違いを説明できる
+2. 対応のあるt検定を Rで実行し，解釈できる
+3. ワイド形式・ロング形式を変換できる（`pivot_longer()` / `pivot_wider()`）
+
+---
+
+## 1. 対応のある vs. 対応のないデータ
+
+### 対応のないデータ（独立2標本）→ 第10回で学習済み
+
+- A群と B群が**異なる人**で構成される
+- 例：男性グループ vs. 女性グループの試験点数
+
+### 対応のあるデータ（繰り返し測定）
+
+- **同じ人**から2回以上測定した（または対になったペアがある）
+- 例：同じ人の**事前**と**事後**の点数
+- 例：双子の左右の腕の測定値
+
+### 対応あり vs. なしの判断
+
+| 対応あり | 対応なし |
+|---------|---------|
+| 同じ人を前後で測定 | 別の人を比較 |
+| マッチドペア（年齢・性別を一致させたペア） | 無作為に2群に割り当て |
+
+---
+
+## 2. 例：介入前後の睡眠時間
+
+```{r}
+# 架空データ：睡眠改善プログラム前後の睡眠時間（時間）
+set.seed(42)
+n <- 15
+sleep_data <- tibble(
+  id     = 1:n,
+  before = round(rnorm(n, mean = 6.0, sd = 0.8), 1),
+  after  = round(before + rnorm(n, mean = 0.8, sd = 0.5), 1)
+)
+sleep_data
+```
+
+```{r}
+# 基本統計量
+sleep_data |>
+  summarise(
+    mean_before = mean(before),
+    sd_before   = sd(before),
+    mean_after  = mean(after),
+    sd_after    = sd(after),
+    mean_diff   = mean(after - before)
+  )
+```
+
+---
+
+## 3. データ構造の変換
+
+### ワイド形式（Wide）
+
+現在の `sleep_data` のような形式：各個人が1行，時点が別の列
+
+```{r}
+sleep_data
+```
+
+### ロング形式（Long）
+
+分析・グラフ作成でよく使う形式：測定値と時点が別の列
+
+```{r}
+# pivot_longer でワイド → ロングに変換
+sleep_long <- sleep_data |>
+  pivot_longer(
+    cols      = c(before, after),   # 変換する列
+    names_to  = "time",             # 時点を入れる新しい列名
+    values_to = "sleep"             # 値を入れる新しい列名
+  ) |>
+  mutate(time = factor(time, levels = c("before", "after"),
+                       labels = c("プログラム前", "プログラム後")))
+sleep_long
+```
+
+```{r}
+# 可視化（対応あり：同じ人をつなぐ線を引く）
+ggplot(sleep_long, aes(x = time, y = sleep, group = id)) +
+  geom_line(alpha = 0.4, color = "gray60") +
+  geom_point(aes(color = time), size = 3, alpha = 0.8) +
+  stat_summary(aes(group = 1), fun = mean, geom = "line",
+               linewidth = 1.5, color = "steelblue", linetype = "dashed") +
+  scale_color_brewer(palette = "Set1") +
+  labs(title = "睡眠改善プログラム前後の睡眠時間",
+       x = "時点", y = "睡眠時間（時間）", color = "時点") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+---
+
+## 4. 対応のあるt検定の実行
+
+```{r}
+# 方法1：paired = TRUE を指定
+t.test(sleep_data$after, sleep_data$before, paired = TRUE)
+```
+
+```{r}
+# 方法2：差分ベクトルを作って1標本t検定として実行（同じ結果）
+diff_sleep <- sleep_data$after - sleep_data$before
+t.test(diff_sleep, mu = 0)
+```
+
+### 結果の読み方
+
+```
+Paired t-test
+
+t = 6.0, df = 14, p-value < 0.001
+95 percent confidence interval:
+ 0.5  1.1
+sample estimates:
+mean of the differences
+                    0.8
+```
+
+- `mean of the differences`：差の平均（= after の平均 − before の平均）
+- 信頼区間が 0 を含まなければ有意
+
+---
+
+## 5. 効果量：Cohenの *d*（対応あり）
+
+```{r}
+d_paired <- mean(diff_sleep) / sd(diff_sleep)
+round(d_paired, 2)
+```
+
+---
+
+## 6. 独立t検定との比較
+
+同じデータを誤って「対応なし」で分析すると：
+
+```{r}
+# 対応なし（誤った分析）
+t.test(sleep_data$after, sleep_data$before, paired = FALSE)
+```
+
+> 対応のある分析の方が一般的に検出力が高い（個人差を除去できるため）。
+> データ構造を正しく理解して，適切な分析を選ぶことが重要。
+
+---
+
+## 7. pivot_wider：ロング → ワイドの変換
+
+```{r}
+# ロング → ワイドに戻す
+sleep_long |>
+  pivot_wider(
+    id_cols    = id,
+    names_from  = time,
+    values_from = sleep
+  )
+```
+
+---
+
+## 演習
+
+### 演習1：データ構造の判断
+
+以下のデータはそれぞれ「対応あり」か「対応なし」か判断してください。
+
+1. 同じ学生が「春学期」と「秋学期」に受けたテストの点数
+2. 男子学生20人と女子学生20人の体重を比較
+3. 双子（一卵性）の知能指数（IQ）の比較
+
+### 演習2：ワイド→ロング変換
+
+以下のデータを `pivot_longer()` でロング形式に変換してください。
+
+```{r}
+# 架空データ：3名の授業前後の不安度スコア
+anxiety_data <- tibble(
+  id     = c("A", "B", "C"),
+  pre    = c(7, 5, 8),
+  post   = c(4, 3, 6)
+)
+anxiety_data
+```
+
+```{r, eval=FALSE}
+anxiety_long <- anxiety_data |>
+  pivot_longer(
+    cols      = c(pre, post),
+    names_to  = "___",
+    values_to = "___"
+  )
+```
+
+### 演習3：対応のあるt検定
+
+演習2のデータ（`anxiety_data`）を使って，
+授業前後で不安度スコアが有意に変化したか検定してください。
+
+```{r, eval=FALSE}
+t.test(anxiety_data$post, anxiety_data$pre, paired = ___)
+```
+
+### 演習4：結果の記述
+
+演習3の結果を1〜2文でまとめてください。
+
+---
+
+## 本日のまとめ
+
+- 対応のあるデータ（反復測定・ペア）には **paired t検定** を使う
+- `t.test(..., paired = TRUE)` で実行
+- `pivot_longer()` でワイド→ロング形式の変換が簡単にできる
+- データ構造を正しく理解することが分析の第一歩
+
+---
+
+## 宿題・予習
+
+- 演習3〜4を仕上げておく
+- 次回は **習熟度確認テスト（第2回）** です
+- 第8〜11回の推測統計（相関・カイ二乗・t検定）を総復習しておく

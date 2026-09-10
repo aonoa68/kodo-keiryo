@@ -1,0 +1,219 @@
+---
+title: "第7回　習熟度確認と復習（1）：可視化・整形までの操作確認"
+subtitle: "行動計量学（Rではじめるデータ分析入門）"
+author: "小野原 彩香"
+date: "令和8年度"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
+                      fig.width = 7, fig.height = 4)
+library(tidyverse)
+```
+
+---
+
+## 本日の流れ
+
+1. **復習（前半）**：第2〜6回のポイントを確認
+2. **習熟度確認テスト（後半）**：RStudio を使って課題に取り組む
+
+---
+
+## 復習：これまでの内容
+
+### R・RStudioの基本（第2回）
+
+```{r}
+# 変数への代入
+x <- 42
+y <- c(1, 2, 3, 4, 5)
+
+# 基本的な統計関数
+mean(y)
+sd(y)
+```
+
+### データの可視化 - ggplot2（第3・4回）
+
+```{r}
+# 散布図の基本
+ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point() +
+  labs(title = "散布図の例", x = "がく片の長さ", y = "花びらの長さ") +
+  theme_bw()
+```
+
+```{r}
+# 箱ひげ図
+ggplot(data = iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
+  geom_boxplot() +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(title = "種ごとのがく片の長さ", x = "種", y = "がく片の長さ (cm)") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+### データの加工 - dplyr（第5・6回）
+
+```{r}
+# filter + select + mutate + arrange の組み合わせ
+iris |>
+  filter(Species == "virginica") |>
+  select(Sepal.Length, Sepal.Width, Petal.Length) |>
+  mutate(sepal_ratio = Sepal.Length / Sepal.Width) |>
+  arrange(desc(sepal_ratio)) |>
+  head(5)
+```
+
+```{r}
+# group_by + summarise
+iris |>
+  group_by(Species) |>
+  summarise(
+    n    = n(),
+    mean = mean(Petal.Length),
+    sd   = sd(Petal.Length)
+  )
+```
+
+---
+
+## よくある間違いと対処法
+
+| エラー | 原因 | 対処法 |
+|--------|------|--------|
+| `could not find function` | パッケージを読み込んでいない | `library(tidyverse)` を実行 |
+| `object not found` | 変数名が間違っている | スペル・大文字小文字を確認 |
+| `unexpected ')'` | 括弧が合っていない | 括弧の数をチェック |
+| グラフが表示されない | データが空など | `str()` / `head()` でデータを確認 |
+| `NA` が返ってくる | 欠損値が含まれている | `na.rm = TRUE` を追加 |
+
+---
+
+## 習熟度確認テスト（第1回）
+
+**以下の課題を RStudio で実行し，スクリプトを提出してください。**
+
+---
+
+### 課題1：データの確認（10点）
+
+`mtcars` データセット（R組み込み）を使います。
+
+```{r, eval=FALSE}
+# データの最初の6行を表示してください
+___
+
+# 各列のデータ型と概要を確認してください
+___
+
+# 基本統計量を表示してください
+___
+```
+
+`mtcars` の主な変数：
+- `mpg`：燃費（マイル/ガロン）
+- `cyl`：シリンダー数（4, 6, 8）
+- `hp`：馬力
+- `wt`：車重（1000ポンド単位）
+- `am`：トランスミッション（0=オートマ, 1=マニュアル）
+
+---
+
+### 課題2：データ加工（30点）
+
+`mtcars` データを使って，以下の操作を順番に行い，結果を表示してください。
+
+1. シリンダー数（`cyl`）が 4 または 6 の車だけ絞り込む
+2. `mpg`（燃費），`cyl`（シリンダー），`hp`（馬力），`wt`（車重）の4列だけ選ぶ
+3. 燃費1マイルあたりのkm換算列を追加する（`mpg_km = mpg * 1.60934`）
+4. 燃費（km換算）の良い順に並べる
+5. 上位10行を表示する
+
+```{r, eval=FALSE}
+mtcars |>
+  filter(___) |>
+  select(___) |>
+  mutate(___) |>
+  arrange(___) |>
+  head(___)
+```
+
+---
+
+### 課題3：グループ別集計（30点）
+
+`mtcars` データを使って，**シリンダー数（`cyl`）ごとに**以下を集計してください。
+
+- サンプルサイズ（`n`）
+- 燃費（`mpg`）の平均・標準偏差
+- 馬力（`hp`）の平均
+
+```{r, eval=FALSE}
+mtcars |>
+  group_by(___) |>
+  summarise(
+    n      = ___,
+    mean_mpg = ___,
+    sd_mpg   = ___,
+    mean_hp  = ___
+  )
+```
+
+---
+
+### 課題4：グラフの作成（30点）
+
+課題3の集計結果，または `mtcars` の元データを使って，以下のグラフを作成してください。
+
+**グラフの要件：**
+- シリンダー数（`cyl`）を x 軸に（`factor(cyl)` で因子型に変換する）
+- 燃費（`mpg`）を y 軸に
+- 箱ひげ図（`geom_boxplot()`）で描く
+- 色はシリンダー数で分ける（`fill = factor(cyl)`）
+- タイトル：「シリンダー数ごとの燃費分布」
+- x 軸ラベル：「シリンダー数」，y 軸ラベル：「燃費（mpg）」
+- テーマ：`theme_bw()`
+- 凡例は非表示（`theme(legend.position = "none")`）
+
+```{r, eval=FALSE}
+ggplot(data = mtcars, aes(x = factor(___), y = ___, fill = factor(___))) +
+  geom_boxplot() +
+  labs(title = "___", x = "___", y = "___") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+---
+
+## 提出方法
+
+- 作成した R スクリプト（`.R` ファイル）を保存する
+- ファイル名：`習熟度確認1_学籍番号.R`
+- 提出先：授業内で案内します
+
+---
+
+## 本日のまとめ
+
+- 第2〜6回の内容（Rの基本操作・可視化・加工）を復習した
+- 習熟度確認テストで `filter()`, `select()`, `mutate()`, `arrange()`, `group_by()`, `summarise()`, `ggplot2` の操作を確認した
+
+---
+
+## 次回の予告
+
+次回（第8回）から**推測統計**に入ります。
+
+- 相関分析と散布図
+- 2変数の関係を数値で表す「相関係数」とは？
+
+教科書の相関分析に関する章を読んでおきましょう。

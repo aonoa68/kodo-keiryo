@@ -1,0 +1,258 @@
+---
+title: "第6回　データの加工（2）：データの集計と要約統計量の算出"
+subtitle: "行動計量学（Rではじめるデータ分析入門）"
+author: "小野原 彩香"
+date: "令和8年度"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(tidyverse)
+```
+
+---
+
+## 本日の目標
+
+1. `group_by()` + `summarise()` でグループ別集計ができる
+2. `count()` でカテゴリの頻度を集計できる
+3. 集計結果を `ggplot2` でグラフ化できる
+
+---
+
+## 1. summarise()：集計
+
+`summarise()` はデータ全体を1行（または数行）に集約します。
+
+```{r}
+# msleep の全体の睡眠時間の平均
+msleep |>
+  summarise(mean_sleep = mean(sleep_total, na.rm = TRUE))
+```
+
+```{r}
+# 複数の統計量をまとめて計算
+msleep |>
+  summarise(
+    n = n(),
+    mean_sleep = mean(sleep_total, na.rm = TRUE),
+    sd_sleep   = sd(sleep_total, na.rm = TRUE),
+    min_sleep  = min(sleep_total, na.rm = TRUE),
+    max_sleep  = max(sleep_total, na.rm = TRUE)
+  )
+```
+
+### よく使う集計関数
+
+| 関数 | 意味 |
+|------|------|
+| `mean(x, na.rm=TRUE)` | 平均値 |
+| `sd(x, na.rm=TRUE)` | 標準偏差 |
+| `median(x, na.rm=TRUE)` | 中央値 |
+| `min(x)` / `max(x)` | 最小値 / 最大値 |
+| `n()` | データ件数 |
+| `sum(x, na.rm=TRUE)` | 合計 |
+
+> `na.rm = TRUE` は欠損値（NA）を除いて計算するオプションです。
+
+---
+
+## 2. group_by() + summarise()：グループ別集計
+
+`group_by()` と `summarise()` を組み合わせると，グループごとに集計できます。
+
+```{r}
+# 食性（vore）ごとの平均睡眠時間
+msleep |>
+  group_by(vore) |>
+  summarise(
+    n = n(),
+    mean_sleep = mean(sleep_total, na.rm = TRUE),
+    sd_sleep   = sd(sleep_total, na.rm = TRUE)
+  )
+```
+
+```{r}
+# irisデータ：種ごとの平均と標準偏差
+iris |>
+  group_by(Species) |>
+  summarise(
+    n = n(),
+    mean_sepal = mean(Sepal.Length),
+    sd_sepal   = sd(Sepal.Length),
+    mean_petal = mean(Petal.Length),
+    sd_petal   = sd(Petal.Length)
+  )
+```
+
+---
+
+## 3. count()：カテゴリの頻度集計
+
+```{r}
+# 食性ごとの件数
+msleep |>
+  count(vore)
+```
+
+```{r}
+# 降順で並べる
+msleep |>
+  count(vore, sort = TRUE)
+```
+
+---
+
+## 4. 集計結果をグラフ化する
+
+### 棒グラフ（平均値の比較）
+
+```{r}
+# 集計データを作成
+sleep_summary <- msleep |>
+  filter(!is.na(vore)) |>
+  group_by(vore) |>
+  summarise(
+    mean_sleep = mean(sleep_total, na.rm = TRUE),
+    sd_sleep   = sd(sleep_total, na.rm = TRUE),
+    n          = n()
+  )
+
+# 棒グラフ（geom_col で集計済みデータを使う）
+ggplot(sleep_summary, aes(x = vore, y = mean_sleep, fill = vore)) +
+  geom_col() +
+  labs(title = "食性ごとの平均睡眠時間",
+       x = "食性", y = "平均睡眠時間（時間）",
+       fill = "食性") +
+  theme_bw()
+```
+
+### エラーバー付き棒グラフ
+
+```{r}
+ggplot(sleep_summary, aes(x = vore, y = mean_sleep, fill = vore)) +
+  geom_col() +
+  geom_errorbar(aes(ymin = mean_sleep - sd_sleep,
+                    ymax = mean_sleep + sd_sleep),
+                width = 0.2) +
+  labs(title = "食性ごとの平均睡眠時間（±SD）",
+       x = "食性", y = "平均睡眠時間（時間）") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+---
+
+## 5. 欠損値の扱い
+
+```{r}
+# 欠損値がある列の確認
+msleep |>
+  summarise(across(everything(), ~ sum(is.na(.))))
+```
+
+```{r}
+# 欠損値を除いて集計（na.rm = TRUE）
+msleep |>
+  summarise(mean_rem = mean(sleep_rem, na.rm = TRUE))
+```
+
+```{r}
+# 欠損値のある行を除いてから集計
+msleep |>
+  filter(!is.na(sleep_rem)) |>
+  group_by(vore) |>
+  summarise(
+    n = n(),
+    mean_rem = mean(sleep_rem)
+  )
+```
+
+---
+
+## 6. 実際のCSVファイルの読み込み
+
+```{r, eval=FALSE}
+# CSVファイルの読み込み（readrパッケージ，tidyverseに含まれる）
+my_data <- read_csv("data/my_data.csv")
+
+# 文字コードを指定する場合（日本語データ）
+my_data <- read_csv("data/my_data.csv", locale = locale(encoding = "UTF-8"))
+
+# Excelファイルを読む場合（readxlパッケージが必要）
+# install.packages("readxl")
+library(readxl)
+my_data <- read_excel("data/my_data.xlsx")
+```
+
+---
+
+## 演習
+
+### 演習1：グループ別集計
+
+`iris` データを使って，種（`Species`）ごとに以下を計算してください。
+
+- `Petal.Length` の平均・標準偏差・サンプルサイズ
+
+```{r, eval=FALSE}
+iris |>
+  group_by(___) |>
+  summarise(
+    n    = n(),
+    mean = mean(___),
+    sd   = sd(___)
+  )
+```
+
+### 演習2：集計結果のグラフ化
+
+演習1で作った集計結果を使って，エラーバー付きの棒グラフを作成してください。
+
+```{r, eval=FALSE}
+# まず集計
+petal_summary <- iris |>
+  group_by(Species) |>
+  summarise(
+    mean_petal = mean(Petal.Length),
+    sd_petal   = sd(Petal.Length)
+  )
+
+# グラフ
+ggplot(petal_summary, aes(x = ___, y = ___, fill = ___)) +
+  geom_col() +
+  geom_errorbar(aes(ymin = ___ - ___, ymax = ___ + ___), width = 0.2) +
+  labs(title = "種ごとの花びらの長さ（平均±SD）",
+       x = "___", y = "___") +
+  theme_bw()
+```
+
+### 演習3：count()の応用
+
+`msleep` で欠損値がない場合の食性（`vore`）ごとのサンプルサイズを
+`count()` を使って集計し，多い順に並べてください。
+
+---
+
+## 本日のまとめ
+
+- `summarise()` でデータを集計できる
+- `group_by()` と組み合わせるとグループ別集計が可能
+- `count()` でカテゴリの頻度を数えられる
+- 集計結果を `ggplot2` でグラフ化できる
+- `na.rm = TRUE` で欠損値を除いた計算ができる
+
+---
+
+## 宿題・予習
+
+- 本日の演習を仕上げ，スクリプトを保存しておく
+- 次回は**習熟度確認テスト（第1回）**と復習です
+- 第2〜6回で学んだ内容（可視化・加工）を見直しておく

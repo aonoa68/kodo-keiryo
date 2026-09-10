@@ -1,0 +1,66 @@
+site_name: 行動計量学
+site_description: 北海道大学 全学教育科目「行動計量学（Rではじめるデータ分析入門）」令和8年度第2学期
+site_author: 小野原 彩香
+site_url: https://aonoa68.github.io/kodo-keiryo/
+
+theme:
+  name: material
+  language: ja
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: green
+      accent: green
+      toggle:
+        icon: material/weather-night
+        name: ダークモードに切り替え
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: green
+      accent: green
+      toggle:
+        icon: material/weather-sunny
+        name: ライトモードに切り替え
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - toc.follow
+
+plugins:
+  - search:
+      lang:
+        - ja
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - ホーム: index.md
+  - 講義資料:
+      - 第1回 ガイダンス: materials/01.html
+      - 第2回 R・RStudioの導入: materials/02.html
+      - 第3回 データの可視化(1): materials/03.html
+      - 第4回 データの可視化(2): materials/04.html
+      - 第5回 データの加工(1): materials/05.html
+      - 第6回 データの加工(2): materials/06.html
+      - 第7回 習熟度確認(1): materials/07.html
+      - 第8回 相関分析: materials/08.html
+      - 第9回 カイ二乗検定: materials/09.html
+      - 第10回 t検定: materials/10.html
+      - 第11回 対応のあるt検定: materials/11.html
+      - 第12回 習熟度確認(2): materials/12.html
+      - 第13回 分散分析(1): materials/13.html
+      - 第14回 分散分析(2): materials/14.html
+      - 第15回 まとめと習熟度確認(3): materials/15.html
+
+copyright: © 2026 小野原 彩香 — 北海道大学 行動計量学
