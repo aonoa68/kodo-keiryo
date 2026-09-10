@@ -1,0 +1,238 @@
+---
+title: "第4回　データの可視化（2）：グラフのカスタマイズと保存"
+subtitle: "行動計量学（Rではじめるデータ分析入門）"
+author: "小野原 彩香"
+date: "令和8年度"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
+                      fig.width = 7, fig.height = 4)
+library(tidyverse)
+```
+
+---
+
+## 本日の目標
+
+1. `theme()` を使ってグラフの見た目を整える
+2. グラフを論文・レポート向けに整形できる
+3. グラフをファイルに保存できる（`ggsave()`）
+
+---
+
+## 1. テーマ（theme）によるデザイン変更
+
+ggplot2には，グラフ全体の見た目を変える**テーマ**が用意されています。
+
+```{r}
+# デフォルトのグラフ
+p <- ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point() +
+  labs(title = "デフォルトのテーマ", x = "がく片の長さ", y = "花びらの長さ")
+p
+```
+
+### 主なテーマ一覧
+
+```{r}
+p + theme_bw()      # 白黒テーマ（論文向き）
+```
+
+```{r}
+p + theme_classic() # クラシック（軸線のみ，論文で人気）
+```
+
+```{r}
+p + theme_minimal() # ミニマル（シンプル）
+```
+
+```{r}
+p + theme_dark()    # ダーク（プレゼン向き）
+```
+
+> **論文・レポートには `theme_bw()` または `theme_classic()` がおすすめです。**
+
+---
+
+## 2. 色のカスタマイズ
+
+### 手動で色を指定する
+
+```{r}
+ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point() +
+  scale_color_manual(values = c("setosa" = "#E74C3C",
+                                 "versicolor" = "#3498DB",
+                                 "virginica" = "#2ECC71")) +
+  theme_classic()
+```
+
+### 組み込みのカラーパレット
+
+```{r}
+# ColorBrewerパレット（カテゴリ変数向き）
+ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point() +
+  scale_color_brewer(palette = "Set1") +
+  theme_bw()
+```
+
+---
+
+## 3. 軸・凡例のカスタマイズ
+
+```{r}
+ggplot(data = iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
+  geom_boxplot() +
+  scale_x_discrete(labels = c("setosa" = "セトサ",
+                               "versicolor" = "バーシカラー",
+                               "virginica" = "バージニカ")) +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(
+    title = "種ごとのがく片の長さ",
+    x = "種",
+    y = "がく片の長さ (cm)",
+    fill = "アヤメの種"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom",        # 凡例の位置
+    plot.title = element_text(size = 14, face = "bold"),  # タイトルの書式
+    axis.title = element_text(size = 12)                  # 軸タイトルの書式
+  )
+```
+
+---
+
+## 4. 複数グラフを並べる（facet）
+
+`facet_wrap()` で変数ごとにグラフを分割できます。
+
+```{r}
+ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length)) +
+  geom_point(color = "steelblue") +
+  facet_wrap(~ Species) +
+  labs(title = "種ごとの散布図", x = "がく片の長さ", y = "花びらの長さ") +
+  theme_bw()
+```
+
+---
+
+## 5. 回帰直線を追加する
+
+```{r}
+ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE) +   # 回帰直線 + 信頼区間
+  labs(title = "散布図と回帰直線",
+       x = "がく片の長さ (cm)", y = "花びらの長さ (cm)") +
+  theme_bw()
+```
+
+---
+
+## 6. グラフの保存（ggsave）
+
+作成したグラフをファイルに保存するには `ggsave()` を使います。
+
+```{r, eval=FALSE}
+# グラフを変数に保存しておく
+my_plot <- ggplot(data = iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(title = "種ごとのがく片の長さ")
+
+# PNG形式で保存
+ggsave(filename = "my_plot.png",
+       plot = my_plot,
+       width = 8,       # 幅（インチ）
+       height = 5,      # 高さ（インチ）
+       dpi = 300)       # 解像度（論文用は300以上推奨）
+
+# PDF形式で保存（ベクター形式，高品質）
+ggsave(filename = "my_plot.pdf",
+       plot = my_plot,
+       width = 8,
+       height = 5)
+```
+
+### 解像度の目安
+
+| 用途 | dpi |
+|------|-----|
+| 画面・Web表示 | 72〜96 |
+| 印刷・プレゼン | 150〜200 |
+| 論文投稿 | 300〜600 |
+
+---
+
+## 7. よく使うグラフのまとめ
+
+| グラフの種類 | 用途 | geom関数 |
+|-------------|------|---------|
+| 散布図 | 2変数の関係 | `geom_point()` |
+| ヒストグラム | 1変数の分布 | `geom_histogram()` |
+| 棒グラフ | カテゴリのカウント・集計値 | `geom_bar()` / `geom_col()` |
+| 箱ひげ図 | グループ間の分布比較 | `geom_boxplot()` |
+| 折れ線グラフ | 時系列・連続変化 | `geom_line()` |
+| バイオリン図 | 箱ひげ図より詳細な分布 | `geom_violin()` |
+
+---
+
+## 演習
+
+### 演習1：テーマの比較
+
+第3回で作ったグラフのいずれかに，`theme_classic()` と `theme_bw()` を適用し，
+どちらが見やすいか比較してください。
+
+### 演習2：論文用グラフの作成
+
+以下の要件を満たすグラフを作成してください。
+
+- **データ**：`iris`
+- **グラフの種類**：箱ひげ図
+- **x軸**：Species，**y軸**：Petal.Length
+- **色**：`fill = Species`，カラーパレットは `"Pastel2"`
+- **テーマ**：`theme_bw()`
+- **日本語のラベル**：タイトル・軸ラベルを日本語で
+- **凡例の位置**：右下（`legend.position = "right"`）
+
+```{r, eval=FALSE}
+ggplot(data = iris, aes(x = ___, y = ___, fill = ___)) +
+  geom_boxplot() +
+  scale_fill_brewer(palette = "___") +
+  labs(title = "___", x = "___", y = "___") +
+  theme_bw() +
+  theme(legend.position = "___")
+```
+
+### 演習3：グラフの保存
+
+演習2で作ったグラフを `kadai_02.png`（dpi = 300，幅 = 7インチ，高さ = 5インチ）で保存してください。
+
+---
+
+## 本日のまとめ
+
+- `theme_bw()` / `theme_classic()` で論文向きのデザインにできる
+- `scale_color_manual()` や `scale_color_brewer()` で色をカスタマイズ
+- `facet_wrap()` で変数ごとに分割したグラフを作れる
+- `geom_smooth()` で回帰直線を追加できる
+- `ggsave()` でグラフをPNG・PDFなどで保存できる
+
+---
+
+## 宿題・予習
+
+- 演習3のグラフを保存し，次回の授業で提出できるよう準備しておく
+- 次回から **データの加工（dplyr）** に入ります
+- 教科書のdplyr関連の章に目を通しておく

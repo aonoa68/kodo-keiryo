@@ -1,0 +1,241 @@
+---
+title: "第5回　データの加工（1）：dplyrによるデータ整形"
+subtitle: "行動計量学（Rではじめるデータ分析入門）"
+author: "小野原 彩香"
+date: "令和8年度"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(tidyverse)
+```
+
+---
+
+## 本日の目標
+
+1. `dplyr` の基本動詞（`filter`, `select`, `mutate`, `arrange`）を使える
+2. パイプ演算子 `|>` を使って処理を連結できる
+3. 実際のデータを整形できる
+
+---
+
+## 1. dplyrとは
+
+`dplyr` は，データフレームを操作するための強力なパッケージです。
+
+### dplyrの6つの基本動詞
+
+| 動詞 | 意味 | Excelで例えると |
+|------|------|----------------|
+| `filter()` | 行を絞り込む | フィルタ機能 |
+| `select()` | 列を選ぶ | 列の選択・非表示 |
+| `mutate()` | 新しい列を追加・変換 | 数式で新列作成 |
+| `arrange()` | 並び替え | 昇順・降順ソート |
+| `summarise()` | 集計（次回） | AVERAGE・SUM関数 |
+| `group_by()` | グループ化（次回） | ピボットテーブル |
+
+---
+
+## 2. 練習用データ
+
+今日は `msleep`（哺乳類の睡眠データ）を使います。
+
+```{r}
+# データの確認
+glimpse(msleep)
+```
+
+| 列名 | 説明 |
+|------|------|
+| `name` | 動物名 |
+| `genus` | 属 |
+| `vore` | 食性（herbi, omni, carni, insecti） |
+| `order` | 目 |
+| `sleep_total` | 1日の総睡眠時間（時間） |
+| `sleep_rem` | REM睡眠時間（時間） |
+| `sleep_cycle` | 睡眠サイクル（時間） |
+| `awake` | 覚醒時間（時間） |
+| `brainwt` | 脳の重さ（kg） |
+| `bodywt` | 体重（kg） |
+
+---
+
+## 3. パイプ演算子 `|>`
+
+パイプ演算子 `|>` は，処理を連続して書くための道具です。
+
+```{r, eval=FALSE}
+# パイプなし
+result <- arrange(filter(msleep, vore == "carni"), sleep_total)
+
+# パイプあり（読みやすい！）
+result <- msleep |>
+  filter(vore == "carni") |>
+  arrange(sleep_total)
+```
+
+> **読み方**：`|>` は「それを〇〇に渡す」と読みます。
+> `データ |> 処理` → 「データを処理にかける」
+
+---
+
+## 4. filter()：行の絞り込み
+
+```{r}
+# 肉食動物だけ抽出
+msleep |>
+  filter(vore == "carni")
+```
+
+```{r}
+# 睡眠時間が12時間以上の動物
+msleep |>
+  filter(sleep_total >= 12)
+```
+
+```{r}
+# 複数条件：肉食で睡眠10時間以上
+msleep |>
+  filter(vore == "carni", sleep_total >= 10)
+```
+
+### 比較演算子と論理演算子
+
+| 記号 | 意味 |
+|------|------|
+| `==` | 等しい |
+| `!=` | 等しくない |
+| `>` / `<` | より大きい / より小さい |
+| `>=` / `<=` | 以上 / 以下 |
+| `&` または `,` | かつ（AND） |
+| `\|` | または（OR） |
+| `is.na()` | 欠損値である |
+| `!is.na()` | 欠損値でない |
+
+---
+
+## 5. select()：列の選択
+
+```{r}
+# 動物名・食性・睡眠時間だけ選ぶ
+msleep |>
+  select(name, vore, sleep_total)
+```
+
+```{r}
+# 特定の列を除外する
+msleep |>
+  select(-genus, -order, -conservation)
+```
+
+```{r}
+# 列名のパターンで選択
+msleep |>
+  select(name, starts_with("sleep"))
+```
+
+---
+
+## 6. mutate()：新しい列の作成・変換
+
+```{r}
+# 睡眠時間を分に変換した列を追加
+msleep |>
+  select(name, sleep_total) |>
+  mutate(sleep_min = sleep_total * 60)
+```
+
+```{r}
+# 脳の割合（脳重量 / 体重）を計算
+msleep |>
+  select(name, brainwt, bodywt) |>
+  mutate(brain_ratio = brainwt / bodywt) |>
+  filter(!is.na(brain_ratio)) |>
+  arrange(desc(brain_ratio))
+```
+
+---
+
+## 7. arrange()：並び替え
+
+```{r}
+# 睡眠時間の短い順（昇順）
+msleep |>
+  select(name, sleep_total) |>
+  arrange(sleep_total)
+```
+
+```{r}
+# 睡眠時間の長い順（降順）
+msleep |>
+  select(name, sleep_total) |>
+  arrange(desc(sleep_total))
+```
+
+---
+
+## 8. 複数の動詞を組み合わせる
+
+```{r}
+# 草食動物の中で睡眠時間が長い上位5種を表示
+msleep |>
+  filter(vore == "herbi") |>
+  select(name, sleep_total, bodywt) |>
+  arrange(desc(sleep_total)) |>
+  head(5)
+```
+
+---
+
+## 演習
+
+### 演習1：filter()の練習
+
+`msleep` から以下の条件に合う動物を抽出してください。
+
+1. 雑食動物（`vore == "omni"`）だけ抽出
+2. 体重（`bodywt`）が 100 kg 以上の動物だけ抽出
+3. 草食（`herbi`）かつ睡眠時間が 8 時間以上の動物を抽出
+
+### 演習2：select() の練習
+
+`msleep` から動物名・食性・総睡眠時間・体重の4列だけを選んだデータフレームを作ってください。
+
+### 演習3：mutate() の練習
+
+`msleep` に「覚醒時間の割合」を計算した列（`awake_ratio = awake / 24`）を追加してください。
+その後，値の大きい順に並べ替え，上位10行を表示してください。
+
+```{r, eval=FALSE}
+msleep |>
+  select(name, awake) |>
+  mutate(awake_ratio = ___ / ___) |>
+  arrange(___) |>
+  head(___)
+```
+
+---
+
+## 本日のまとめ
+
+- `filter()` で行を絞り込む
+- `select()` で列を選ぶ
+- `mutate()` で新しい列を作る・変換する
+- `arrange()` で並び替える
+- パイプ `|>` で処理をつなげると読みやすい
+
+---
+
+## 宿題・予習
+
+- 本日の演習を完成させ，スクリプトを保存する
+- 次回は `summarise()` と `group_by()` によるデータ集計を学びます
+- 教科書のdplyrに関する章（集計まで）を読んでおく

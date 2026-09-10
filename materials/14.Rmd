@@ -1,0 +1,239 @@
+---
+title: "第14回　分散分析（2）：多重比較と分析結果のまとめ方"
+subtitle: "行動計量学（Rではじめるデータ分析入門）"
+author: "小野原 彩香"
+date: "令和8年度"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
+                      fig.width = 8, fig.height = 5)
+library(tidyverse)
+```
+
+---
+
+## 本日の目標
+
+1. 多重比較の必要性と Tukey HSD 法の考え方を理解する
+2. Rで多重比較を実行し，どの群間に差があるかを特定できる
+3. 分散分析から多重比較までの結果を統合してレポートにまとめられる
+
+---
+
+## 1. 多重比較とは
+
+### 分散分析の後に必要なこと
+
+分散分析（ANOVA）で「少なくとも1組の群に有意差がある」とわかっても，
+**「どの群とどの群が異なるのか」**はわかりません。
+
+→ **多重比較（post-hoc test）** でペアごとの差を検定します。
+
+### なぜ専用の方法が必要か？
+
+単純な t検定の繰り返しでは第一種の過誤率が膨らむ（第13回で解説）ため，
+検定全体の誤り率を制御する方法を使います。
+
+---
+
+## 2. 代表的な多重比較法
+
+| 方法 | 特徴 | Rの関数 |
+|------|------|--------|
+| **Tukey HSD** | 全ペア比較，バランスのとれた設計に適す | `TukeyHSD()` |
+| Bonferroni | 保守的，検定回数で α を割る | `pairwise.t.test(..., p.adjust="bonferroni")` |
+| Holm | Bonferroni より検出力が高い | `pairwise.t.test(..., p.adjust="holm")` |
+| Scheffé | 任意の対比を検定，最も保守的 | 専用パッケージ |
+
+> 本授業では **Tukey HSD 法** を中心に扱います。
+
+---
+
+## 3. Tukey HSD 法の実行
+
+### 例：iris データ（3種のがく片の長さ）
+
+```{r}
+# 分散分析の実行（第13回の復習）
+result_anova <- aov(Sepal.Length ~ Species, data = iris)
+summary(result_anova)
+```
+
+```{r}
+# Tukey HSD 多重比較
+result_tukey <- TukeyHSD(result_anova)
+result_tukey
+```
+
+### 結果の読み方
+
+```
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = Sepal.Length ~ Species, data = iris)
+
+$Species
+                      diff        lwr        upr     p adj
+versicolor-setosa    0.930  0.6862...  1.1737...  0.0000000
+virginica-setosa     1.582  1.3382...  1.8257...  0.0000000
+virginica-versicolor 0.652  0.4082...  0.8957...  0.0000000
+```
+
+| 列 | 意味 |
+|----|------|
+| `diff` | 平均差 |
+| `lwr` / `upr` | 95%信頼区間の下限・上限 |
+| `p adj` | 調整済みp値（< .05 で有意） |
+
+---
+
+## 4. Tukey HSD 結果の可視化
+
+```{r}
+# confint() でデータフレームに変換して描く
+tukey_df <- as.data.frame(result_tukey$Species)
+tukey_df$comparison <- rownames(tukey_df)
+
+ggplot(tukey_df, aes(x = comparison, y = diff)) +
+  geom_point(size = 3, color = "steelblue") +
+  geom_errorbar(aes(ymin = lwr, ymax = upr), width = 0.1, color = "steelblue") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  labs(title = "Tukey HSD：群間の平均差と95%CI",
+       x = "比較ペア", y = "平均差（cm）") +
+  coord_flip() +
+  theme_bw()
+```
+
+> 信頼区間が 0 をまたがっていなければ有意差あり。
+
+---
+
+## 5. 全体の結果をグラフで示す
+
+### 有意差ブラケット付きの箱ひげ図
+
+```{r}
+# ggplot2で箱ひげ図を作成
+p_box <- ggplot(iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.7) +
+  geom_jitter(width = 0.1, alpha = 0.3, size = 1.5) +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(title = "種ごとのがく片の長さ（Tukey HSD: すべての群間に p < .001）",
+       x = "種", y = "がく片の長さ (cm)") +
+  theme_bw() +
+  theme(legend.position = "none")
+p_box
+```
+
+---
+
+## 6. 完全な分析フローのまとめ
+
+### Step 1：記述統計
+
+```{r}
+iris |>
+  group_by(Species) |>
+  summarise(n = n(), M = mean(Sepal.Length), SD = sd(Sepal.Length)) |>
+  mutate(across(where(is.numeric), ~ round(., 2)))
+```
+
+### Step 2：前提条件の確認
+
+```{r}
+bartlett.test(Sepal.Length ~ Species, data = iris)
+```
+
+### Step 3：分散分析
+
+```{r}
+result_anova <- aov(Sepal.Length ~ Species, data = iris)
+summary(result_anova)
+```
+
+### Step 4：多重比較
+
+```{r}
+TukeyHSD(result_anova)
+```
+
+### Step 5：効果量
+
+```{r}
+ss_b <- 63.21
+ss_t <- 63.21 + 38.96
+round(ss_b / ss_t, 3)
+```
+
+---
+
+## 7. 結果の報告（論文・レポート形式）
+
+> **方法**：3種のアヤメ（setosa, versicolor, virginica）のがく片の長さを
+> 一元配置分散分析によって比較した。多重比較には Tukey HSD 法を用いた。
+>
+> **結果**：種の主効果が有意であった，*F*(2, 147) = 119.3, *p* < .001, η² = .62。
+> Tukey HSD 法による多重比較の結果，
+> setosa と versicolor（*p* < .001），setosa と virginica（*p* < .001），
+> versicolor と virginica（*p* < .001）の間でそれぞれ有意差が認められた。
+
+---
+
+## 演習
+
+### 演習1：多重比較の実行
+
+`iris` データで `Petal.Length` の一元配置分散分析を実行し，
+Tukey HSD で多重比較を行ってください。
+
+どの群間に有意差がありましたか？
+
+```{r, eval=FALSE}
+result <- aov(___ ~ ___, data = iris)
+TukeyHSD(result)
+```
+
+### 演習2：視覚化
+
+演習1の Tukey HSD の結果を，`tukey_df` を使って信頼区間のプロットで表示してください。
+
+### 演習3：総合レポート（最終課題の練習）
+
+以下の問いに対して，Step 1〜5 の分析フローを実行し，
+結果を論文の「方法・結果」の節として1段落にまとめてください。
+
+**問い**：`mtcars` データで，シリンダー数（`cyl`：4・6・8）によって
+馬力（`hp`）に違いがあるかを検討してください。
+
+1. 記述統計（平均・SD・n）
+2. 箱ひげ図
+3. 一元配置分散分析（`aov()`）
+4. Tukey HSD
+5. 効果量 η²
+6. 結果の記述
+
+---
+
+## 本日のまとめ
+
+- 分散分析で有意差が出た後，Tukey HSD で**どの群間か**を特定する
+- `TukeyHSD()` で調整済みp値と信頼区間を確認
+- 分析フローは「記述統計 → 前提確認 → ANOVA → 多重比較 → 効果量 → 報告」
+- 結果の記述には F値・df・p値・η²・多重比較の結果を含める
+
+---
+
+## 宿題・予習
+
+- 演習3（総合問題）を完成させ，スクリプトを保存する
+- 次回（第15回）は**最終まとめと習熟度確認テスト（第3回）**です
+- 第1〜14回の内容全体を見直しておいてください

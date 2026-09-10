@@ -1,0 +1,223 @@
+---
+title: "第10回　データを分析する（3）：2群の平均値の比較（t検定の実行と解釈）"
+subtitle: "行動計量学（Rではじめるデータ分析入門）"
+author: "小野原 彩香"
+date: "令和8年度"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
+                      fig.width = 7, fig.height = 4)
+library(tidyverse)
+```
+
+---
+
+## 本日の目標
+
+1. 独立2標本t検定の論理を理解する
+2. Rで `t.test()` を実行し，結果を解釈できる
+3. 効果量（Cohenの *d*）を計算・解釈できる
+
+---
+
+## 1. 2群の平均値を比較するとき
+
+### 「差がある」とはどういうことか？
+
+- A組の平均点：75点，B組の平均点：80点
+- この5点の差は**偶然のばらつき**か，**本当の差**か？
+
+→ **t検定（独立2標本t検定）** で統計的に判断します
+
+---
+
+## 2. t検定の仕組み
+
+### 仮説の設定
+
+- **帰無仮説 H₀**：2群の母平均は等しい（μ₁ = μ₂）
+- **対立仮説 H₁**：2群の母平均は異なる（μ₁ ≠ μ₂）
+
+### t統計量
+
+$$t = \frac{\bar{x}_1 - \bar{x}_2}{SE_{差}}$$
+
+- 分子：2群の平均値の差
+- 分母：標準誤差（ばらつきの大きさを考慮）
+
+→ t値が大きいほど「差が大きく，偶然とは言いにくい」
+
+---
+
+## 3. Rで独立2標本t検定を実行する
+
+### 例：オートマ vs. マニュアル車の燃費
+
+```{r}
+# mtcars データ：am（0=オートマ, 1=マニュアル）ごとの燃費(mpg)
+mtcars |>
+  group_by(am) |>
+  summarise(n = n(), mean_mpg = mean(mpg), sd_mpg = sd(mpg))
+```
+
+```{r}
+# 箱ひげ図で確認
+mtcars |>
+  mutate(am = factor(am, labels = c("オートマ", "マニュアル"))) |>
+  ggplot(aes(x = am, y = mpg, fill = am)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.1, alpha = 0.5) +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(title = "トランスミッション別の燃費", x = "トランスミッション", y = "燃費 (mpg)") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+```{r}
+# t検定の実行
+t.test(mpg ~ am, data = mtcars)
+```
+
+### 結果の読み方
+
+```
+Welch Two Sample t-test
+
+t = -3.7671, df = 18.332, p-value = 0.001374
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -11.280194  -3.209684
+sample estimates:
+mean in group 0 mean in group 1
+       17.14737        24.39231
+```
+
+| 項目 | 意味 |
+|------|------|
+| `t` | t統計量（負の値 = group0 < group1） |
+| `df` | 自由度 |
+| `p-value` | p値（< 0.05 で有意） |
+| `95% CI` | 平均差の95%信頼区間（0を含まなければ有意） |
+| `mean in group 0/1` | 各群の平均値 |
+
+---
+
+## 4. 等分散性の検定
+
+Welch法（分散が等しくない場合に対応）とStudent法（等分散を仮定）の使い分け：
+
+```{r}
+# 等分散性の検定（F検定）
+var.test(mpg ~ am, data = mtcars)
+```
+
+- p < .05 → 分散が有意に異なる → **Welch法**を使う（デフォルト）
+- p ≥ .05 → 分散が等しいと判断 → Student法でも可
+
+```{r}
+# Student法（var.equal = TRUE）
+t.test(mpg ~ am, data = mtcars, var.equal = TRUE)
+```
+
+> 現代的には，Welch法をデフォルトで使うことが推奨されています（前提条件が少ないため）。
+
+---
+
+## 5. 効果量：Cohenの *d*
+
+p値は「差が有意かどうか」しか教えてくれません。
+**「どのくらいの差か」** を表すのが効果量です。
+
+$$d = \frac{\bar{x}_1 - \bar{x}_2}{SD_{プール}}$$
+
+```{r}
+# Cohenの d を手動で計算
+auto   <- mtcars |> filter(am == 0) |> pull(mpg)
+manual <- mtcars |> filter(am == 1) |> pull(mpg)
+
+mean_diff <- mean(manual) - mean(auto)
+sd_pooled <- sqrt(((length(auto)-1)*var(auto) + (length(manual)-1)*var(manual)) /
+                  (length(auto) + length(manual) - 2))
+d <- mean_diff / sd_pooled
+round(d, 2)
+```
+
+### Cohenの *d* の目安
+
+| *d* の値 | 効果の大きさ |
+|----------|------------|
+| 0.2 | 小 |
+| 0.5 | 中 |
+| 0.8以上 | 大 |
+
+---
+
+## 6. 結果の報告
+
+論文・レポートでの記述例：
+
+> マニュアル車（*M* = 24.39, *SD* = 6.17）の燃費は，
+> オートマ車（*M* = 17.15, *SD* = 3.83）に比べて有意に高かった，
+> *t*(18.33) = 3.77, *p* = .001, *d* = 1.48。
+
+**報告の要素**：各群の M と SD，t値，df，p値，効果量 d
+
+---
+
+## 演習
+
+### 演習1：基本統計量の確認
+
+`iris` データを使って，`setosa` と `versicolor` の `Petal.Length` を比較します。
+まず，2群の平均・標準偏差・サンプルサイズを確認してください。
+
+```{r, eval=FALSE}
+iris |>
+  filter(Species %in% c("setosa", "versicolor")) |>
+  group_by(Species) |>
+  summarise(n = n(), mean = mean(___), sd = sd(___))
+```
+
+### 演習2：箱ひげ図
+
+演習1の2群を箱ひげ図で比較してください。
+
+### 演習3：t検定の実行
+
+`iris` の `setosa` と `versicolor` の `Petal.Length` を比べるt検定を実行し，
+結果を解釈してください。
+
+```{r, eval=FALSE}
+iris_sub <- iris |> filter(Species %in% c("setosa", "versicolor"))
+t.test(___ ~ ___, data = iris_sub)
+```
+
+### 演習4：レポート形式でまとめる
+
+演習3の結果を，論文の結果の節として1〜2文で記述してください。
+（M, SD, t値, df, p値を含める）
+
+---
+
+## 本日のまとめ
+
+- 独立2標本t検定で「2群の平均値の差が偶然かどうか」を検定できる
+- `t.test()` で t値・df・p値・信頼区間を取得
+- 効果量 Cohenの *d* で「差の大きさ」を表す
+- 結果の報告では M, SD, t, df, p, d を記載する
+
+---
+
+## 宿題・予習
+
+- 演習3〜4を仕上げ，スクリプトを保存
+- 次回は **対応のあるt検定とデータ構造** を学びます
+- 「対応あり」と「対応なし」の違いを教科書で確認しておく

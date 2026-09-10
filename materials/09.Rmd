@@ -1,0 +1,242 @@
+---
+title: "第9回　データを分析する（2）：カテゴリデータの分析（カイ二乗検定）"
+subtitle: "行動計量学（Rではじめるデータ分析入門）"
+author: "小野原 彩香"
+date: "令和8年度"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
+                      fig.width = 7, fig.height = 4)
+library(tidyverse)
+```
+
+---
+
+## 本日の目標
+
+1. カテゴリデータの分析が必要な場面を理解する
+2. クロス集計表（分割表）を作成できる
+3. カイ二乗検定（独立性の検定）をRで実行し，結果を解釈できる
+
+---
+
+## 1. カテゴリデータとは
+
+**カテゴリデータ（名義・順序尺度）**：数値ではなく，グループや分類を表すデータ
+
+| カテゴリデータの例 | 連続データとの違い |
+|------------------|------------------|
+| 性別（男・女） | 平均が計算できない |
+| 学部（文・理・医…） | 「文学部の平均」は意味をなさない |
+| 回答（はい・いいえ） | 頻度（件数）で分析する |
+
+---
+
+## 2. クロス集計表（分割表）
+
+2つのカテゴリ変数の組み合わせごとの件数を表にしたものです。
+
+### 例：タイタニック号の乗客データ
+
+```{r}
+# R組み込みの Titanic データ
+# データフレーム形式に変換
+titanic <- as.data.frame(Titanic)
+head(titanic)
+```
+
+```{r}
+# 性別と生存の2×2分割表を作る
+titanic_summary <- titanic |>
+  group_by(Sex, Survived) |>
+  summarise(Freq = sum(Freq), .groups = "drop")
+
+titanic_summary
+```
+
+```{r}
+# クロス集計表の形式で表示
+xtabs(Freq ~ Sex + Survived, data = titanic_summary)
+```
+
+---
+
+## 3. カイ二乗検定（独立性の検定）
+
+### 問い
+
+「性別と生存率は**独立（無関係）**か，それとも**関連がある**か？」
+
+### 仮説の設定
+
+- **帰無仮説 H₀**：性別と生存は独立（関連がない）
+- **対立仮説 H₁**：性別と生存は独立でない（関連がある）
+
+### カイ二乗統計量
+
+期待度数（H₀が正しいとしたときの理論上の頻度）と観測度数の差から計算します。
+
+$$\chi^2 = \sum \frac{(観測度数 - 期待度数)^2}{期待度数}$$
+
+---
+
+## 4. Rでカイ二乗検定を実行する
+
+### chisq.test()
+
+```{r}
+# クロス集計表の作成
+tab <- xtabs(Freq ~ Sex + Survived, data = titanic_summary)
+tab
+```
+
+```{r}
+# カイ二乗検定
+chisq.test(tab)
+```
+
+### 結果の読み方
+
+```
+Pearson's Chi-squared test with Yates' continuity correction
+
+X-squared = 454.5, df = 1, p-value < 2.2e-16
+```
+
+| 項目 | 意味 |
+|------|------|
+| `X-squared` | カイ二乗統計量 χ² |
+| `df` | 自由度（= (行数-1)×(列数-1)） |
+| `p-value` | p値 |
+
+p < .05 ならば「性別と生存は独立でない」（関連がある）と結論できます。
+
+---
+
+## 5. 効果量：クラメールの V
+
+p値は「統計的に有意かどうか」を示しますが，
+**「効果の大きさ」**は別途，効果量で表します。
+
+$$V = \sqrt{\frac{\chi^2}{n \cdot (k-1)}}$$
+
+（n = 総度数，k = 行数・列数の小さい方）
+
+```{r}
+# 効果量の計算（手動）
+chi2 <- chisq.test(tab)$statistic
+n    <- sum(tab)
+k    <- min(nrow(tab), ncol(tab))
+V    <- sqrt(chi2 / (n * (k - 1)))
+round(V, 3)
+```
+
+### クラメールのVの目安
+
+| V の値 | 効果の大きさ |
+|--------|------------|
+| 0.1〜0.3 | 小 |
+| 0.3〜0.5 | 中 |
+| 0.5〜 | 大 |
+
+---
+
+## 6. 可視化：積み上げ棒グラフ
+
+```{r}
+titanic_pct <- titanic_summary |>
+  group_by(Sex) |>
+  mutate(pct = Freq / sum(Freq) * 100)
+
+ggplot(titanic_pct, aes(x = Sex, y = pct, fill = Survived)) +
+  geom_col() +
+  scale_fill_manual(values = c("No" = "#E74C3C", "Yes" = "#2ECC71"),
+                    labels = c("No" = "死亡", "Yes" = "生存")) +
+  labs(title = "タイタニック：性別と生存率",
+       x = "性別", y = "割合（%）", fill = "生存") +
+  theme_bw()
+```
+
+---
+
+## 7. 結果の報告
+
+論文・レポートでの記述例：
+
+> 性別と生存の独立性を検定するためにカイ二乗検定を実施した。
+> その結果，性別と生存の間には有意な関連が認められた，
+> χ²(1, N = 2201) = 454.5, p < .001, *V* = .45。
+
+---
+
+## 演習
+
+### 演習1：クロス集計表の作成
+
+`mtcars` データを使って，シリンダー数（`cyl`）とトランスミッション（`am`）の
+クロス集計表を作成してください。
+
+```{r, eval=FALSE}
+table(mtcars$cyl, mtcars$am)
+```
+
+### 演習2：カイ二乗検定
+
+演習1のクロス集計表を使って，カイ二乗検定を実施し，結果を解釈してください。
+
+- 仮説を日本語で書く
+- `chisq.test()` を実行する
+- p値と自由度を確認し，結論を書く
+
+```{r, eval=FALSE}
+tab <- table(mtcars$cyl, mtcars$am)
+chisq.test(tab)
+```
+
+### 演習3：可視化
+
+`mtcars` の `cyl`（シリンダー数）と `am`（0=オートマ, 1=マニュアル）の
+関係を積み上げ棒グラフで表現してください。
+
+```{r, eval=FALSE}
+mtcars |>
+  mutate(
+    am  = factor(am,  labels = c("オートマ", "マニュアル")),
+    cyl = factor(cyl, labels = c("4気筒", "6気筒", "8気筒"))
+  ) |>
+  group_by(cyl, am) |>
+  summarise(n = n(), .groups = "drop") |>
+  group_by(cyl) |>
+  mutate(pct = n / sum(n) * 100) |>
+  ggplot(aes(x = cyl, y = pct, fill = am)) +
+  geom_col() +
+  labs(title = "シリンダー数とトランスミッションの関係",
+       x = "シリンダー数", y = "割合（%）", fill = "トランスミッション") +
+  theme_bw()
+```
+
+---
+
+## 本日のまとめ
+
+- カテゴリデータの分析には**クロス集計表とカイ二乗検定**を使う
+- `table()` / `xtabs()` でクロス集計表を作成
+- `chisq.test()` で独立性を検定
+- 効果量（クラメールの V）も一緒に報告する
+- 積み上げ棒グラフでカテゴリ間の比率を可視化する
+
+---
+
+## 宿題・予習
+
+- 演習2の結果をレポート形式でまとめる（1〜2文）
+- 次回は **t検定（2群の平均値の比較）** を学びます
+- 教科書のt検定に関する章を読んでおく

@@ -1,0 +1,251 @@
+---
+title: "第13回　分散分析（1）：一元配置分散分析の考え方"
+subtitle: "行動計量学（Rではじめるデータ分析入門）"
+author: "小野原 彩香"
+date: "令和8年度"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
+                      fig.width = 7, fig.height = 4)
+library(tidyverse)
+```
+
+---
+
+## 本日の目標
+
+1. なぜ3群以上でt検定を繰り返してはいけないかを説明できる
+2. 分散分析（ANOVA）の基本的な論理を理解する
+3. Rで一元配置分散分析を実行し，結果を解釈できる
+
+---
+
+## 1. なぜ分散分析が必要か
+
+### 3群以上でt検定を繰り返す問題
+
+3群（A, B, C）を比較するとき，t検定を繰り返すと：
+
+- A vs. B，A vs. C，B vs. C の3回の検定が必要
+- 各検定で α = .05 を使うと…
+
+**第一種の過誤（偽陽性）の確率が膨らむ！**
+
+$$1 - (1 - 0.05)^3 = 1 - 0.857 = 0.143$$
+
+→ 3回の検定では，帰無仮説が正しいのに少なくとも1回有意になる確率が14.3%！
+
+### 解決策：分散分析（ANOVA）
+
+**Analysis of Variance（ANOVA）**：
+- 3群以上を1回の検定で同時に比較
+- 全体の第一種の過誤率を α = .05 に保つ
+
+---
+
+## 2. 分散分析の論理
+
+### 「分散」を分解する
+
+$$SS_{全体} = SS_{群間} + SS_{群内}$$
+
+| 変動の種類 | 意味 |
+|-----------|------|
+| **群間変動** (SS_between) | 群の平均値のばらつき（群の効果） |
+| **群内変動** (SS_within) | 各群内のばらつき（誤差） |
+
+### F 統計量
+
+$$F = \frac{MS_{群間}}{MS_{群内}} = \frac{群間の平均二乗}{群内の平均二乗}$$
+
+- F > 1 なら群間のばらつきが誤差より大きい
+- F が十分大きければ「群の違いは偶然ではない」
+
+### 仮説の設定
+
+- **帰無仮説 H₀**：すべての群の母平均が等しい（μ₁ = μ₂ = μ₃ = …）
+- **対立仮説 H₁**：少なくとも1組の群で平均が異なる
+
+---
+
+## 3. Rで一元配置分散分析を実行する
+
+### 例：iris データ（3種のがく片の長さを比較）
+
+```{r}
+# データの確認
+iris |>
+  group_by(Species) |>
+  summarise(
+    n    = n(),
+    mean = mean(Sepal.Length),
+    sd   = sd(Sepal.Length)
+  )
+```
+
+```{r}
+# 箱ひげ図で確認
+ggplot(iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.1, alpha = 0.3) +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(title = "種ごとのがく片の長さ",
+       x = "種", y = "がく片の長さ (cm)") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+### aov()：分散分析の実行
+
+```{r}
+# 一元配置分散分析
+result_anova <- aov(Sepal.Length ~ Species, data = iris)
+summary(result_anova)
+```
+
+### 結果の読み方
+
+```
+            Df Sum Sq Mean Sq F value Pr(>F)
+Species      2  63.21  31.606   119.3 <2e-16 ***
+Residuals  147  38.96   0.265
+```
+
+| 項目 | 意味 |
+|------|------|
+| `Df` | 自由度（群間 = k-1，群内 = N-k） |
+| `Sum Sq` | 平方和 |
+| `Mean Sq` | 平均二乗（平方和÷自由度） |
+| `F value` | F統計量 |
+| `Pr(>F)` | p値 |
+
+**p < .05 → 帰無仮説を棄却（少なくとも1組の群に有意差がある）**
+
+> ただし，どの群とどの群が異なるかはこれだけではわかりません。
+> → 次回の多重比較へ
+
+---
+
+## 4. 分散分析の前提条件
+
+| 前提条件 | 確認方法 |
+|---------|---------|
+| 各群が正規分布に従う | Shapiro-Wilk 検定 |
+| 各群の分散が等しい（等分散性） | Levene 検定 / Bartlett 検定 |
+| 観測値の独立性 | データの収集方法を確認 |
+
+```{r}
+# Bartlett検定（等分散性の確認）
+bartlett.test(Sepal.Length ~ Species, data = iris)
+```
+
+等分散性が満たされない場合は Welch の ANOVA（`oneway.test()`）を使います。
+
+```{r}
+# Welch の ANOVA（等分散を仮定しない）
+oneway.test(Sepal.Length ~ Species, data = iris)
+```
+
+---
+
+## 5. 効果量：η²（イータ二乗）
+
+$$\eta^2 = \frac{SS_{群間}}{SS_{全体}}$$
+
+```{r}
+# 手動でη²を計算
+ss_between <- 63.21
+ss_total   <- 63.21 + 38.96
+eta_sq     <- ss_between / ss_total
+round(eta_sq, 3)
+```
+
+### η² の目安（Cohenの基準）
+
+| η² | 効果の大きさ |
+|----|------------|
+| 0.01 | 小 |
+| 0.06 | 中 |
+| 0.14以上 | 大 |
+
+---
+
+## 6. 可視化：平均値±SDの棒グラフ
+
+```{r}
+iris_summary <- iris |>
+  group_by(Species) |>
+  summarise(
+    mean = mean(Sepal.Length),
+    sd   = sd(Sepal.Length),
+    n    = n()
+  )
+
+ggplot(iris_summary, aes(x = Species, y = mean, fill = Species)) +
+  geom_col(width = 0.6) +
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.15) +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(title = "種ごとのがく片の長さ（平均±SD）",
+       x = "種", y = "がく片の長さ (cm)") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+---
+
+## 演習
+
+### 演習1：分散分析の実行
+
+`iris` データで，3種の **`Petal.Length`（花びらの長さ）** を一元配置分散分析で比較してください。
+
+1. `group_by() + summarise()` で各群の M と SD を計算する
+2. 箱ひげ図で可視化する
+3. `aov()` で分散分析を実行し，`summary()` で結果を確認する
+4. F値・df・p値を確認し，帰無仮説を棄却するか判断する
+
+### 演習2：前提条件の確認
+
+演習1で使ったデータについて，Bartlett 検定で等分散性を確認してください。
+
+```{r, eval=FALSE}
+bartlett.test(Petal.Length ~ Species, data = iris)
+```
+
+### 演習3：効果量の計算
+
+演習1の `summary()` の出力から SS_between と SS_total を読み取り，
+η² を計算してください。
+
+### 演習4：レポートの記述
+
+演習1の結果を，以下のフォーマットで記述してください。
+
+> 3種のアヤメの花びらの長さを一元配置分散分析によって比較した結果，
+> 種の主効果が有意であった，*F*(__, __) = __.__, *p* __ .001, η² = .__。
+
+---
+
+## 本日のまとめ
+
+- 3群以上の比較には分散分析（ANOVA）を使う（t検定の繰り返しはNG）
+- `aov()` + `summary()` で一元配置分散分析を実行
+- F値が大きいほど群間の差が誤差より大きいことを意味する
+- 効果量 η² で「効果の大きさ」を表す
+- **有意な場合，どの群間に差があるかは次回の多重比較で調べる**
+
+---
+
+## 宿題・予習
+
+- 演習1〜4を仕上げておく
+- 次回は **多重比較と分析結果のまとめ方** を学びます
+- 教科書の多重比較（Tukey法など）の部分を読んでおく
