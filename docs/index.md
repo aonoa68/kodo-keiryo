@@ -52,30 +52,33 @@ ISBN 978-4-297-12170-9
 
 各回、**HTML版**（ブラウザで読む）と**Rmd版**（RStudioで開いて自分で実行する）を用意しています。
 
-| 回 | 日付 | 内容 | 資料 |
-|---:|---|---|---|
-| 1 | 10/2 | ガイダンス：行動計量学とは何か／Rとデータ分析の位置づけ | [HTML](materials/01.html) ・ [Rmd](materials/01.Rmd) |
-| 2 | 10/9 | R・RStudioの導入：インストールと基本操作 | [HTML](materials/02.html) ・ [Rmd](materials/02.Rmd) |
-| 3 | 10/16 | データの可視化(1)：ggplot2によるグラフ作成の基礎 | [HTML](materials/03.html) ・ [Rmd](materials/03.Rmd) |
-| 4 | 10/23 | データの可視化(2)：グラフのカスタマイズと保存 | [HTML](materials/04.html) ・ [Rmd](materials/04.Rmd) |
-| 5 | 10/30 | データの加工(1)：dplyrによるデータ整形 | [HTML](materials/05.html) ・ [Rmd](materials/05.Rmd) |
-| 6 | 11/6 | データの加工(2)：データの集計と要約統計量の算出 | [HTML](materials/06.html) ・ [Rmd](materials/06.Rmd) |
-| **7** | 11/13 | **習熟度確認と復習(1)**：可視化・整形までの操作確認 | [HTML](materials/07.html) ・ [Rmd](materials/07.Rmd) |
-| 8 | 11/20 | データを分析する(1)：相関分析と散布図 | [HTML](materials/08.html) ・ [Rmd](materials/08.Rmd) |
-| 9 | 11/27 | データを分析する(2)：カテゴリデータの分析（カイ二乗検定） | [HTML](materials/09.html) ・ [Rmd](materials/09.Rmd) |
-| 10 | 12/4 | データを分析する(3)：2群の平均値の比較（t検定） | [HTML](materials/10.html) ・ [Rmd](materials/10.Rmd) |
-| 11 | 12/11 | データを分析する(4)：対応のあるt検定とデータ構造 | [HTML](materials/11.html) ・ [Rmd](materials/11.Rmd) |
-| **12** | 12/18 | **習熟度確認と復習(2)**：基礎的推測統計の実行 | [HTML](materials/12.html) ・ [Rmd](materials/12.Rmd) |
-| 13 | 12/25 | 分散分析(1)：一元配置分散分析の考え方 | [HTML](materials/13.html) ・ [Rmd](materials/13.Rmd) |
-| 14 | 1/8 | 分散分析(2)：多重比較と分析結果のまとめ方 | [HTML](materials/14.html) ・ [Rmd](materials/14.Rmd) |
-| **15** | 1/22 | **まとめと習熟度確認(3)**：これまでの学習内容の統合 | [HTML](materials/15.html) ・ [Rmd](materials/15.Rmd) |
-| 16 | 1/29 | **補講予備日**（休講が生じた場合の振替に使います） | — |
+| 回 | 日付 | 内容 | 資料 | 考え方 |
+|---:|---|---|---|---|
+| 1 | 10/2 | ガイダンス：行動計量学とは何か／Rとデータ分析の位置づけ | [HTML](materials/01.html) ・ [Rmd](materials/01.Rmd) | — |
+| 2 | 10/9 | R・RStudioの導入：インストールと基本操作 | [HTML](materials/02.html) ・ [Rmd](materials/02.Rmd) | — |
+| 3 | 10/16 | データの可視化(1)：ggplot2によるグラフ作成の基礎 | [HTML](materials/03.html) ・ [Rmd](materials/03.Rmd) | [グラフで見る](https://aonoa68.github.io/teaching/guide/visualize/) |
+| 4 | 10/23 | データの可視化(2)：グラフのカスタマイズと保存 | [HTML](materials/04.html) ・ [Rmd](materials/04.Rmd) | [グラフで見る](https://aonoa68.github.io/teaching/guide/visualize/) |
+| 5 | 10/30 | データの加工(1)：dplyrによるデータ整形 | [HTML](materials/05.html) ・ [Rmd](materials/05.Rmd) | — |
+| 6 | 11/6 | データの加工(2)：データの集計と要約統計量の算出 | [HTML](materials/06.html) ・ [Rmd](materials/06.Rmd) | — |
+| **7** | 11/13 | **習熟度確認と復習(1)**：可視化・整形までの操作確認 | [HTML](materials/07.html) ・ [Rmd](materials/07.Rmd) | — |
+| 8 | 11/20 | データを分析する(1)：相関分析と散布図 | [HTML](materials/08.html) ・ [Rmd](materials/08.Rmd) | [相関と因果](https://aonoa68.github.io/teaching/guide/correlation/) |
+| 9 | 11/27 | データを分析する(2)：カテゴリデータの分析（カイ二乗検定） | [HTML](materials/09.html) ・ [Rmd](materials/09.Rmd) | [仮説検定とp値](https://aonoa68.github.io/teaching/guide/testing/) |
+| 10 | 12/4 | データを分析する(3)：2群の平均値の比較（t検定） | [HTML](materials/10.html) ・ [Rmd](materials/10.Rmd) | [仮説検定とp値](https://aonoa68.github.io/teaching/guide/testing/) |
+| 11 | 12/11 | データを分析する(4)：対応のあるt検定とデータ構造 | [HTML](materials/11.html) ・ [Rmd](materials/11.Rmd) | [仮説検定とp値](https://aonoa68.github.io/teaching/guide/testing/) |
+| **12** | 12/18 | **習熟度確認と復習(2)**：基礎的推測統計の実行 | [HTML](materials/12.html) ・ [Rmd](materials/12.Rmd) | — |
+| 13 | 12/25 | 分散分析(1)：一元配置分散分析の考え方 | [HTML](materials/13.html) ・ [Rmd](materials/13.Rmd) | [仮説検定とp値](https://aonoa68.github.io/teaching/guide/testing/) |
+| 14 | 1/8 | 分散分析(2)：多重比較と分析結果のまとめ方 | [HTML](materials/14.html) ・ [Rmd](materials/14.Rmd) | [仮説検定とp値](https://aonoa68.github.io/teaching/guide/testing/) |
+| **15** | 1/22 | **まとめと習熟度確認(3)**：これまでの学習内容の統合 | [HTML](materials/15.html) ・ [Rmd](materials/15.Rmd) | — |
+| 16 | 1/29 | **補講予備日**（休講が生じた場合の振替に使います） | — | — |
 
 !!! warning "休講日"
     - **1月1日（金）** … 元日
     - **1月15日（金）** … 大学入学共通テストの準備・実施
 
     第13回（12/25）と第14回（1/8）の間が2週間空きます。
+
+!!! tip "考え方の列について"
+    「考え方」の列は、[統計の考え方ガイド](https://aonoa68.github.io/teaching/guide/)の対応するページです。R の操作ではなく、その回の統計の考え方を、霊長類のデータを動かしながら確かめられます。
 
 !!! note "第16回について"
     第16回（1/29）は**補講の予備日**です。急な休講が生じた場合の振替に使います。通常どおり進んだ場合の扱いは、授業内でお知らせします。
