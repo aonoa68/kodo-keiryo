@@ -16,6 +16,11 @@ output:
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
                       fig.width = 7, fig.height = 4)
 library(tidyverse)
+
+# 図の日本語が文字化けしないようにする（ragg があるときだけ有効にする）
+if (requireNamespace("ragg", quietly = TRUE)) {
+  knitr::opts_chunk$set(dev = "ragg_png")
+}
 ```
 
 ---
