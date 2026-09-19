@@ -37,6 +37,8 @@ plugins:
 
 markdown_extensions:
   - admonition
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.details
   - pymdownx.superfences
   - attr_list
@@ -64,3 +66,7 @@ nav:
       - 第15回 まとめと習熟度確認(3): materials/15.html
 
 copyright: © 2026 小野原 彩香 — 北海道大学 行動計量学
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
