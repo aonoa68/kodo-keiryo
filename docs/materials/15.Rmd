@@ -111,105 +111,13 @@ if (requireNamespace("ragg", quietly = TRUE)) {
 
 ## 習熟度確認テスト（第3回）：総合課題
 
-**以下の課題を RStudio で実行し，スクリプトを提出してください。**
+**問題は授業当日に配布します。**
 
-ファイル名：`習熟度確認3_学籍番号.R`
+この回は前半が復習，後半が習熟度確認テストです。
+テストは RStudio で実際にデータを分析し，作成した `.R` スクリプトを提出する形式で行います。
+出題範囲は，上の復習部分で扱った内容です。
 
----
-
-### 【データ】
-
-今回は `PlantGrowth` データセット（R 組み込み）を使います。
-
-```{r}
-head(PlantGrowth)
-str(PlantGrowth)
-```
-
-変数の説明：
-- `weight`：植物の乾燥重量
-- `group`：処置群（`ctrl` = 対照群，`trt1` = 処置1，`trt2` = 処置2）
-
----
-
-### 課題1：データの確認と記述統計（20点）
-
-1. 各群（`group`）の `weight` の平均・標準偏差・サンプルサイズを表示してください
-2. 箱ひげ図と散布点（`geom_jitter()`）を組み合わせてグラフを作成してください
-   - `fill = group`，`theme_bw()`，日本語ラベル付き
-
-```{r, eval=FALSE}
-# 1. 集計
-PlantGrowth |>
-  group_by(___) |>
-  summarise(n = ___, M = mean(___), SD = sd(___))
-
-# 2. グラフ
-ggplot(PlantGrowth, aes(x = ___, y = ___, fill = ___)) +
-  geom_boxplot(alpha = 0.6) +
-  geom_jitter(width = 0.1, alpha = 0.5) +
-  labs(title = "___", x = "___", y = "___") +
-  theme_bw() +
-  theme(legend.position = "none")
-```
-
----
-
-### 課題2：一元配置分散分析（25点）
-
-1. 等分散性を Bartlett 検定で確認してください
-2. 一元配置分散分析を実行してください（`aov()`）
-3. F値・自由度・p値を読み取り，帰無仮説を棄却するか判断してください
-
-```{r, eval=FALSE}
-# 等分散性の確認
-bartlett.test(___ ~ ___, data = PlantGrowth)
-
-# 分散分析
-result_anova <- aov(___ ~ ___, data = PlantGrowth)
-summary(result_anova)
-```
-
----
-
-### 課題3：多重比較（25点）
-
-課題2の分散分析結果を使って，Tukey HSD 法による多重比較を実行してください。
-
-1. `TukeyHSD()` を実行する
-2. どのペア間に有意差があるかを特定する
-3. 信頼区間のプロットを作成する
-
-```{r, eval=FALSE}
-result_tukey <- TukeyHSD(result_anova)
-result_tukey
-
-# 可視化（オプション）
-tukey_df <- as.data.frame(result_tukey$group)
-tukey_df$comparison <- rownames(tukey_df)
-ggplot(tukey_df, aes(x = comparison, y = diff)) +
-  geom_point(size = 3) +
-  geom_errorbar(aes(ymin = lwr, ymax = upr), width = 0.1) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
-  coord_flip() +
-  theme_bw()
-```
-
----
-
-### 課題4：効果量と結果の記述（30点）
-
-1. η²（イータ二乗）を計算してください（`summary(result_anova)` の出力から SS を読み取る）
-2. 以下のテンプレートに沿って，分析結果を論文の「結果」の節として記述してください
-
-**記述テンプレート：**
-
-> 3群（対照群，処置1群，処置2群）の植物乾燥重量を一元配置分散分析によって比較した。
-> 群の主効果は〔有意であった・有意でなかった〕，
-> *F*(__,__) = __.__, *p* __ .05, η² = .___。
->
-> （有意だった場合）Tukey HSD 法による多重比較の結果，
-> 〇〇群と〇〇群の間に有意差が認められた（*p* __ .05）。
+> 問題と解答例は，**テスト実施後にこのページへ掲載します。**
 
 ---
 

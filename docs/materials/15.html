@@ -2993,140 +2993,46 @@ border-radius: 0px;
 </div>
 <div id="習熟度確認テスト第3回総合課題" class="section level2">
 <h2>習熟度確認テスト（第3回）：総合課題</h2>
-<p><strong>以下の課題を RStudio
-で実行し，スクリプトを提出してください。</strong></p>
-<p>ファイル名：<code>習熟度確認3_学籍番号.R</code></p>
-<hr />
-<div id="データ" class="section level3">
-<h3>【データ】</h3>
-<p>今回は <code>PlantGrowth</code> データセット（R
-組み込み）を使います。</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">head</span>(PlantGrowth)</span></code></pre></div>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["weight"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[2],"type":["fct"],"align":["left"]}],"data":[{"1":"4.17","2":"ctrl","_rn_":"1"},{"1":"5.58","2":"ctrl","_rn_":"2"},{"1":"5.18","2":"ctrl","_rn_":"3"},{"1":"6.11","2":"ctrl","_rn_":"4"},{"1":"4.50","2":"ctrl","_rn_":"5"},{"1":"4.61","2":"ctrl","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">str</span>(PlantGrowth)</span></code></pre></div>
-<pre><code>## &#39;data.frame&#39;:    30 obs. of  2 variables:
-##  $ weight: num  4.17 5.58 5.18 6.11 4.5 4.61 5.17 4.53 5.33 5.14 ...
-##  $ group : Factor w/ 3 levels &quot;ctrl&quot;,&quot;trt1&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
-<p>変数の説明： - <code>weight</code>：植物の乾燥重量 -
-<code>group</code>：処置群（<code>ctrl</code> =
-対照群，<code>trt1</code> = 処置1，<code>trt2</code> = 処置2）</p>
-<hr />
-</div>
-<div id="課題1データの確認と記述統計20点" class="section level3">
-<h3>課題1：データの確認と記述統計（20点）</h3>
-<ol style="list-style-type: decimal">
-<li>各群（<code>group</code>）の <code>weight</code>
-の平均・標準偏差・サンプルサイズを表示してください</li>
-<li>箱ひげ図と散布点（<code>geom_jitter()</code>）を組み合わせてグラフを作成してください
-<ul>
-<li><code>fill = group</code>，<code>theme_bw()</code>，日本語ラベル付き</li>
-</ul></li>
-</ol>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># 1. 集計</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>PlantGrowth <span class="sc">|&gt;</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">group_by</span>(___) <span class="sc">|&gt;</span></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> ___, <span class="at">M =</span> <span class="fu">mean</span>(___), <span class="at">SD =</span> <span class="fu">sd</span>(___))</span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co"># 2. グラフ</span></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="fu">ggplot</span>(PlantGrowth, <span class="fu">aes</span>(<span class="at">x =</span> ___, <span class="at">y =</span> ___, <span class="at">fill =</span> ___)) <span class="sc">+</span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;___&quot;</span>, <span class="at">x =</span> <span class="st">&quot;___&quot;</span>, <span class="at">y =</span> <span class="st">&quot;___&quot;</span>) <span class="sc">+</span></span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
-<hr />
-</div>
-<div id="課題2一元配置分散分析25点" class="section level3">
-<h3>課題2：一元配置分散分析（25点）</h3>
-<ol style="list-style-type: decimal">
-<li>等分散性を Bartlett 検定で確認してください</li>
-<li>一元配置分散分析を実行してください（<code>aov()</code>）</li>
-<li>F値・自由度・p値を読み取り，帰無仮説を棄却するか判断してください</li>
-</ol>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># 等分散性の確認</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">bartlett.test</span>(___ <span class="sc">~</span> ___, <span class="at">data =</span> PlantGrowth)</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co"># 分散分析</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>result_anova <span class="ot">&lt;-</span> <span class="fu">aov</span>(___ <span class="sc">~</span> ___, <span class="at">data =</span> PlantGrowth)</span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="fu">summary</span>(result_anova)</span></code></pre></div>
-<hr />
-</div>
-<div id="課題3多重比較25点" class="section level3">
-<h3>課題3：多重比較（25点）</h3>
-<p>課題2の分散分析結果を使って，Tukey HSD
-法による多重比較を実行してください。</p>
-<ol style="list-style-type: decimal">
-<li><code>TukeyHSD()</code> を実行する</li>
-<li>どのペア間に有意差があるかを特定する</li>
-<li>信頼区間のプロットを作成する</li>
-</ol>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>result_tukey <span class="ot">&lt;-</span> <span class="fu">TukeyHSD</span>(result_anova)</span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>result_tukey</span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co"># 可視化（オプション）</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>tukey_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(result_tukey<span class="sc">$</span>group)</span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>tukey_df<span class="sc">$</span>comparison <span class="ot">&lt;-</span> <span class="fu">rownames</span>(tukey_df)</span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="fu">ggplot</span>(tukey_df, <span class="fu">aes</span>(<span class="at">x =</span> comparison, <span class="at">y =</span> diff)) <span class="sc">+</span></span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">width =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
-<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
-<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
-<hr />
-</div>
-<div id="課題4効果量と結果の記述30点" class="section level3">
-<h3>課題4：効果量と結果の記述（30点）</h3>
-<ol style="list-style-type: decimal">
-<li>η²（イータ二乗）を計算してください（<code>summary(result_anova)</code>
-の出力から SS を読み取る）</li>
-<li>以下のテンプレートに沿って，分析結果を論文の「結果」の節として記述してください</li>
-</ol>
-<p><strong>記述テンプレート：</strong></p>
+<p><strong>問題は授業当日に配布します。</strong></p>
+<p>この回は前半が復習，後半が習熟度確認テストです。 テストは RStudio
+で実際にデータを分析し，作成した <code>.R</code>
+スクリプトを提出する形式で行います。
+出題範囲は，上の復習部分で扱った内容です。</p>
 <blockquote>
-<p>3群（対照群，処置1群，処置2群）の植物乾燥重量を一元配置分散分析によって比較した。
-群の主効果は〔有意であった・有意でなかった〕，
-<em>F</em>(<strong>,</strong>) = <strong>.</strong>, <em>p</em> __ .05,
-η² = .___。</p>
-<p>（有意だった場合）Tukey HSD 法による多重比較の結果，
-〇〇群と〇〇群の間に有意差が認められた（<em>p</em> __ .05）。</p>
+<p>問題と解答例は，<strong>テスト実施後にこのページへ掲載します。</strong></p>
 </blockquote>
 <hr />
-</div>
 </div>
 <div id="この授業で身についたこと" class="section level2">
 <h2>この授業で身についたこと</h2>
 <p>この授業を通じて，以下のスキルが身につきました：</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># ───────────────────────────────────</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co"># あなたが今できること</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co"># ───────────────────────────────────</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co"># 1. データを読み込む</span></span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;my_data.csv&quot;</span>)</span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a></span>
-<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co"># 2. データを整形する</span></span>
-<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>data_clean <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
-<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(score)) <span class="sc">|&gt;</span></span>
-<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">score_z =</span> <span class="fu">scale</span>(score)) <span class="sc">|&gt;</span></span>
-<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>  <span class="fu">arrange</span>(group, <span class="fu">desc</span>(score))</span>
-<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a></span>
-<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co"># 3. グループ別に集計する</span></span>
-<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>data_summary <span class="ot">&lt;-</span> data_clean <span class="sc">|&gt;</span></span>
-<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">|&gt;</span></span>
-<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">M =</span> <span class="fu">mean</span>(score), <span class="at">SD =</span> <span class="fu">sd</span>(score))</span>
-<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a></span>
-<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co"># 4. グラフを作る</span></span>
-<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="fu">ggplot</span>(data_clean, <span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> score, <span class="at">fill =</span> group)) <span class="sc">+</span></span>
-<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">theme_bw</span>()</span>
-<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a></span>
-<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co"># 5. 統計検定を実行する</span></span>
-<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="fu">aov</span>(score <span class="sc">~</span> group, <span class="at">data =</span> data_clean) <span class="sc">|&gt;</span></span>
-<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># ───────────────────────────────────</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co"># あなたが今できること</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># ───────────────────────────────────</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># 1. データを読み込む</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;my_data.csv&quot;</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co"># 2. データを整形する</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>data_clean <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(score)) <span class="sc">|&gt;</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">score_z =</span> <span class="fu">scale</span>(score)) <span class="sc">|&gt;</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>  <span class="fu">arrange</span>(group, <span class="fu">desc</span>(score))</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co"># 3. グループ別に集計する</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>data_summary <span class="ot">&lt;-</span> data_clean <span class="sc">|&gt;</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">|&gt;</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">M =</span> <span class="fu">mean</span>(score), <span class="at">SD =</span> <span class="fu">sd</span>(score))</span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co"># 4. グラフを作る</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="fu">ggplot</span>(data_clean, <span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> score, <span class="at">fill =</span> group)) <span class="sc">+</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">theme_bw</span>()</span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co"># 5. 統計検定を実行する</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="fu">aov</span>(score <span class="sc">~</span> group, <span class="at">data =</span> data_clean) <span class="sc">|&gt;</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code></pre></div>
 <hr />
 </div>
 <div id="今後の学習のために" class="section level2">
