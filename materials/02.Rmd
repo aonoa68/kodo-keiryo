@@ -33,6 +33,13 @@ if (requireNamespace("ragg", quietly = TRUE)) {
 
 ## 1. インストール手順
 
+> **詳しい手順書を別に用意しています。**
+> PCの種類の確認から，インストール後の動作確認，よくあるトラブルの対処までを
+> 段階的にまとめた **[R・RStudioのインストール手順](02-install.html)** があります。
+> 作成は本授業のTA・齋藤悠輔さんで，Windows・Macの両方で検証済みです。
+>
+> **インストールで少しでも迷ったら，まずそちらを見てください。** 以下は要点だけの簡略版です。
+
 ### Step 1：Rのインストール
 
 1. CRAN（The Comprehensive R Archive Network）にアクセス

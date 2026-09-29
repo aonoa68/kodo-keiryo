@@ -1,0 +1,276 @@
+---
+title: "R・RStudioのインストール手順"
+subtitle: "行動計量学（行動科学分析法入門）"
+author: "作成：齋藤 悠輔（TA）"
+date: "令和8年度"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{css, echo=FALSE}
+/* ===== 表（テーブル）の体裁 ===== */
+/* 素の Markdown 表だけで成立します。
+   横に長い表のみ ::: {.tbl} ... ::: で囲むと，狭い画面で横スクロールします。 */
+
+table:not(.pagedtable table) {
+  width: 100%;
+  margin: 1.8em 0;
+  border-collapse: separate;   /* 角丸を効かせるため collapse は使わない */
+  border-spacing: 0;
+  background: #fff;
+  font-size: .93em;
+  line-height: 1.75;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .07),
+              0 0 0 1px rgba(44, 62, 80, .10);
+}
+
+/* 見出し行 */
+table:not(.pagedtable table) thead th {
+  background: #2C3E50;         /* flatly のベースカラーに合わせる */
+  color: #fff;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+  padding: 12px 16px;
+  border: none;
+}
+table:not(.pagedtable table) thead th:first-child { border-top-left-radius:  8px; }
+table:not(.pagedtable table) thead th:last-child  { border-top-right-radius: 8px; }
+
+/* 本文セル */
+table:not(.pagedtable table) tbody td {
+  padding: 12px 16px;
+  vertical-align: top;         /* 行の高さが揃わなくても頭を揃える */
+  border-top: 1px solid #e6e9ec;
+  word-break: normal;
+  overflow-wrap: anywhere;     /* 長いパスなどでレイアウトを壊さない */
+}
+table:not(.pagedtable table) tbody tr:last-child td:first-child { border-bottom-left-radius:  8px; }
+table:not(.pagedtable table) tbody tr:last-child td:last-child  { border-bottom-right-radius: 8px; }
+
+table:not(.pagedtable table) tbody tr:nth-child(even) { background: #f7f9fa; }
+table:not(.pagedtable table) tbody tr:hover           { background: #eaf6f3; }
+
+/* 1列目を小見出しのように強調 */
+table:not(.pagedtable table) tbody td:first-child {
+  font-weight: 600;
+  color: #2C3E50;
+}
+
+/* 表の中のコード表記（パスなど） */
+table:not(.pagedtable table) code {
+  background: #eef1f3;
+  color: #c7254e;
+  padding: .1em .35em;
+  border-radius: 3px;
+  font-size: .9em;
+}
+
+/* ::: {.tbl} で囲んだ表だけ，狭い画面で横スクロールさせる */
+.tbl { overflow-x: auto; padding: 4px; margin: 1.8em -4px; }
+.tbl table { min-width: 560px; margin: 0; }
+
+@media (max-width: 700px) {
+  table:not(.pagedtable table) { font-size: .88em; }
+  table:not(.pagedtable table) thead th,
+  table:not(.pagedtable table) tbody td { padding: 10px 12px; }
+}
+```
+
+---
+
+> **この資料について**
+>
+> 本資料は，この授業のティーチング・アシスタントである
+> **齋藤 悠輔 さん（北海道大学大学院 文学院 行動科学研究室）** が作成したものです。
+> Windows・Mac の両方で実際に検証したうえで書かれています。
+>
+> 第2回の講義資料の補足として配布します。
+
+---
+
+作業は **Step 0 → Step 3** の順に進めます。全部で30分ほどです。
+途中でわからなくなったら，その画面のスクリーンショットを撮っておいてください。相談がとても早く済みます。
+
+---
+
+## Step 0：自分のPCの種類をメモする
+
+**ダウンロードするファイルがPCによって違います。** ここを間違えると「インストールしたのに起動しない」となるので，最初に必ず確認してください。
+
+### Windowsの人
+
+1. 画面左下のスタートボタンを右クリック → `システム`
+2. **Windowsのエディション**（`Windows 11` か `Windows 10` か）をメモする
+
+### Macの人
+
+1. 画面左上の **りんごマーク** をクリック → `このMacについて`
+2. 次の2つをメモする
+   - **チップ**（`Apple M1` `Apple M4` などなら **Appleシリコン**，`Intel Core i5` などなら **Intel**）
+   - **macOSのバージョン**（`macOS 27 Golden Gate` `macOS 26 Tahoe` のような表記）
+
+> **なぜ確認するのか**：Mac用のRは，AppleシリコンのMac用とIntelのMac用で**別々のファイル**が配布されています。
+> 2020年後半以降に買ったMacはほぼAppleシリコンですが，思い込みで進めず必ず画面で確認してください。
+
+### メモした内容がこれに当てはまる人は，先に相談してください
+
+- **Windows 10** の人
+- **macOSが 13 以前**（`macOS 13 Ventura` `macOS 12 Monterey` など）の人
+
+最新のRStudioはこれらに対応していません（2026年9月時点の最新版 RStudio 2026.09.0 の対象は **Windows 11 / macOS 14以上** です）。**インストールできないわけではありません**が，少し古いバージョンを選ぶ必要があるので，メモを持って声をかけてください。この資料の末尾にある **Posit Cloud**（ブラウザでRStudioを使う方法）でも授業は問題なく受けられます。
+
+上記に当てはまらない人は，そのままStep 1へ進んでください。
+
+---
+
+## Step 1：Rのインストール
+
+### Windowsの場合
+
+1. CRAN（Rの公式配布サイト）にアクセス
+   - URL: `https://cran.r-project.org/`
+2. ページ上部の **「Download R for Windows」** をクリック
+3. 次の画面で **「base」** をクリック
+   - 他にもリンクがありますが，**使うのは base だけ**です
+4. 大きく表示されている **「Download R-4.x.x for Windows」** をクリック
+   - `R-4.6.1-win.exe` のようなファイルがダウンロードされます（バージョン番号は時期によって変わります。最新版で構いません）
+5. ダウンロードフォルダの `.exe` ファイルをダブルクリック
+6. 「このアプリがデバイスに変更を加えることを許可しますか？」→ **「はい」**
+7. **言語の選択**が出ます
+   - `English` を選ぶと，エラーメッセージが英語になります。**英語のまま検索するとほぼ確実に解決策が見つかる**ので，English を推奨します
+   - 日本語を選んでも授業には支障ありません
+8. 以降は**すべて「次へ（Next）」を押すだけ**です。インストール先フォルダやコンポーネントの選択画面が出ますが，**何も変更しないでください**
+9. 「完了（Finish）」が出たら終了です
+
+### Macの場合
+
+1. CRAN（Rの公式配布サイト）にアクセス
+   - URL: `https://cran.r-project.org/`
+2. ページ上部の **「Download R for macOS」** をクリック
+3. **Step 0で確認したチップに合うファイル**をクリックします
+   - **Appleシリコン**（M1〜）の人 → `R-4.x.x-arm64.pkg`
+   - **Intel** の人 → `R-4.x.x-x86_64.pkg`
+   - ファイル名の近くに「requires macOS ...」と書かれていて，その数字がStep 0でメモしたバージョンより**新しい**場合は，それは入りません。Step 0のメモを持って相談してください
+4. ダウンロードした `.pkg` ファイルをダブルクリック
+5. 「続ける」→「続ける」→「同意する」→「インストール」と進みます
+6. **Macのログインパスワード**を求められるので入力します
+   - 入力しても画面に文字は表示されませんが，正常です
+7. 「インストールが完了しました」と出たら「閉じる」
+   - インストーラをゴミ箱に入れるか聞かれたら，入れて構いません
+
+---
+
+## Step 2：RStudioのインストール
+
+> **必ずStep 1を終えてから**進めてください。RStudioは「Rを動かすための道具」であって，RStudio自体にRは入っていません。
+
+1. Posit（旧RStudio社）の配布ページにアクセス
+   - URL: `https://posit.co/download/rstudio-desktop/`
+   - アクセスすると **`docs.posit.co` のページに自動的に移動します**。それで正しいので，そのまま進めてください
+2. ページを下にスクロールし，**「Direct Downloads (Open Source)」** と書かれた表を探します
+3. 自分のOSの行から **RStudio Desktop（無料版）** をダウンロードします
+   - Windowsの人 → `RStudio-2026.xx.x-xxx.exe`
+   - Macの人 → `RStudio-2026.xx.x-xxx.dmg`
+   - **RStudioにはAppleシリコン／Intelの区別はありません。** 区別が必要なのはStep 1のR本体だけです
+   - 有料版やProと書かれたものを選ぶ必要はありません
+
+### Windowsの場合
+
+4. ダウンロードした `RStudio-....exe` をダブルクリック
+5. 「次へ」→「インストール」→「完了」と進みます（設定の変更は不要です）
+
+### Macの場合
+
+4. ダウンロードした `RStudio-....dmg` をダブルクリックすると，ウィンドウが開きます
+5. **ウィンドウの中のRStudioアイコンを，隣の「Applications」フォルダのアイコンにドラッグ＆ドロップします**
+   - **この操作が「インストール」です。** ここを飛ばして，開いたウィンドウの中のRStudioを直接起動してしまう人が毎年います
+6. コピーが終わったら，デスクトップまたはFinderの左側に出ている白いディスクのアイコンを右クリック →「取り出す」
+7. **Finderの「アプリケーション」フォルダ**からRStudioを起動します
+   - `command + スペース` で検索窓を出し，`RStudio` と入力して起動しても構いません
+   - 初回だけ「インターネットからダウンロードされたアプリケーションです」と確認が出ます →「開く」
+
+> **重要**：RとRStudioは別々のソフトです。
+> 必ずRを先にインストールしてからRStudioをインストールしてください。
+>
+> インストール後，普段起動するのは **RStudioだけ** です。R本体（`R.app` や `Rgui`）のアイコンは使いません。
+
+---
+
+## Step 3：正しく入ったかを確認する
+
+「インストールできたつもり」で当日を迎えるのが一番困ります。次の確認まで済ませて初めて完了です。
+
+1. **RStudio** を起動します
+2. 画面の **左側（または左下）の「Console」** と書かれたパネルをクリックします
+3. `>` という記号の右に，次を1行ずつ入力して `Enter` を押します
+
+```{r, eval=FALSE}
+R.version.string
+1 + 1
+```
+
+4. 次のように表示されれば成功です（バージョン番号は違っていて構いません）
+
+```
+[1] "R version 4.6.1 (2026-06-24)"
+[1] 2
+```
+
+> **うまくいかない場合の典型例**
+>
+> - RStudioを起動したのに，Rが見つからない・インストールされていないという趣旨のメッセージが出る
+>   → Rが入っていません。Step 1をやり直してください
+> - RStudioが起動してすぐ落ちる／そもそも起動しない
+>   → OSのバージョンが対応していない可能性があります。Step 0でメモした内容を持って相談してください
+
+---
+
+## よくあるトラブルと対処法
+
+::: {.tbl .tbl-trouble}
+| 症状 | 原因 | 対処 |
+|:-------------------------|:-------------------------|:-----------------------------------------------|
+| Macで「開発元を検証できないため開けません」と出る | macOSのセキュリティ機能 | システム設定 →「プライバシーとセキュリティ」→ 下の方にある **「このまま開く」** |
+| Windowsでパッケージのインストールに失敗し続ける | PCのユーザー名が日本語（`C:\Users\山田太郎` など）になっている | よくある原因です。自力での解決は難しいので相談してください |
+| ファイルを保存しようとするとエラーになる | 作業フォルダが OneDrive / iCloud の同期対象になっている | 同期対象外の場所（例：`C:\Users\（ユーザー名）\R`）に作業フォルダを作る |
+| 「管理者権限がありません」と出る | 大学の貸出PCや，家族共用PCの制限 | 管理者パスワードがわかる人に依頼するか，下記の Posit Cloud を使う |
+| ダウンロードが異常に遅い・途中で止まる | 回線の混雑 | 時間帯を変える。学内Wi-Fiより自宅回線の方が安定することが多い |
+| スクリプトの日本語が文字化けする | 文字コードの不一致 | RStudioの `File` → `Save with Encoding` → **UTF-8** を選ぶ |
+:::
+
+**どれにも当てはまらない場合**：エラーメッセージを**そのままコピーして検索**してみてください。それでも解決しなければ，次の3点を添えて相談してください。
+
+1. OSの種類とバージョン（Step 0でメモしたもの）
+2. どのStepのどの操作でつまずいたか
+3. エラーメッセージ全文のスクリーンショット
+
+---
+
+## どうしてもインストールできないとき：Posit Cloud
+
+PCの機種や設定の都合で，どうしてもインストールできないことがあります。
+そのときは **Posit Cloud** を使ってください。**ブラウザの中でRStudioがそのまま動きます。**
+画面の見た目も操作も，この資料で説明するRStudio Desktopとほぼ同じです。
+
+1. <https://posit.cloud/> にアクセス
+2. 無料プラン（Cloud Free）でアカウントを作成
+3. `New Project` → `New RStudio Project`
+
+> **注意**：無料プランには1か月あたりの利用時間の上限があります。
+> しかも，実際に画面を見ていた時間よりも**早く減っていきます**（使うメモリの量に応じて加算されるため）。
+> 使い終わったらプロジェクトを閉じる習慣をつけてください。
+>
+> あくまで「インストールできるまでの避難先」です。
+> この授業の到達目標の1つは「**自力で分析環境を構築できる**」ことなので，
+> 落ち着いたら改めて自分のPCへのインストールに挑戦しましょう。個別に相談に応じます。
