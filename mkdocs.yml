@@ -51,6 +51,7 @@ nav:
   - 講義資料:
       - 第1回 ガイダンス: materials/01.html
       - 第2回 R・RStudioの導入: materials/02.html
+      - 第2回 補足 インストール手順（TA作成）: materials/02-install.html
       - 第3回 データの可視化(1): materials/03.html
       - 第4回 データの可視化(2): materials/04.html
       - 第5回 データの加工(1): materials/05.html

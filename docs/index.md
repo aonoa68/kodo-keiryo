@@ -10,7 +10,7 @@
 
 行動科学におけるデータ分析の基本的な考え方を理解し、統計解析環境 **R（RStudio）** を使って、実際にデータを読み込み、整理し、基礎的な分析を実行できるようになることを目標とします。
 
-**プログラミングを初めて学ぶ人を想定**しています。第2回でインストールから始めるので、事前の準備は要りません。
+**プログラミングを初めて学ぶ人を想定**しています。RとRStudioの導入は第1回のあとに各自で進めてもらいますが、[インストール手順書](materials/02-install.html)を用意していますし、うまくいかなくても第2回で一緒に解決します。
 
 ### 到達目標
 
@@ -55,7 +55,7 @@ ISBN 978-4-297-12170-9
 | 回 | 日付 | 内容 | 資料 | 考え方 |
 |---:|---|---|---|---|
 | 1 | 10/2 | ガイダンス：行動計量学とは何か／Rとデータ分析の位置づけ | [HTML](materials/01.html) ・ [Rmd](materials/01.Rmd) | — |
-| 2 | 10/9 | R・RStudioの導入：インストールと基本操作 | [HTML](materials/02.html) ・ [Rmd](materials/02.Rmd) | — |
+| 2 | 10/9 | R・RStudioの導入：インストールと基本操作 | [HTML](materials/02.html) ・ [Rmd](materials/02.Rmd)<br>**[→ インストール手順](materials/02-install.html)** | — |
 | 3 | 10/16 | データの可視化(1)：ggplot2によるグラフ作成の基礎 | [HTML](materials/03.html) ・ [Rmd](materials/03.Rmd) | [グラフで見る](https://aonoa68.github.io/teaching/guide/visualize/) |
 | 4 | 10/23 | データの可視化(2)：グラフのカスタマイズと保存 | [HTML](materials/04.html) ・ [Rmd](materials/04.Rmd) | [グラフで見る](https://aonoa68.github.io/teaching/guide/visualize/) |
 | 5 | 10/30 | データの加工(1)：dplyrによるデータ整形 | [HTML](materials/05.html) ・ [Rmd](materials/05.Rmd) | — |
