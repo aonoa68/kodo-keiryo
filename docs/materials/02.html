@@ -2942,7 +2942,7 @@ border-radius: 0px;
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fl">1e7</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">mean</span>(x))</span></code></pre></div>
 <pre><code>##    ユーザ   システム       経過  
-##      0.021      0.003      0.024</code></pre>
+##      0.020      0.004      0.024</code></pre>
 <p>一瞬で終わります。では，まったく同じ計算を<strong>Rのループで</strong>書いてみます。</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">system.time</span>({</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="dv">0</span></span>
@@ -2950,7 +2950,7 @@ border-radius: 0px;
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  s <span class="sc">/</span> <span class="fu">length</span>(x)</span>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    ユーザ   システム       経過  
-##      0.157      0.001      0.158</code></pre>
+##      0.159      0.001      0.160</code></pre>
 <p>上の2つの「経過」を見比べてください。<strong>同じ計算でも，<code>mean()</code>
 のほうが明確に速く終わっています</strong>（実行環境によって数値は変わります）。</p>
 <p>理由は，<code>mean()</code>
@@ -3647,7 +3647,8 @@ Rさえ動いていれば演習は進められます。インストールがう�
 <li>別のPCを使う場合は <code>install.packages(&quot;tidyverse&quot;)</code>
 から</li>
 </ul></li>
-<li>教科書のR導入にあたる部分に目を通しておく</li>
+<li>教科書の <strong>Chapter
+0</strong>（Rの導入）を読み返しておく（今日の内容の復習になります）</li>
 </ul>
 </div>
 
