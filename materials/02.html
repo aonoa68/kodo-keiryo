@@ -3065,7 +3065,7 @@ int main(void) {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fl">1e7</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">mean</span>(x))</span></code></pre></div>
 <pre><code>##    ユーザ   システム       経過  
-##      0.021      0.004      0.024</code></pre>
+##      0.020      0.003      0.024</code></pre>
 <p>一瞬で終わります。では，まったく同じ計算を<strong>Rのループで</strong>書いてみます。</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">system.time</span>({</span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="dv">0</span></span>
@@ -3073,7 +3073,7 @@ int main(void) {
 <span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  s <span class="sc">/</span> <span class="fu">length</span>(x)</span>
 <span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    ユーザ   システム       経過  
-##      0.159      0.003      0.161</code></pre>
+##      0.158      0.001      0.160</code></pre>
 <p>上の2つの「経過」を見比べてください。<strong>同じ計算でも，<code>mean()</code>
 のほうが明確に速く終わっています</strong>（実行環境によって数値は変わります）。</p>
 <p>理由は，<code>mean()</code>
@@ -3445,8 +3445,9 @@ data（整然データ）</strong> という考え方を指します。</p>
 <li><code>y &lt;- x + 5</code> は，<strong>その時点の</strong>
 <code>x</code> の値で計算した結果を <code>y</code> に入れる操作です。
 あとから <code>x</code> を変えても <code>y</code>
-は自動では変わりません。<strong><code>y</code>
-の行をもう一度実行する</strong>必要があります。</li>
+は自動では変わりません。<strong><code>y &lt;- x + 5</code>
+の行をもう一度実行してから</strong>，<code>y</code>
+を表示してください。</li>
 <li>スクリプトを書き換えただけでは，何も計算されません。<strong>実行して初めて</strong>値が変わります。</li>
 </ul>
 </blockquote>
@@ -3616,8 +3617,15 @@ data（整然データ）</strong> という考え方を指します。</p>
 <p><strong>これはエラーではありません。</strong> <code>Conflicts</code>
 や <code>masks</code>
 は「同じ名前の関数が複数あるので，こちらを優先します」という案内です。読み込みは成功しています。</p>
-<p>先頭に <code>Error</code>
-と書かれている場合だけが本当の失敗です。見分けがつかないときは呼んでください。</p>
+<p>ただし，<strong>警告（<code>Warning</code>）の中には，インストールの失敗を知らせるものもあります。</strong>
+例えばインストールが途中で失敗すると <code>non-zero exit status</code>
+という警告が出ます。「警告ならすべて無視してよい」わけではありません。</p>
+<p>判断の基準はこれです。</p>
+<blockquote>
+<p><strong><code>library(tidyverse)</code>
+が実行できるかどうか。</strong></p>
+</blockquote>
+<p>実行してエラーにならなければ大丈夫です。実行できない場合や，表示の意味が分からない場合は，<strong>メッセージを消さずに</strong>呼んでください。</p>
 <blockquote>
 <p><strong>今日の演習1〜3に tidyverse は使いません。</strong>
 Rさえ動いていれば演習は進められます。インストールがうまくいかなくても，そこで止まらずに先へ進んでください。</p>
@@ -3666,6 +3674,16 @@ Rさえ動いていれば演習は進められます。インストールがう�
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>「全体を実行したのに，結果が表示されない」とき</strong></p>
+<p>選択範囲の実行は，その行が<strong>そのままコンソールに打ち込まれます</strong>。だから自分で打ったときと同じように結果が出ます。
+一方の全体実行（Source）は，ファイルをいったん保存してから読み込む別の経路を通るため，<strong>設定によっては計算結果が自動表示されません。</strong></p>
+<p><strong>すべての結果を確認したいときは，スクリプトを全選択して
+<code>Ctrl + Enter</code>（Macは
+<code>Cmd + Enter</code>）</strong>で実行してください。
+全体実行で特定の値を表示させたい場合は，<code>print(bmi)</code>
+のように明示的に書きます。</p>
+</blockquote>
 <blockquote>
 <p><strong>この授業の標準の進め方</strong></p>
 <p>資料のHTML版を読みながら，コードは自分の <code>.R</code>
@@ -3735,6 +3753,14 @@ Rさえ動いていれば演習は進められます。インストールがう�
 <li><strong><code>install.packages()</code> と <code>library()</code>
 の違い</strong></li>
 </ol>
+<p><strong>回答は，各行の先頭に <code>#</code>
+を付けて，同じスクリプトに書いてください。</strong> <code>#</code>
+のない文章を書くとエラーになります。</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" tabindex="-1"></a><span class="co"># 演習4-1：</span></span>
+<span id="cb70-2"><a href="#cb70-2" tabindex="-1"></a><span class="co"># （ここに説明を書く）</span></span>
+<span id="cb70-3"><a href="#cb70-3" tabindex="-1"></a></span>
+<span id="cb70-4"><a href="#cb70-4" tabindex="-1"></a><span class="co"># 演習4-2：</span></span>
+<span id="cb70-5"><a href="#cb70-5" tabindex="-1"></a><span class="co"># （ここに説明を書く）</span></span></code></pre></div>
 <hr />
 </div>
 </div>
@@ -3761,7 +3787,9 @@ Rさえ動いていれば演習は進められます。インストールがう�
 <ul>
 <li>完了の条件は，<strong>ファイルを先頭から順に実行して，同じ結果が再現できること</strong>です</li>
 <li>RStudioの Environment
-に値が残っていることと，手順がファイルに保存されていることは別です。一度Rを再起動して，先頭から実行し直して確かめてください</li>
+に値が残っていることと，手順がファイルに保存されていることは別です</li>
+<li><strong>Rを再起動し，右上の Environment
+に以前の変数が残っていないことを確認してから</strong>，スクリプトを先頭から実行してください（RStudioには前回の変数を復元する設定があるため，再起動しただけでは空にならないことがあります）</li>
 </ul></li>
 <li><strong>次回使うPCで <code>library(tidyverse)</code>
 が実行できることを確認しておく</strong>
