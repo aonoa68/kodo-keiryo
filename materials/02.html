@@ -2936,7 +2936,7 @@ border-radius: 0px;
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fl">1e7</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">mean</span>(x))</span></code></pre></div>
 <pre><code>##    ユーザ   システム       経過  
-##      0.021      0.004      0.028</code></pre>
+##      0.019      0.001      0.020</code></pre>
 <p>一瞬で終わります。では，まったく同じ計算を<strong>Rのループで</strong>書いてみます。</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">system.time</span>({</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="dv">0</span></span>
@@ -2944,8 +2944,9 @@ border-radius: 0px;
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  s <span class="sc">/</span> <span class="fu">length</span>(x)</span>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    ユーザ   システム       経過  
-##      0.164      0.002      0.323</code></pre>
-<p>こちらは時間がかかります。<strong>同じ計算なのに，書き方でこれだけ違います。</strong></p>
+##      0.156      0.001      0.157</code></pre>
+<p>上の2つの「経過」を見比べてください。<strong>同じ計算でも，<code>mean()</code>
+のほうが明確に速く終わっています</strong>（実行環境によって数値は変わります）。</p>
 <p>理由は，<code>mean()</code>
 の中身がRで書かれていないからです。重い計算は，コンパイル済みのネイティブコード（CやFortran）側で動いています。</p>
 <blockquote>
@@ -2953,7 +2954,17 @@ border-radius: 0px;
 <p>Pythonでも同じで，<code>numpy</code> の処理とPythonの
 <code>for</code> ループは別物です。</p>
 </blockquote>
-<p>ですから「Rは遅い言語だから使わない」という判断は，少なくとも統計解析の用途では当たりません。</p>
+<div id="差が思ったほど大きくないのも面白い点です" class="section level4">
+<h4>差が「思ったほど大きくない」のも面白い点です</h4>
+<p>昔のRなら，このループは何十倍も遅かったはずです。いま差がこの程度に収まっているのは，<strong>R
+3.4以降，バイトコードコンパイラ（JIT）が既定で有効</strong>になり，こうした単純なループが自動的に
+compile されて実行されるようになったからです。</p>
+<p>つまり「Rは遅い」という評判自体が，かなり古い情報を元にしています。</p>
+<p>ですから「Rは遅い言語だから使わない」という判断は，少なくとも統計解析の用途では当たりません。
+<strong>それでも <code>mean()</code>
+を使う理由は，速いことよりも「何をしたいかがそのまま書ける」ことにあります。</strong>
+次の1-3がその話です。</p>
+</div>
 </div>
 <div id="抽象化のレベルが違う" class="section level3">
 <h3>1-3. 抽象化のレベルが違う</h3>
