@@ -127,6 +127,43 @@ aggregate(weight ~ group, data = PlantGrowth, FUN = mean)
 >
 > はっきり違うのは **「統計とデータ分析が，その言語の中心にあるかどうか」** です。
 
+#### 自分でも動かしてみたい人へ（任意）
+
+CもPythonも，**インストールせずブラウザだけ**で試せます。
+
+| 言語 | 試せる場所 |
+|---|---|
+| C | [paiza.IO](https://paiza.io/ja/projects/new?language=c)（日本語・ログイン不要） |
+| C | [JDoodle](https://www.jdoodle.com/c-online-compiler/)（ログイン不要） |
+| Python | [Google Colab](https://colab.research.google.com/)（Googleアカウントがあれば） |
+
+ちなみに **Colab は Linux の上で動いている**ので，Pythonだけの環境ではありません。
+`%%writefile` でファイルに書き出して `!gcc` を呼べば，ColabでもCが動きます。
+
+```
+%%writefile mean.c
+#include <stdio.h>
+int main(void) {
+    double x[] = {85, 72, 91, 68, 79};
+    double sum = 0;
+    for (int i = 0; i < 5; i++) sum += x[i];
+    printf("%f\n", sum / 5);
+    return 0;
+}
+```
+
+```
+!gcc mean.c -o mean && ./mean
+```
+
+同じ計算をRで書くと1行です。
+
+```{r}
+mean(c(85, 72, 91, 68, 79))
+```
+
+> **この授業で手を動かすのはRだけです。** 上は「他の言語がどんなものか見てみたい人」向けの案内で，課題ではありません。
+
 **どれが優れているという話ではありません。** 目的に対して道具を選びます。
 この授業の目的は統計的に人間行動を分析することなので，Rを使います。
 
