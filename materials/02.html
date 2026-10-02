@@ -2857,56 +2857,262 @@ border-radius: 0px;
 <div id="本日の目標" class="section level2">
 <h2>本日の目標</h2>
 <ol style="list-style-type: decimal">
-<li>R と RStudio を自分のPCにインストールできる</li>
+<li><strong>なぜこの授業でRを使うのか</strong>を説明できる</li>
+<li>R と RStudio，パッケージと CRAN の関係を理解する</li>
 <li>RStudio の画面構成を理解し，基本的な操作ができる</li>
 <li>Rでの四則演算・変数への代入・基本的な関数を使える</li>
 </ol>
 <hr />
 </div>
-<div id="インストール手順" class="section level2">
-<h2>1. インストール手順</h2>
-<blockquote>
-<p><strong>詳しい手順書を別に用意しています。</strong>
-PCの種類の確認から，インストール後の動作確認，よくあるトラブルの対処までを
-段階的にまとめた <strong><a href="02-install.html">R・RStudioのインストール手順</a></strong>
-があります。
-作成は本授業のTA・齋藤悠輔さんで，Windows・Macの両方で検証済みです。</p>
-<p><strong>インストールで少しでも迷ったら，まずそちらを見てください。</strong>
-以下は要点だけの簡略版です。</p>
-</blockquote>
-<div id="step-1rのインストール" class="section level3">
-<h3>Step 1：Rのインストール</h3>
-<ol style="list-style-type: decimal">
-<li>CRAN（The Comprehensive R Archive Network）にアクセス
-<ul>
-<li>URL: <code>https://cran.r-project.org/</code></li>
-</ul></li>
-<li>自分のOS（Windows / macOS）に合わせたインストーラをダウンロード</li>
-<li>インストーラを実行し，すべてデフォルト設定でインストール</li>
-</ol>
+<div id="なぜrなのか" class="section level2">
+<h2>1. なぜRなのか</h2>
+<p>前回，RとRStudioをインストールしました。操作に入る前に，<strong>なぜこの授業でRを使うのか</strong>を整理します。
+ここが分かっていると，このあとの作業が「言われたから打つ」ではなく「何をしているか分かって打つ」になります。</p>
+<div id="cpythonr-は何が違うのか" class="section level3">
+<h3>1-1. C・Python・R は何が違うのか</h3>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr>
+<th>観点</th>
+<th>C</th>
+<th>Python</th>
+<th>R</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主な思想</td>
+<td>汎用・計算機に近い</td>
+<td>汎用・可読性</td>
+<td><strong>統計計算とデータ解析</strong></td>
+</tr>
+<tr>
+<td>統計解析</td>
+<td>自分で実装する部分が多い</td>
+<td>ライブラリを使う</td>
+<td><strong>言語環境の中心機能</strong></td>
+</tr>
+<tr>
+<td>データ操作</td>
+<td>低水準</td>
+<td>pandas など</td>
+<td>data.frame / tidyverse</td>
+</tr>
+<tr>
+<td>可視化</td>
+<td>自前または外部ライブラリ</td>
+<td>matplotlib など</td>
+<td><strong>標準機能＋ggplot2</strong></td>
+</tr>
+<tr>
+<td>機械学習</td>
+<td>ライブラリ次第</td>
+<td><strong>非常に強い</strong></td>
+<td>強い</td>
+</tr>
+<tr>
+<td>入口の学びやすさ</td>
+<td>急</td>
+<td>比較的なだらか</td>
+<td>統計用途ならなだらか</td>
+</tr>
+</tbody>
+</table>
+<p><strong>どれが優れているという話ではありません。</strong>
+目的に対して道具を選びます。
+この授業の目的は統計的に人間行動を分析することなので，Rを使います。</p>
 </div>
-<div id="step-2rstudioのインストール" class="section level3">
-<h3>Step 2：RStudioのインストール</h3>
-<ol style="list-style-type: decimal">
-<li>Posit（旧RStudio社）の公式サイトにアクセス
-<ul>
-<li>URL: <code>https://posit.co/download/rstudio-desktop/</code></li>
-</ul></li>
-<li><strong>RStudio Desktop（無料版）</strong> をダウンロード</li>
-<li>インストーラを実行</li>
-</ol>
+<div id="rは遅いは本当か" class="section level3">
+<h3>1-2. 「Rは遅い」は本当か</h3>
+<p>よく「C ＞ Python ＞ R
+の順に速い」と言われます。これは<strong>単純化しすぎです。</strong></p>
+<p>実際に，1000万個の乱数の平均を計算してみます。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fl">1e7</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">mean</span>(x))</span></code></pre></div>
+<pre><code>##    ユーザ   システム       経過  
+##      0.021      0.004      0.028</code></pre>
+<p>一瞬で終わります。では，まったく同じ計算を<strong>Rのループで</strong>書いてみます。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(x)) s <span class="ot">&lt;-</span> s <span class="sc">+</span> x[i]</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  s <span class="sc">/</span> <span class="fu">length</span>(x)</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>})</span></code></pre></div>
+<pre><code>##    ユーザ   システム       経過  
+##      0.164      0.002      0.323</code></pre>
+<p>こちらは時間がかかります。<strong>同じ計算なのに，書き方でこれだけ違います。</strong></p>
+<p>理由は，<code>mean()</code>
+の中身がRで書かれていないからです。重い計算は，コンパイル済みのネイティブコード（CやFortran）側で動いています。</p>
 <blockquote>
-<p><strong>重要</strong>：RとRStudioは別々のソフトです。
-必ずRを先にインストールしてからRStudioをインストールしてください。</p>
+<p><strong>「何の言語で書いたか」と「実際にどこで計算しているか」は別の問題です。</strong></p>
+<p>Pythonでも同じで，<code>numpy</code> の処理とPythonの
+<code>for</code> ループは別物です。</p>
 </blockquote>
+<p>ですから「Rは遅い言語だから使わない」という判断は，少なくとも統計解析の用途では当たりません。</p>
 </div>
-<div id="どうしてもインストールできないときposit-cloud" class="section level3">
-<h3>どうしてもインストールできないとき：Posit Cloud</h3>
-<p>PCの機種や設定の都合で，どうしてもインストールできないことがあります。
-そのときは <strong>Posit Cloud</strong>
-を使ってください。<strong>ブラウザの中でRStudioがそのまま動きます。</strong>
-画面の見た目も操作も，この資料で説明するRStudio
-Desktopとほぼ同じです。</p>
+<div id="抽象化のレベルが違う" class="section level3">
+<h3>1-3. 抽象化のレベルが違う</h3>
+<p>同じ「平均を求める」を書き比べます。Cなら，考え方としてはこうです。</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="dt">double</span> sum <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>    sum <span class="op">+=</span> x<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="dt">double</span> mean <span class="op">=</span> sum <span class="op">/</span> n<span class="op">;</span></span></code></pre></div>
+<p>Rならこうです。</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">mean</span>(x)</span></code></pre></div>
+<p>Cは<strong>計算機が実際に何をしているか</strong>に近い書き方です。
+Rは<strong>「このデータの平均が欲しい」と宣言している</strong>書き方です。</p>
+<p>これは難しい・易しいの差ではなく，<strong>抽象化のレベルの差</strong>です。</p>
+<p>行動計量学で知りたいのは，メモリの中身やループの実装ではありません。たとえば</p>
+<p><span class="math display">\[Y_i = \beta_0 + \beta_1 X_i +
+\epsilon_i\]</span></p>
+<p>の <span class="math inline">\(\beta_1\)</span>
+がどう推定されるか，です。だから</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">lm</span>(y <span class="sc">~</span> x)</span></code></pre></div>
+<p>と書けばよい。Cで最小二乗法を一から実装することには計算機科学としての意味がありますが，<strong>この授業では目的と手段が逆転してしまいます。</strong></p>
+</div>
+<div id="r-と-rstudio-は別のもの" class="section level3">
+<h3>1-4. R と RStudio は別のもの</h3>
+<pre><code>R        言語 ＋ 統計計算環境    … 実際に計算しているのはこちら
+RStudio  Rを操作するためのIDE    … 画面を使いやすくまとめたもの</code></pre>
+<p>前回入れたのは，この2つです。ひとつのソフトではありません。</p>
+<blockquote>
+<p><strong>皆さんが前回入れたRStudioが計算しているわけではありません。計算しているのはRです。</strong></p>
+</blockquote>
+<p>RStudioは，スクリプト・コンソール・グラフ・ファイルを1つの画面にまとめ，全員の作業環境をそろえるために使います。</p>
+</div>
+<div id="パッケージ道具箱cran公式の倉庫" class="section level3">
+<h3>1-5. パッケージ＝道具箱，CRAN＝公式の倉庫</h3>
+<p>Rには後から機能を足せます。その単位が<strong>パッケージ</strong>です。</p>
+<table>
+<thead>
+<tr>
+<th>用語</th>
+<th>たとえると</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>R本体</strong></td>
+<td>作業場＋基本の道具</td>
+</tr>
+<tr>
+<td><strong>パッケージ</strong></td>
+<td>あとから追加できる<strong>道具箱</strong></td>
+</tr>
+<tr>
+<td><strong>関数</strong></td>
+<td>道具箱の中の<strong>個々の道具</strong></td>
+</tr>
+<tr>
+<td><strong>CRAN</strong></td>
+<td>道具箱を集めて配布している<strong>公式の倉庫</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>CRAN</strong>（シーラン）は Comprehensive R Archive Network
+の略です。チェックを通ったRパッケージを配布しているリポジトリで，<code>install.packages()</code>
+は原則ここから持ってきます。</p>
+<blockquote>
+<p>GitHubと似ていますが別物です。GitHubはソースコードを管理・共同開発する場所，CRANは<strong>審査を通ったパッケージを配布する</strong>場所です。</p>
+</blockquote>
+<p>この区別が，最初につまずきやすい <code>install.packages()</code> と
+<code>library()</code> の違いにそのまま対応します。</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr>
+<th>コード</th>
+<th>たとえると</th>
+<th>頻度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>install.packages(&quot;ggplot2&quot;)</code></td>
+<td>倉庫から道具箱を買って作業場に置く</td>
+<td><strong>原則1回だけ</strong></td>
+</tr>
+<tr>
+<td><code>library(ggplot2)</code></td>
+<td>その道具箱を棚から出して開く</td>
+<td><strong>Rを起動するたび</strong></td>
+</tr>
+</tbody>
+</table>
+<p>実際のコードは第6節で扱います。</p>
+</div>
+<div id="tidyverse-とは" class="section level3">
+<h3>1-6. tidyverse とは</h3>
+<p><strong>tidyverse</strong>（タイディバース）は
+<code>tidy</code>（整然とした）＋ <code>universe</code> の造語です。</p>
+<p>ここでの <code>tidy</code> は「きれい」ではなく，<strong>tidy
+data（整然データ）</strong> という考え方を指します。</p>
+<ul>
+<li>1つの変数 → 1列</li>
+<li>1つの観測 → 1行</li>
+<li>1つの値 → 1セル</li>
+</ul>
+<p>という構造です。</p>
+<p>tidyverseは，この考え方を共有するパッケージ群の総称です。</p>
+<table>
+<thead>
+<tr>
+<th>パッケージ</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ggplot2</code></td>
+<td>可視化</td>
+</tr>
+<tr>
+<td><code>dplyr</code></td>
+<td>データの整形・加工</td>
+</tr>
+<tr>
+<td><code>tidyr</code></td>
+<td>データの整列</td>
+</tr>
+<tr>
+<td><code>readr</code></td>
+<td>データの読み込み</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>tidyverse ＝
+データを「整った形」で扱うという共通の思想をもったRの道具箱セット</strong></p>
+</blockquote>
+<hr />
+</div>
+</div>
+<div id="インストールの確認" class="section level2">
+<h2>2. インストールの確認</h2>
+<p>第1回の授業内でRとRStudioを入れました。まず，全員の環境が動くことを確認します。</p>
+<p>RStudioを起動し，<strong>Console</strong> に次を1行ずつ入力して
+<code>Enter</code> を押してください。</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>R.version.string</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code></pre></div>
+<p>バージョン番号が表示され，<code>[1] 2</code>
+と出れば問題ありません。</p>
+<div id="まだ入っていない途中で止まっている場合" class="section level3">
+<h3>まだ入っていない・途中で止まっている場合</h3>
+<p>今日この場で解決します。遠慮なく手を挙げてください。手順書は下記にあります。</p>
+<p><strong>→ <a href="02-install.html">R・RStudioのインストール手順</a></strong>（作成：TA
+齋藤悠輔さん）</p>
+<p>どうしてもインストールできない場合は，ブラウザの中でRStudioが動く
+<strong>Posit Cloud</strong> で授業に参加できます。</p>
 <ol style="list-style-type: decimal">
 <li><a href="https://posit.cloud/" class="uri">https://posit.cloud/</a>
 にアクセス</li>
@@ -2914,17 +3120,14 @@ Desktopとほぼ同じです。</p>
 <li><code>New Project</code> → <code>New RStudio Project</code></li>
 </ol>
 <blockquote>
-<p><strong>注意</strong>：無料プランには1か月に使える計算時間の上限があります。
-「インストールできるまでの避難先」として使ってください。</p>
-<p>この授業の到達目標の1つは「<strong>自力で分析環境を構築できる</strong>」ことなので，
-落ち着いたら改めて自分のPCへのインストールに挑戦しましょう。
-個別に相談に応じます。</p>
+<p>無料プランには1か月あたりの利用時間の上限があります。「インストールできるまでの避難先」として使ってください。
+この授業の到達目標の1つは「<strong>自力で分析環境を構築できる</strong>」ことなので，落ち着いたら改めて挑戦しましょう。個別に相談に応じます。</p>
 </blockquote>
 <hr />
 </div>
 </div>
 <div id="rstudioの画面構成" class="section level2">
-<h2>2. RStudioの画面構成</h2>
+<h2>3. RStudioの画面構成</h2>
 <pre><code>┌──────────────────────────┬──────────────────────┐
 │  ① スクリプトエディタ      │  ② 環境・履歴パネル   │
 │  .R ファイルを書く場所    │  変数・データを確認   │
@@ -2971,26 +3174,26 @@ Desktopとほぼ同じです。</p>
 </div>
 </div>
 <div id="rの基本操作" class="section level2">
-<h2>3. Rの基本操作</h2>
+<h2>4. Rの基本操作</h2>
 <div id="四則演算" class="section level3">
-<h3>3-1. 四則演算</h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># 足し算</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="dv">3</span> <span class="sc">+</span> <span class="dv">5</span></span></code></pre></div>
+<h3>4-1. 四則演算</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># 足し算</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="dv">3</span> <span class="sc">+</span> <span class="dv">5</span></span></code></pre></div>
 <pre><code>## [1] 8</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># 引き算</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="dv">10</span> <span class="sc">-</span> <span class="dv">4</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># 引き算</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="dv">10</span> <span class="sc">-</span> <span class="dv">4</span></span></code></pre></div>
 <pre><code>## [1] 6</code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># 掛け算</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="dv">6</span> <span class="sc">*</span> <span class="dv">7</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># 掛け算</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="dv">6</span> <span class="sc">*</span> <span class="dv">7</span></span></code></pre></div>
 <pre><code>## [1] 42</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># 割り算</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="dv">15</span> <span class="sc">/</span> <span class="dv">4</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># 割り算</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="dv">15</span> <span class="sc">/</span> <span class="dv">4</span></span></code></pre></div>
 <pre><code>## [1] 3.75</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># 累乗</span></span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span><span class="dv">3</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="co"># 累乗</span></span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span><span class="dv">3</span></span></code></pre></div>
 <pre><code>## [1] 8</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># 余り（剰余）</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="dv">17</span> <span class="sc">%%</span> <span class="dv">5</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="co"># 余り（剰余）</span></span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a><span class="dv">17</span> <span class="sc">%%</span> <span class="dv">5</span></span></code></pre></div>
 <pre><code>## [1] 2</code></pre>
 <blockquote>
 <p><code>#</code>
@@ -2999,19 +3202,19 @@ Desktopとほぼ同じです。</p>
 </blockquote>
 </div>
 <div id="変数への代入" class="section level3">
-<h3>3-2. 変数への代入</h3>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># 変数 x に 10 を代入</span></span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co"># 変数の内容を表示</span></span>
-<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>x</span></code></pre></div>
+<h3>4-2. 変数への代入</h3>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="co"># 変数 x に 10 を代入</span></span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a><span class="co"># 変数の内容を表示</span></span>
+<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a>x</span></code></pre></div>
 <pre><code>## [1] 10</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># 変数を使った計算</span></span>
-<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>x <span class="sc">*</span> <span class="dv">2</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="co"># 変数を使った計算</span></span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>x <span class="sc">*</span> <span class="dv">2</span></span></code></pre></div>
 <pre><code>## [1] 20</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co"># 別の変数に代入</span></span>
-<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="dv">5</span></span>
-<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>y</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="co"># 別の変数に代入</span></span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="dv">5</span></span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>y</span></code></pre></div>
 <pre><code>## [1] 15</code></pre>
 <blockquote>
 <p>Rでは <code>&lt;-</code> を代入演算子として使います（<code>=</code>
@@ -3019,80 +3222,80 @@ Desktopとほぼ同じです。</p>
 </blockquote>
 </div>
 <div id="文字列" class="section level3">
-<h3>3-3. 文字列</h3>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="co"># 文字列は &quot; &quot; で囲む</span></span>
-<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>name <span class="ot">&lt;-</span> <span class="st">&quot;小野原&quot;</span></span>
-<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="fu">print</span>(name)</span></code></pre></div>
+<h3>4-3. 文字列</h3>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="co"># 文字列は &quot; &quot; で囲む</span></span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>name <span class="ot">&lt;-</span> <span class="st">&quot;小野原&quot;</span></span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a><span class="fu">print</span>(name)</span></code></pre></div>
 <pre><code>## [1] &quot;小野原&quot;</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="co"># paste() で文字列を連結</span></span>
-<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>greeting <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&quot;こんにちは，&quot;</span>, name, <span class="st">&quot;さん&quot;</span>)</span>
-<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>greeting</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="co"># paste() で文字列を連結</span></span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a>greeting <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&quot;こんにちは，&quot;</span>, name, <span class="st">&quot;さん&quot;</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a>greeting</span></code></pre></div>
 <pre><code>## [1] &quot;こんにちは， 小野原 さん&quot;</code></pre>
 </div>
 <div id="ベクトル数値の列" class="section level3">
-<h3>3-4. ベクトル（数値の列）</h3>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="co"># c() でベクトルを作る</span></span>
-<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">85</span>, <span class="dv">72</span>, <span class="dv">91</span>, <span class="dv">68</span>, <span class="dv">79</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>scores</span></code></pre></div>
+<h3>4-4. ベクトル（数値の列）</h3>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="co"># c() でベクトルを作る</span></span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">85</span>, <span class="dv">72</span>, <span class="dv">91</span>, <span class="dv">68</span>, <span class="dv">79</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a>scores</span></code></pre></div>
 <pre><code>## [1] 85 72 91 68 79</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="co"># ベクトルの要素数</span></span>
-<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="fu">length</span>(scores)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="co"># ベクトルの要素数</span></span>
+<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a><span class="fu">length</span>(scores)</span></code></pre></div>
 <pre><code>## [1] 5</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="co"># ベクトルの合計</span></span>
-<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="fu">sum</span>(scores)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="co"># ベクトルの合計</span></span>
+<span id="cb37-2"><a href="#cb37-2" tabindex="-1"></a><span class="fu">sum</span>(scores)</span></code></pre></div>
 <pre><code>## [1] 395</code></pre>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="co"># ベクトルの平均</span></span>
-<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a><span class="fu">mean</span>(scores)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="co"># ベクトルの平均</span></span>
+<span id="cb39-2"><a href="#cb39-2" tabindex="-1"></a><span class="fu">mean</span>(scores)</span></code></pre></div>
 <pre><code>## [1] 79</code></pre>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="co"># ベクトルの最小値・最大値</span></span>
-<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a><span class="fu">min</span>(scores)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="co"># ベクトルの最小値・最大値</span></span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a><span class="fu">min</span>(scores)</span></code></pre></div>
 <pre><code>## [1] 68</code></pre>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="fu">max</span>(scores)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a><span class="fu">max</span>(scores)</span></code></pre></div>
 <pre><code>## [1] 91</code></pre>
 <hr />
 </div>
 </div>
 <div id="基本的な統計関数" class="section level2">
-<h2>4. 基本的な統計関数</h2>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="co"># データを作成</span></span>
-<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">15</span>, <span class="dv">14</span>, <span class="dv">10</span>, <span class="dv">18</span>, <span class="dv">20</span>, <span class="dv">13</span>, <span class="dv">16</span>, <span class="dv">11</span>, <span class="dv">17</span>)</span>
-<span id="cb36-3"><a href="#cb36-3" tabindex="-1"></a></span>
-<span id="cb36-4"><a href="#cb36-4" tabindex="-1"></a><span class="co"># 基本統計量をまとめて確認</span></span>
-<span id="cb36-5"><a href="#cb36-5" tabindex="-1"></a><span class="fu">summary</span>(data)</span></code></pre></div>
+<h2>5. 基本的な統計関数</h2>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a><span class="co"># データを作成</span></span>
+<span id="cb45-2"><a href="#cb45-2" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">15</span>, <span class="dv">14</span>, <span class="dv">10</span>, <span class="dv">18</span>, <span class="dv">20</span>, <span class="dv">13</span>, <span class="dv">16</span>, <span class="dv">11</span>, <span class="dv">17</span>)</span>
+<span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" tabindex="-1"></a><span class="co"># 基本統計量をまとめて確認</span></span>
+<span id="cb45-5"><a href="#cb45-5" tabindex="-1"></a><span class="fu">summary</span>(data)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   10.00   12.25   14.50   14.60   16.75   20.00</code></pre>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="co"># 個別に計算</span></span>
-<span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a><span class="fu">mean</span>(data)     <span class="co"># 平均</span></span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a><span class="co"># 個別に計算</span></span>
+<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a><span class="fu">mean</span>(data)     <span class="co"># 平均</span></span></code></pre></div>
 <pre><code>## [1] 14.6</code></pre>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="fu">median</span>(data)   <span class="co"># 中央値</span></span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a><span class="fu">median</span>(data)   <span class="co"># 中央値</span></span></code></pre></div>
 <pre><code>## [1] 14.5</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="fu">sd</span>(data)       <span class="co"># 標準偏差</span></span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" tabindex="-1"></a><span class="fu">sd</span>(data)       <span class="co"># 標準偏差</span></span></code></pre></div>
 <pre><code>## [1] 3.204164</code></pre>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a><span class="fu">var</span>(data)      <span class="co"># 分散</span></span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" tabindex="-1"></a><span class="fu">var</span>(data)      <span class="co"># 分散</span></span></code></pre></div>
 <pre><code>## [1] 10.26667</code></pre>
 <hr />
 </div>
 <div id="パッケージのインストールと読み込み" class="section level2">
-<h2>5. パッケージのインストールと読み込み</h2>
+<h2>6. パッケージのインストールと読み込み</h2>
 <p>パッケージは，Rの機能を拡張するためのツールセットです。</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a><span class="co"># パッケージのインストール（最初の1回だけ）</span></span>
-<span id="cb46-2"><a href="#cb46-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
-<span id="cb46-3"><a href="#cb46-3" tabindex="-1"></a></span>
-<span id="cb46-4"><a href="#cb46-4" tabindex="-1"></a><span class="co"># パッケージの読み込み（毎回必要）</span></span>
-<span id="cb46-5"><a href="#cb46-5" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" tabindex="-1"></a><span class="co"># パッケージのインストール（最初の1回だけ）</span></span>
+<span id="cb55-2"><a href="#cb55-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" tabindex="-1"></a></span>
+<span id="cb55-4"><a href="#cb55-4" tabindex="-1"></a><span class="co"># パッケージの読み込み（毎回必要）</span></span>
+<span id="cb55-5"><a href="#cb55-5" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
 <blockquote>
 <p><strong>インストール</strong>（<code>install.packages()</code>）は1回だけでOK。
 <strong>読み込み</strong>（<code>library()</code>）はRを起動するたびに必要です。</p>
 </blockquote>
 <div id="この授業で使う主なパッケージ" class="section level3">
 <h3>この授業で使う主なパッケージ</h3>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a><span class="co"># 今日インストールしておく</span></span>
-<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)   <span class="co"># ggplot2, dplyr などをまとめてインストール</span></span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" tabindex="-1"></a><span class="co"># 今日インストールしておく</span></span>
+<span id="cb56-2"><a href="#cb56-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)   <span class="co"># ggplot2, dplyr などをまとめてインストール</span></span></code></pre></div>
 <hr />
 </div>
 </div>
 <div id="スクリプトの保存と実行" class="section level2">
-<h2>6. スクリプトの保存と実行</h2>
+<h2>7. スクリプトの保存と実行</h2>
 <div id="スクリプトの作成保存" class="section level3">
 <h3>スクリプトの作成・保存</h3>
 <ol style="list-style-type: decimal">
@@ -3135,40 +3338,46 @@ Desktopとほぼ同じです。</p>
 <div id="演習1電卓として使ってみる" class="section level3">
 <h3>演習1：電卓として使ってみる</h3>
 <p>コンソールに以下を入力して実行してみましょう。</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a><span class="co"># 問1：100を7で割った余りを求めなさい</span></span>
-<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a><span class="co"># 問2：2の10乗を求めなさい</span></span>
-<span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a><span class="co"># 問3：(3 + 4) * (10 - 6) を計算しなさい</span></span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a><span class="co"># 問1：100を7で割った余りを求めなさい</span></span>
+<span id="cb57-2"><a href="#cb57-2" tabindex="-1"></a><span class="co"># 問2：2の10乗を求めなさい</span></span>
+<span id="cb57-3"><a href="#cb57-3" tabindex="-1"></a><span class="co"># 問3：(3 + 4) * (10 - 6) を計算しなさい</span></span></code></pre></div>
 </div>
 <div id="演習2変数を使った計算" class="section level3">
 <h3>演習2：変数を使った計算</h3>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a><span class="co"># 自分の身長（cm）と体重（kg）を変数に入れ，BMIを計算してください</span></span>
-<span id="cb49-2"><a href="#cb49-2" tabindex="-1"></a><span class="co"># BMI = 体重 / (身長 [m])^2</span></span>
-<span id="cb49-3"><a href="#cb49-3" tabindex="-1"></a></span>
-<span id="cb49-4"><a href="#cb49-4" tabindex="-1"></a>height_cm <span class="ot">&lt;-</span> ___  <span class="co"># 身長（cm）を入力</span></span>
-<span id="cb49-5"><a href="#cb49-5" tabindex="-1"></a>weight_kg <span class="ot">&lt;-</span> ___  <span class="co"># 体重（kg）を入力</span></span>
-<span id="cb49-6"><a href="#cb49-6" tabindex="-1"></a></span>
-<span id="cb49-7"><a href="#cb49-7" tabindex="-1"></a>height_m <span class="ot">&lt;-</span> height_cm <span class="sc">/</span> <span class="dv">100</span></span>
-<span id="cb49-8"><a href="#cb49-8" tabindex="-1"></a>bmi <span class="ot">&lt;-</span> weight_kg <span class="sc">/</span> height_m<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb49-9"><a href="#cb49-9" tabindex="-1"></a>bmi</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a><span class="co"># 自分の身長（cm）と体重（kg）を変数に入れ，BMIを計算してください</span></span>
+<span id="cb58-2"><a href="#cb58-2" tabindex="-1"></a><span class="co"># BMI = 体重 / (身長 [m])^2</span></span>
+<span id="cb58-3"><a href="#cb58-3" tabindex="-1"></a></span>
+<span id="cb58-4"><a href="#cb58-4" tabindex="-1"></a>height_cm <span class="ot">&lt;-</span> ___  <span class="co"># 身長（cm）を入力</span></span>
+<span id="cb58-5"><a href="#cb58-5" tabindex="-1"></a>weight_kg <span class="ot">&lt;-</span> ___  <span class="co"># 体重（kg）を入力</span></span>
+<span id="cb58-6"><a href="#cb58-6" tabindex="-1"></a></span>
+<span id="cb58-7"><a href="#cb58-7" tabindex="-1"></a>height_m <span class="ot">&lt;-</span> height_cm <span class="sc">/</span> <span class="dv">100</span></span>
+<span id="cb58-8"><a href="#cb58-8" tabindex="-1"></a>bmi <span class="ot">&lt;-</span> weight_kg <span class="sc">/</span> height_m<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb58-9"><a href="#cb58-9" tabindex="-1"></a>bmi</span></code></pre></div>
 </div>
 <div id="演習3ベクトルと基本統計" class="section level3">
 <h3>演習3：ベクトルと基本統計</h3>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a><span class="co"># あなたのクラスの小テストの点数（架空データ）</span></span>
-<span id="cb50-2"><a href="#cb50-2" tabindex="-1"></a>quiz_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">65</span>, <span class="dv">78</span>, <span class="dv">82</span>, <span class="dv">55</span>, <span class="dv">90</span>, <span class="dv">71</span>, <span class="dv">68</span>, <span class="dv">85</span>, <span class="dv">77</span>, <span class="dv">60</span>)</span>
-<span id="cb50-3"><a href="#cb50-3" tabindex="-1"></a></span>
-<span id="cb50-4"><a href="#cb50-4" tabindex="-1"></a><span class="co"># 以下を計算してください</span></span>
-<span id="cb50-5"><a href="#cb50-5" tabindex="-1"></a><span class="co"># 1. 平均点</span></span>
-<span id="cb50-6"><a href="#cb50-6" tabindex="-1"></a><span class="co"># 2. 最高点と最低点</span></span>
-<span id="cb50-7"><a href="#cb50-7" tabindex="-1"></a><span class="co"># 3. 標準偏差</span></span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a><span class="co"># あなたのクラスの小テストの点数（架空データ）</span></span>
+<span id="cb59-2"><a href="#cb59-2" tabindex="-1"></a>quiz_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">65</span>, <span class="dv">78</span>, <span class="dv">82</span>, <span class="dv">55</span>, <span class="dv">90</span>, <span class="dv">71</span>, <span class="dv">68</span>, <span class="dv">85</span>, <span class="dv">77</span>, <span class="dv">60</span>)</span>
+<span id="cb59-3"><a href="#cb59-3" tabindex="-1"></a></span>
+<span id="cb59-4"><a href="#cb59-4" tabindex="-1"></a><span class="co"># 以下を計算してください</span></span>
+<span id="cb59-5"><a href="#cb59-5" tabindex="-1"></a><span class="co"># 1. 平均点</span></span>
+<span id="cb59-6"><a href="#cb59-6" tabindex="-1"></a><span class="co"># 2. 最高点と最低点</span></span>
+<span id="cb59-7"><a href="#cb59-7" tabindex="-1"></a><span class="co"># 3. 標準偏差</span></span></code></pre></div>
 <hr />
 </div>
 </div>
 <div id="本日のまとめ" class="section level2">
 <h2>本日のまとめ</h2>
 <ul>
-<li>R と RStudio をインストールし，基本的な画面構成を理解した</li>
+<li><strong>なぜRなのか</strong>：目的に対して道具を選ぶ。統計解析のための抽象度をもつ言語としてRを使う</li>
+<li>「Rは遅い」は単純化しすぎ。重い計算はコンパイル済みのコードで動いている</li>
+<li><strong>R は言語＋計算環境，RStudio
+はそれを操作するIDE</strong>。計算しているのはR</li>
+<li><strong>パッケージ＝道具箱，CRAN＝公式の倉庫</strong>。<code>install.packages()</code>
+は原則1回，<code>library()</code> は起動ごと</li>
+<li><strong>tidyverse</strong> ＝
+整然データの思想を共有する道具箱のセット</li>
 <li>四則演算，変数への代入，基本的な関数の使い方を習得した</li>
-<li>パッケージのインストールと読み込み方法を確認した</li>
 </ul>
 <hr />
 </div>
