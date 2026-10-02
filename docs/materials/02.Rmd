@@ -53,6 +53,80 @@ if (requireNamespace("ragg", quietly = TRUE)) {
 | 機械学習 | ライブラリ次第 | **非常に強い** | 強い |
 | 入口の学びやすさ | 急 | 比較的なだらか | 統計用途ならなだらか |
 
+#### 同じ課題を3つの言語で書いてみる
+
+表だけでは伝わりにくいので，具体的に比べます。課題はこれです。
+
+> **CSVファイルを読み込み，グループごとの平均を求め，棒グラフにする。**
+
+行動科学でデータを扱うなら，ほぼ毎回やることです。
+
+**C の場合**
+
+```c
+FILE *fp = fopen("data.csv", "r");
+char line[256];
+double sum[3] = {0, 0, 0};
+int    cnt[3] = {0, 0, 0};
+
+while (fgets(line, sizeof(line), fp)) {
+    char  *g = strtok(line, ",");      /* 文字列を自分で切り分ける */
+    double v = atof(strtok(NULL, ","));
+    int    i = group_to_index(g);      /* この関数も自分で書く     */
+    sum[i] += v;
+    cnt[i] += 1;
+}
+fclose(fp);
+
+for (int i = 0; i < 3; i++)
+    printf("%d: %f\n", i, sum[i] / cnt[i]);
+
+/* グラフは標準機能にないので，別のライブラリが必要 */
+```
+
+**Python の場合**
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("data.csv")
+means = df.groupby("group")["value"].mean()
+means.plot(kind="bar")
+plt.show()
+```
+
+**R の場合**
+
+```{r, eval=FALSE}
+library(tidyverse)
+
+read_csv("data.csv") |>
+  group_by(group) |>
+  summarise(mean = mean(value)) |>
+  ggplot(aes(x = group, y = mean)) +
+  geom_col()
+```
+
+#### この3つを並べて見えること
+
+- **C** は「ファイルを1行ずつ読む」「文字列を区切る」「合計と個数を自分で管理する」ところから書きます。**平均という概念が言語のどこにもない**ので，自分で作ることになります。グラフも標準機能にはありません。
+- **Python** は `pandas` と `matplotlib` という2つのライブラリを読み込めば数行です。ライブラリが優秀です。
+- **R** も数行です。ただし1つ違うのは，**データフレーム・CSVの読み込み・集計が，パッケージなしの標準機能にも入っている**ことです。
+
+実際，パッケージを1つも使わずにこう書けます。
+
+```{r}
+# PlantGrowth は R に最初から入っているデータ
+aggregate(weight ~ group, data = PlantGrowth, FUN = mean)
+```
+
+> **誤解しないでください。Cが劣っているわけではありません。**
+> CはOSや組み込み機器のための言語で，統計をやる道具として作られていないだけです。
+> PythonとRの差も，この例ではほとんどありません。
+>
+> はっきり違うのは **「統計とデータ分析が，その言語の中心にあるかどうか」** です。
+
 **どれが優れているという話ではありません。** 目的に対して道具を選びます。
 この授業の目的は統計的に人間行動を分析することなので，Rを使います。
 
