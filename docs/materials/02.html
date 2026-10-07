@@ -3065,7 +3065,7 @@ int main(void) {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fl">1e7</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">mean</span>(x))</span></code></pre></div>
 <pre><code>##    ユーザ   システム       経過  
-##      0.020      0.004      0.024</code></pre>
+##      0.020      0.004      0.025</code></pre>
 <p>一瞬で終わります。では，まったく同じ計算を<strong>Rのループで</strong>書いてみます。</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">system.time</span>({</span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="dv">0</span></span>
@@ -3073,7 +3073,7 @@ int main(void) {
 <span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  s <span class="sc">/</span> <span class="fu">length</span>(x)</span>
 <span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    ユーザ   システム       経過  
-##      0.153      0.000      0.155</code></pre>
+##      0.154      0.001      0.156</code></pre>
 <p>上の2つの「経過」を見比べてください。<strong>同じ計算でも，<code>mean()</code>
 のほうが明確に速く終わっています</strong>（実行環境によって数値は変わります）。</p>
 <p>理由は，<code>mean()</code>
@@ -3487,22 +3487,25 @@ data（整然データ）</strong> という考え方を指します。</p>
 <div id="rの命令の構造" class="section level3">
 <h3>4-5. Rの命令の構造</h3>
 <p>Rの命令は，いくつかの部品でできています。<code>average &lt;- mean(scores)</code>
-を分解してみます。</p>
-<pre class="text"><code>  average  &lt;-  mean( scores )
-     │      │    │      │
-     │      │    │      └─ 引数（ひきすう）：処理したいデータ
-     │      │    └──────── 関数名：何をするか
-     │      └───────────── 代入：右の結果を左の名前に入れる
-     └──────────────────── オブジェクト（変数）：結果につける名前</code></pre>
-<p>この形を覚えてしまえば，関数が <code>mean</code> から <code>sd</code>
-や <code>summary</code> に変わっても， データが <code>scores</code>
-から別のものに変わっても，<strong>読み方は同じ</strong>です。</p>
+を分解してみます。
+Pythonを触ったことがある人のために，同じ処理をPythonで書いたものを並べます。</p>
+<pre class="text"><code>R        average  &lt;-  mean( scores )
+Python   average  =   mean( scores )
+            │     │     │      │
+            │     │     │      └─ 引数（ひきすう）：処理したいデータ
+            │     │     └──────── 関数名：何をするか
+            │     └────────────── 代入：右の結果を左の名前に入れる
+            └──────────────────── オブジェクト（変数）：結果につける名前</code></pre>
+<p><strong>部品の並びも役割も，Pythonとまったく同じ</strong>です。違うのは代入の記号が
+<code>&lt;-</code> か <code>=</code> かだけ。 「<code>=</code> が
+<code>&lt;-</code> に変わっただけ」と考えて構いません。</p>
 <table>
 <thead>
 <tr>
 <th>部分</th>
 <th>呼び方</th>
 <th>意味</th>
+<th>Pythonでは</th>
 </tr>
 </thead>
 <tbody>
@@ -3510,31 +3513,55 @@ data（整然データ）</strong> という考え方を指します。</p>
 <td><code>average</code></td>
 <td>オブジェクト（変数）</td>
 <td>結果につける名前</td>
+<td>同じ</td>
 </tr>
 <tr>
 <td><code>&lt;-</code></td>
 <td>代入演算子</td>
 <td>右の結果を左の名前に入れる</td>
+<td><code>=</code></td>
 </tr>
 <tr>
 <td><code>mean</code></td>
 <td>関数名</td>
 <td>何をするかの名前</td>
+<td>同じ（下記参照）</td>
 </tr>
 <tr>
 <td><code>scores</code></td>
 <td>引数（ひきすう）</td>
 <td>処理したいデータ</td>
+<td>同じ</td>
 </tr>
 <tr>
 <td><code>79</code></td>
 <td>返り値</td>
 <td>返ってくる結果</td>
+<td>同じ</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" tabindex="-1"></a>average <span class="ot">&lt;-</span> <span class="fu">mean</span>(scores)</span>
-<span id="cb54-2"><a href="#cb54-2" tabindex="-1"></a>average</span></code></pre></div>
+<p>この形を覚えてしまえば，関数が <code>mean</code> から <code>sd</code>
+や <code>summary</code> に変わっても， データが <code>scores</code>
+から別のものに変わっても，<strong>読み方は同じ</strong>です。</p>
+<blockquote>
+<p><strong>なぜ <code>=</code> ではなく <code>&lt;-</code>
+なのか</strong></p>
+<p>Rでも <code>average = mean(scores)</code> と書けば動きます。それでも
+<code>&lt;-</code> を使うのは， Rでは <code>=</code>
+を<strong>関数の引数に名前をつける</strong>ときに使うからです。</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" tabindex="-1"></a><span class="fu">mean</span>(scores, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)   <span class="co"># この = は代入ではなく，引数の指定</span></span></code></pre></div>
+<p>記号を分けておくと，代入なのか引数の指定なのかが一目で分かります。</p>
+</blockquote>
+<blockquote>
+<p><strong>「最初から使えるか」は違います</strong></p>
+<p>Pythonで <code>mean()</code> を使うには
+<code>import statistics</code> や <code>import numpy</code> が要ります。
+Rは <code>mean()</code> も <code>sd()</code>
+も最初から使えます。1-1で見た「統計がR本体に入っている」の一例です。</p>
+</blockquote>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" tabindex="-1"></a>average <span class="ot">&lt;-</span> <span class="fu">mean</span>(scores)</span>
+<span id="cb55-2"><a href="#cb55-2" tabindex="-1"></a>average</span></code></pre></div>
 <pre><code>## [1] 79</code></pre>
 <blockquote>
 <p><strong>代入しない場合との違い</strong></p>
@@ -3552,21 +3579,21 @@ data（整然データ）</strong> という考え方を指します。</p>
 </div>
 <div id="基本的な統計関数" class="section level2">
 <h2>5. 基本的な統計関数</h2>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" tabindex="-1"></a><span class="co"># データを作成</span></span>
-<span id="cb56-2"><a href="#cb56-2" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">15</span>, <span class="dv">14</span>, <span class="dv">10</span>, <span class="dv">18</span>, <span class="dv">20</span>, <span class="dv">13</span>, <span class="dv">16</span>, <span class="dv">11</span>, <span class="dv">17</span>)</span>
-<span id="cb56-3"><a href="#cb56-3" tabindex="-1"></a></span>
-<span id="cb56-4"><a href="#cb56-4" tabindex="-1"></a><span class="co"># 基本統計量をまとめて確認</span></span>
-<span id="cb56-5"><a href="#cb56-5" tabindex="-1"></a><span class="fu">summary</span>(data)</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a><span class="co"># データを作成</span></span>
+<span id="cb57-2"><a href="#cb57-2" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">15</span>, <span class="dv">14</span>, <span class="dv">10</span>, <span class="dv">18</span>, <span class="dv">20</span>, <span class="dv">13</span>, <span class="dv">16</span>, <span class="dv">11</span>, <span class="dv">17</span>)</span>
+<span id="cb57-3"><a href="#cb57-3" tabindex="-1"></a></span>
+<span id="cb57-4"><a href="#cb57-4" tabindex="-1"></a><span class="co"># 基本統計量をまとめて確認</span></span>
+<span id="cb57-5"><a href="#cb57-5" tabindex="-1"></a><span class="fu">summary</span>(data)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   10.00   12.25   14.50   14.60   16.75   20.00</code></pre>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a><span class="co"># 個別に計算</span></span>
-<span id="cb58-2"><a href="#cb58-2" tabindex="-1"></a><span class="fu">mean</span>(data)     <span class="co"># 平均</span></span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a><span class="co"># 個別に計算</span></span>
+<span id="cb59-2"><a href="#cb59-2" tabindex="-1"></a><span class="fu">mean</span>(data)     <span class="co"># 平均</span></span></code></pre></div>
 <pre><code>## [1] 14.6</code></pre>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a><span class="fu">median</span>(data)   <span class="co"># 中央値</span></span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" tabindex="-1"></a><span class="fu">median</span>(data)   <span class="co"># 中央値</span></span></code></pre></div>
 <pre><code>## [1] 14.5</code></pre>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a><span class="fu">sd</span>(data)       <span class="co"># 標準偏差</span></span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" tabindex="-1"></a><span class="fu">sd</span>(data)       <span class="co"># 標準偏差</span></span></code></pre></div>
 <pre><code>## [1] 3.204164</code></pre>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" tabindex="-1"></a><span class="fu">var</span>(data)      <span class="co"># 分散</span></span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" tabindex="-1"></a><span class="fu">var</span>(data)      <span class="co"># 分散</span></span></code></pre></div>
 <pre><code>## [1] 10.26667</code></pre>
 <blockquote>
 <p><strong>分母に注意してください。</strong></p>
@@ -3622,11 +3649,11 @@ data（整然データ）</strong> という考え方を指します。</p>
 <div id="パッケージのインストールと読み込み" class="section level2">
 <h2>6. パッケージのインストールと読み込み</h2>
 <p>パッケージは，Rの機能を拡張するためのツールセットです。</p>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" tabindex="-1"></a><span class="co"># パッケージのインストール（最初の1回だけ）</span></span>
-<span id="cb66-2"><a href="#cb66-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
-<span id="cb66-3"><a href="#cb66-3" tabindex="-1"></a></span>
-<span id="cb66-4"><a href="#cb66-4" tabindex="-1"></a><span class="co"># パッケージの読み込み（毎回必要）</span></span>
-<span id="cb66-5"><a href="#cb66-5" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" tabindex="-1"></a><span class="co"># パッケージのインストール（最初の1回だけ）</span></span>
+<span id="cb67-2"><a href="#cb67-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
+<span id="cb67-3"><a href="#cb67-3" tabindex="-1"></a></span>
+<span id="cb67-4"><a href="#cb67-4" tabindex="-1"></a><span class="co"># パッケージの読み込み（毎回必要）</span></span>
+<span id="cb67-5"><a href="#cb67-5" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
 <blockquote>
 <p><strong>インストール</strong>（<code>install.packages()</code>）は，そのPCで1回だけでOK。
 <strong>読み込み</strong>（<code>library()</code>）はRを起動するたびに必要です。</p>
@@ -3725,13 +3752,13 @@ Rさえ動いていれば演習は進められます。インストールがう�
 <h3>演習1：電卓として使ってみる</h3>
 <p>3節で作ったスクリプトに書いて実行しましょう。</p>
 <p><strong>下の3行はコメントなので，そのまま実行しても何も起こりません。各問題の下に，自分で計算式を書いてください。</strong></p>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" tabindex="-1"></a><span class="co"># 問1：100を7で割った余りを求めなさい</span></span>
-<span id="cb68-2"><a href="#cb68-2" tabindex="-1"></a></span>
-<span id="cb68-3"><a href="#cb68-3" tabindex="-1"></a></span>
-<span id="cb68-4"><a href="#cb68-4" tabindex="-1"></a><span class="co"># 問2：2の10乗を求めなさい</span></span>
-<span id="cb68-5"><a href="#cb68-5" tabindex="-1"></a></span>
-<span id="cb68-6"><a href="#cb68-6" tabindex="-1"></a></span>
-<span id="cb68-7"><a href="#cb68-7" tabindex="-1"></a><span class="co"># 問3：(3 + 4) * (10 - 6) を計算しなさい</span></span></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" tabindex="-1"></a><span class="co"># 問1：100を7で割った余りを求めなさい</span></span>
+<span id="cb69-2"><a href="#cb69-2" tabindex="-1"></a></span>
+<span id="cb69-3"><a href="#cb69-3" tabindex="-1"></a></span>
+<span id="cb69-4"><a href="#cb69-4" tabindex="-1"></a><span class="co"># 問2：2の10乗を求めなさい</span></span>
+<span id="cb69-5"><a href="#cb69-5" tabindex="-1"></a></span>
+<span id="cb69-6"><a href="#cb69-6" tabindex="-1"></a></span>
+<span id="cb69-7"><a href="#cb69-7" tabindex="-1"></a><span class="co"># 問3：(3 + 4) * (10 - 6) を計算しなさい</span></span></code></pre></div>
 </div>
 <div id="演習2変数を使った計算" class="section level3">
 <h3>演習2：変数を使った計算</h3>
@@ -3740,13 +3767,13 @@ Rさえ動いていれば演習は進められます。インストールがう�
 は数値を入れるための空欄です。そのまま実行するとエラーになります。</strong></p>
 <p><span class="math display">\[\text{BMI} =
 \frac{\text{体重(kg)}}{\left(\text{身長(m)}\right)^2}\]</span></p>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" tabindex="-1"></a><span class="co"># 架空の人物A：身長 160 cm，体重 60 kg</span></span>
-<span id="cb69-2"><a href="#cb69-2" tabindex="-1"></a>height_cm <span class="ot">&lt;-</span> ___   <span class="co"># 160 を入れる</span></span>
-<span id="cb69-3"><a href="#cb69-3" tabindex="-1"></a>weight_kg <span class="ot">&lt;-</span> ___   <span class="co"># 60 を入れる</span></span>
-<span id="cb69-4"><a href="#cb69-4" tabindex="-1"></a></span>
-<span id="cb69-5"><a href="#cb69-5" tabindex="-1"></a>height_m <span class="ot">&lt;-</span> height_cm <span class="sc">/</span> <span class="dv">100</span></span>
-<span id="cb69-6"><a href="#cb69-6" tabindex="-1"></a>bmi <span class="ot">&lt;-</span> weight_kg <span class="sc">/</span> height_m<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb69-7"><a href="#cb69-7" tabindex="-1"></a>bmi</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" tabindex="-1"></a><span class="co"># 架空の人物A：身長 160 cm，体重 60 kg</span></span>
+<span id="cb70-2"><a href="#cb70-2" tabindex="-1"></a>height_cm <span class="ot">&lt;-</span> ___   <span class="co"># 160 を入れる</span></span>
+<span id="cb70-3"><a href="#cb70-3" tabindex="-1"></a>weight_kg <span class="ot">&lt;-</span> ___   <span class="co"># 60 を入れる</span></span>
+<span id="cb70-4"><a href="#cb70-4" tabindex="-1"></a></span>
+<span id="cb70-5"><a href="#cb70-5" tabindex="-1"></a>height_m <span class="ot">&lt;-</span> height_cm <span class="sc">/</span> <span class="dv">100</span></span>
+<span id="cb70-6"><a href="#cb70-6" tabindex="-1"></a>bmi <span class="ot">&lt;-</span> weight_kg <span class="sc">/</span> height_m<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb70-7"><a href="#cb70-7" tabindex="-1"></a>bmi</span></code></pre></div>
 <p><strong>追加問題</strong>：体重だけを 65 kg
 に変えて，BMIを計算し直してください。</p>
 <blockquote>
@@ -3757,13 +3784,13 @@ Rさえ動いていれば演習は進められます。インストールがう�
 </div>
 <div id="演習3ベクトルと基本統計" class="section level3">
 <h3>演習3：ベクトルと基本統計</h3>
-<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" tabindex="-1"></a><span class="co"># ある授業の小テストの点数（架空データ）</span></span>
-<span id="cb70-2"><a href="#cb70-2" tabindex="-1"></a>quiz_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">65</span>, <span class="dv">78</span>, <span class="dv">82</span>, <span class="dv">55</span>, <span class="dv">90</span>, <span class="dv">71</span>, <span class="dv">68</span>, <span class="dv">85</span>, <span class="dv">77</span>, <span class="dv">60</span>)</span>
-<span id="cb70-3"><a href="#cb70-3" tabindex="-1"></a></span>
-<span id="cb70-4"><a href="#cb70-4" tabindex="-1"></a><span class="co"># 以下を計算してください</span></span>
-<span id="cb70-5"><a href="#cb70-5" tabindex="-1"></a><span class="co"># 1. 平均点            → mean()</span></span>
-<span id="cb70-6"><a href="#cb70-6" tabindex="-1"></a><span class="co"># 2. 最高点と最低点     → max(), min()</span></span>
-<span id="cb70-7"><a href="#cb70-7" tabindex="-1"></a><span class="co"># 3. 標準偏差          → sd() を使うこと</span></span></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" tabindex="-1"></a><span class="co"># ある授業の小テストの点数（架空データ）</span></span>
+<span id="cb71-2"><a href="#cb71-2" tabindex="-1"></a>quiz_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">65</span>, <span class="dv">78</span>, <span class="dv">82</span>, <span class="dv">55</span>, <span class="dv">90</span>, <span class="dv">71</span>, <span class="dv">68</span>, <span class="dv">85</span>, <span class="dv">77</span>, <span class="dv">60</span>)</span>
+<span id="cb71-3"><a href="#cb71-3" tabindex="-1"></a></span>
+<span id="cb71-4"><a href="#cb71-4" tabindex="-1"></a><span class="co"># 以下を計算してください</span></span>
+<span id="cb71-5"><a href="#cb71-5" tabindex="-1"></a><span class="co"># 1. 平均点            → mean()</span></span>
+<span id="cb71-6"><a href="#cb71-6" tabindex="-1"></a><span class="co"># 2. 最高点と最低点     → max(), min()</span></span>
+<span id="cb71-7"><a href="#cb71-7" tabindex="-1"></a><span class="co"># 3. 標準偏差          → sd() を使うこと</span></span></code></pre></div>
 <blockquote>
 <p>標準偏差は <strong><code>sd()</code></strong>
 で求めてください（分母は <span class="math inline">\(n-1\)</span>）。
@@ -3782,11 +3809,11 @@ Rさえ動いていれば演習は進められます。インストールがう�
 <p><strong>回答は，各行の先頭に <code>#</code>
 を付けて，同じスクリプトに書いてください。</strong> <code>#</code>
 のない文章を書くとエラーになります。</p>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" tabindex="-1"></a><span class="co"># 演習4-1：</span></span>
-<span id="cb71-2"><a href="#cb71-2" tabindex="-1"></a><span class="co"># （ここに説明を書く）</span></span>
-<span id="cb71-3"><a href="#cb71-3" tabindex="-1"></a></span>
-<span id="cb71-4"><a href="#cb71-4" tabindex="-1"></a><span class="co"># 演習4-2：</span></span>
-<span id="cb71-5"><a href="#cb71-5" tabindex="-1"></a><span class="co"># （ここに説明を書く）</span></span></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" tabindex="-1"></a><span class="co"># 演習4-1：</span></span>
+<span id="cb72-2"><a href="#cb72-2" tabindex="-1"></a><span class="co"># （ここに説明を書く）</span></span>
+<span id="cb72-3"><a href="#cb72-3" tabindex="-1"></a></span>
+<span id="cb72-4"><a href="#cb72-4" tabindex="-1"></a><span class="co"># 演習4-2：</span></span>
+<span id="cb72-5"><a href="#cb72-5" tabindex="-1"></a><span class="co"># （ここに説明を書く）</span></span></code></pre></div>
 <hr />
 </div>
 </div>
