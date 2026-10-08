@@ -184,18 +184,71 @@ msleep |>
 
 ## 6. 実際のCSVファイルの読み込み
 
+ここまではRに最初から入っているデータを使ってきました。
+自分で集めたデータを読み込むときは，次のように書きます。
+
 ```{r, eval=FALSE}
-# CSVファイルの読み込み（readrパッケージ，tidyverseに含まれる）
+# CSVファイルの読み込み（readr パッケージ，tidyverse に含まれる）
 my_data <- read_csv("data/my_data.csv")
-
-# 文字コードを指定する場合（日本語データ）
-my_data <- read_csv("data/my_data.csv", locale = locale(encoding = "UTF-8"))
-
-# Excelファイルを読む場合（readxlパッケージが必要）
-# install.packages("readxl")
-library(readxl)
-my_data <- read_excel("data/my_data.xlsx")
 ```
+
+### 日本語が化けるとき ―― 文字コードの問題
+
+`read_csv()` は **UTF-8** という文字コードを前提にしています。
+ところが **Windows版のExcelで「CSV（コンマ区切り）」として保存すると，多くの場合
+Shift_JIS（CP932）になります。** この食い違いが起きると，こうなります。
+
+```text
+> my_data
+  \x92n\x88\xe6 \x90l\x90\x94
+1 \x93\x8c\x8b\x9e           10
+2       \x8eD\x96y           20
+```
+
+本来は `地域` `人数` `東京` `札幌` と表示されるはずのところが，`\x` で始まる記号の列になります。
+
+> **これが一番やりにくい点です。**
+> **エラーで止まりません。** 読み込み自体は成功してしまうので，気づかないまま集計や作図に進み，
+> グラフの軸ラベルが記号だらけになって初めて気づく，ということが起きます。
+> 読み込んだ直後に必ず中身を表示して，日本語が読めているか確認してください。
+
+対処は2つあります。
+
+**① 読み込むときに文字コードを指定する**
+
+```{r, eval=FALSE}
+# Windows版Excelで保存したCSVは，たいていこちら
+my_data <- read_csv("data/my_data.csv", locale = locale(encoding = "CP932"))
+
+# すでにUTF-8になっているCSV（指定しなくても読めます）
+my_data <- read_csv("data/my_data.csv", locale = locale(encoding = "UTF-8"))
+```
+
+**② 保存するときにUTF-8にしておく（こちらを推奨）**
+
+Excelの「名前を付けて保存」で，ファイルの種類を **`CSV UTF-8 (コンマ区切り)`** にします。
+こうしておけば `read_csv()` に何も足さずに読めますし，他の人とデータを共有するときも安全です。
+
+> どちらの文字コードか分からないときは，まず `read_csv()` だけで試してください。
+> 化けていたら `locale = locale(encoding = "CP932")` を足す，という順番で構いません。
+
+### Excelファイルを直接読む方法もあります
+
+`.xlsx` のまま読めば，**文字コードの問題は起きません。**
+
+```{r, eval=FALSE}
+# install.packages("readxl")   # 最初の1回だけ
+library(readxl)
+
+my_data <- read_excel("data/my_data.xlsx")
+
+# シートを指定する場合
+my_data <- read_excel("data/my_data.xlsx", sheet = "データ")
+```
+
+Excelで管理しているデータなら，CSVに変換せずこちらのほうが確実です。
+
+> `readxl` は tidyverse に含まれていないので，`install.packages("readxl")` が別に必要です。
 
 ---
 

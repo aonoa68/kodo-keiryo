@@ -3060,17 +3060,69 @@ border-radius: 0px;
 </div>
 <div id="実際のcsvファイルの読み込み" class="section level2">
 <h2>6. 実際のCSVファイルの読み込み</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># CSVファイルの読み込み（readrパッケージ，tidyverseに含まれる）</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/my_data.csv&quot;</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co"># 文字コードを指定する場合（日本語データ）</span></span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/my_data.csv&quot;</span>, <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>))</span>
-<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co"># Excelファイルを読む場合（readxlパッケージが必要）</span></span>
-<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co"># install.packages(&quot;readxl&quot;)</span></span>
-<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/my_data.xlsx&quot;</span>)</span></code></pre></div>
+<p>ここまではRに最初から入っているデータを使ってきました。
+自分で集めたデータを読み込むときは，次のように書きます。</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># CSVファイルの読み込み（readr パッケージ，tidyverse に含まれる）</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/my_data.csv&quot;</span>)</span></code></pre></div>
+<div id="日本語が化けるとき-文字コードの問題" class="section level3">
+<h3>日本語が化けるとき ―― 文字コードの問題</h3>
+<p><code>read_csv()</code> は <strong>UTF-8</strong>
+という文字コードを前提にしています。 ところが
+<strong>Windows版のExcelで「CSV（コンマ区切り）」として保存すると，多くの場合
+Shift_JIS（CP932）になります。</strong>
+この食い違いが起きると，こうなります。</p>
+<pre class="text"><code>&gt; my_data
+  \x92n\x88\xe6 \x90l\x90\x94
+1 \x93\x8c\x8b\x9e           10
+2       \x8eD\x96y           20</code></pre>
+<p>本来は <code>地域</code> <code>人数</code> <code>東京</code>
+<code>札幌</code> と表示されるはずのところが，<code>\x</code>
+で始まる記号の列になります。</p>
+<blockquote>
+<p><strong>これが一番やりにくい点です。</strong>
+<strong>エラーで止まりません。</strong>
+読み込み自体は成功してしまうので，気づかないまま集計や作図に進み，
+グラフの軸ラベルが記号だらけになって初めて気づく，ということが起きます。
+読み込んだ直後に必ず中身を表示して，日本語が読めているか確認してください。</p>
+</blockquote>
+<p>対処は2つあります。</p>
+<p><strong>① 読み込むときに文字コードを指定する</strong></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># Windows版Excelで保存したCSVは，たいていこちら</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/my_data.csv&quot;</span>, <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">encoding =</span> <span class="st">&quot;CP932&quot;</span>))</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co"># すでにUTF-8になっているCSV（指定しなくても読めます）</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/my_data.csv&quot;</span>, <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>))</span></code></pre></div>
+<p><strong>② 保存するときにUTF-8にしておく（こちらを推奨）</strong></p>
+<p>Excelの「名前を付けて保存」で，ファイルの種類を
+<strong><code>CSV UTF-8 (コンマ区切り)</code></strong> にします。
+こうしておけば <code>read_csv()</code>
+に何も足さずに読めますし，他の人とデータを共有するときも安全です。</p>
+<blockquote>
+<p>どちらの文字コードか分からないときは，まず <code>read_csv()</code>
+だけで試してください。 化けていたら
+<code>locale = locale(encoding = &quot;CP932&quot;)</code>
+を足す，という順番で構いません。</p>
+</blockquote>
+</div>
+<div id="excelファイルを直接読む方法もあります" class="section level3">
+<h3>Excelファイルを直接読む方法もあります</h3>
+<p><code>.xlsx</code>
+のまま読めば，<strong>文字コードの問題は起きません。</strong></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># install.packages(&quot;readxl&quot;)   # 最初の1回だけ</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/my_data.xlsx&quot;</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="co"># シートを指定する場合</span></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/my_data.xlsx&quot;</span>, <span class="at">sheet =</span> <span class="st">&quot;データ&quot;</span>)</span></code></pre></div>
+<p>Excelで管理しているデータなら，CSVに変換せずこちらのほうが確実です。</p>
+<blockquote>
+<p><code>readxl</code> は tidyverse
+に含まれていないので，<code>install.packages(&quot;readxl&quot;)</code>
+が別に必要です。</p>
+</blockquote>
 <hr />
+</div>
 </div>
 <div id="演習" class="section level2">
 <h2>演習</h2>
@@ -3081,32 +3133,32 @@ border-radius: 0px;
 <ul>
 <li><code>Petal.Length</code> の平均・標準偏差・サンプルサイズ</li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>iris <span class="sc">|&gt;</span></span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="fu">group_by</span>(___) <span class="sc">|&gt;</span></span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>    <span class="at">n    =</span> <span class="fu">n</span>(),</span>
-<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(___),</span>
-<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>    <span class="at">sd   =</span> <span class="fu">sd</span>(___)</span>
-<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>iris <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>  <span class="fu">group_by</span>(___) <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>    <span class="at">n    =</span> <span class="fu">n</span>(),</span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(___),</span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>    <span class="at">sd   =</span> <span class="fu">sd</span>(___)</span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>  )</span></code></pre></div>
 </div>
 <div id="演習2集計結果のグラフ化" class="section level3">
 <h3>演習2：集計結果のグラフ化</h3>
 <p>演習1で作った集計結果を使って，エラーバー付きの棒グラフを作成してください。</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># まず集計</span></span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>petal_summary <span class="ot">&lt;-</span> iris <span class="sc">|&gt;</span></span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">|&gt;</span></span>
-<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>    <span class="at">mean_petal =</span> <span class="fu">mean</span>(Petal.Length),</span>
-<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>    <span class="at">sd_petal   =</span> <span class="fu">sd</span>(Petal.Length)</span>
-<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>  )</span>
-<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="co"># グラフ</span></span>
-<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="fu">ggplot</span>(petal_summary, <span class="fu">aes</span>(<span class="at">x =</span> ___, <span class="at">y =</span> ___, <span class="at">fill =</span> ___)) <span class="sc">+</span></span>
-<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> ___ <span class="sc">-</span> ___, <span class="at">ymax =</span> ___ <span class="sc">+</span> ___), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;種ごとの花びらの長さ（平均±SD）&quot;</span>,</span>
-<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;___&quot;</span>, <span class="at">y =</span> <span class="st">&quot;___&quot;</span>) <span class="sc">+</span></span>
-<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># まず集計</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>petal_summary <span class="ot">&lt;-</span> iris <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">|&gt;</span></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>    <span class="at">mean_petal =</span> <span class="fu">mean</span>(Petal.Length),</span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>    <span class="at">sd_petal   =</span> <span class="fu">sd</span>(Petal.Length)</span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>  )</span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="co"># グラフ</span></span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a><span class="fu">ggplot</span>(petal_summary, <span class="fu">aes</span>(<span class="at">x =</span> ___, <span class="at">y =</span> ___, <span class="at">fill =</span> ___)) <span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> ___ <span class="sc">-</span> ___, <span class="at">ymax =</span> ___ <span class="sc">+</span> ___), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;種ごとの花びらの長さ（平均±SD）&quot;</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;___&quot;</span>, <span class="at">y =</span> <span class="st">&quot;___&quot;</span>) <span class="sc">+</span></span>
+<span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
 </div>
 <div id="演習3countの応用" class="section level3">
 <h3>演習3：count()の応用</h3>
