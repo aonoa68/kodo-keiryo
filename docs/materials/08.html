@@ -2926,17 +2926,19 @@ RStudioを起動したら，<strong>まずこれを実行してください。</
 <strong>導出①</strong>：<span class="math inline">\(r\)</span>
 は「共分散を，2つのばらつきで割ったもの」
 </summary>
-<p>上の式の分子と分母を，どちらも <span class="math inline">\(n\)</span>
+<p>上の式の分子と分母を，どちらも <span class="math inline">\(n-1\)</span>
 で割ってみます。値は変わりません。</p>
-<p>分子を <span class="math inline">\(n\)</span>
-で割ったものが<strong>共分散</strong>です。</p>
-<p><span class="math display">\[\mathrm{Cov}(x,y) = \frac{1}{n}\sum(x_i
-- \bar{x})(y_i - \bar{y})\]</span></p>
-<p>分母を <span class="math inline">\(n\)</span>
-で割ったものは，2つの標準偏差の積になります。</p>
-<p><span class="math display">\[\frac{1}{n}\sqrt{\sum(x_i-\bar{x})^2
-\cdot \sum(y_i-\bar{y})^2} = \sqrt{\frac{\sum(x_i-\bar{x})^2}{n}} \cdot
-\sqrt{\frac{\sum(y_i-\bar{y})^2}{n}} = s_x \, s_y\]</span></p>
+<p>分子を <span class="math inline">\(n-1\)</span>
+で割ったものが<strong>共分散</strong>です（R の <code>cov()</code>
+と同じ定義です）。</p>
+<p><span class="math display">\[\mathrm{Cov}(x,y) =
+\frac{1}{n-1}\sum(x_i - \bar{x})(y_i - \bar{y})\]</span></p>
+<p>分母を <span class="math inline">\(n-1\)</span>
+で割ったものは，2つの標準偏差の積になります（R の <code>sd()</code>
+と同じ定義です）。</p>
+<p><span class="math display">\[\frac{1}{n-1}\sqrt{\sum(x_i-\bar{x})^2
+\cdot \sum(y_i-\bar{y})^2} = \sqrt{\frac{\sum(x_i-\bar{x})^2}{n-1}}
+\cdot \sqrt{\frac{\sum(y_i-\bar{y})^2}{n-1}} = s_x \, s_y\]</span></p>
 <p>したがって</p>
 <p><span class="math display">\[r = \frac{\mathrm{Cov}(x,y)}{s_x \,
 s_y}\]</span></p>
@@ -2944,24 +2946,32 @@ s_y}\]</span></p>
 <span class="math inline">\(r\)</span> です。</p>
 <p>各データを標準化して <span class="math inline">\(z_x = (x_i -
 \bar{x})/s_x\)</span>，<span class="math inline">\(z_y = (y_i -
-\bar{y})/s_y\)</span> と置くと，同じことが次のように書けます。</p>
-<p><span class="math display">\[r = \frac{1}{n}\sum z_{x_i}
+\bar{y})/s_y\)</span> と置くと（R の <code>scale()</code>
+がこの計算です），同じことが次のように書けます。</p>
+<p><span class="math display">\[r = \frac{1}{n-1}\sum z_{x_i}
 z_{y_i}\]</span></p>
 <p><span class="math inline">\(r\)</span>
-は<strong>標準化した値どうしの積の平均</strong>である，ということです。</p>
+は<strong>標準化した値どうしの積を合計して <span class="math inline">\(n-1\)</span>
+で割ったもの</strong>である，ということです。</p>
 <p><strong>数値で確かめる</strong>：iris
 のがく片の長さと花びらの長さ（<span class="math inline">\(n =
-150\)</span>）では，本文の定義式が <span class="math inline">\(0.8717538\)</span>，<code>cor()</code> が <span class="math inline">\(0.8717538\)</span>，<span class="math inline">\(\frac{1}{n}\sum z_x z_y\)</span> も <span class="math inline">\(0.8717538\)</span> で，3つとも一致します。</p>
+150\)</span>）では，本文の定義式が <span class="math inline">\(0.8717538\)</span>，<code>cor()</code> が <span class="math inline">\(0.8717538\)</span>，<code>cov(x, y) / (sd(x) * sd(y))</code>
+が <span class="math inline">\(0.8717538\)</span>，<span class="math inline">\(\frac{1}{n-1}\sum z_x z_y\)</span> も <span class="math inline">\(0.8717538\)</span> で，すべて一致します。</p>
 <p><strong>単位を変えても <span class="math inline">\(r\)</span>
 は変わりません。</strong> がく片を cm から mm に（<span class="math inline">\(\times 10\)</span>），花びらを cm
 からインチに（<span class="math inline">\(\div 2.54\)</span>）換算しても
 <span class="math inline">\(r = 0.8717538\)</span>
 のままです。分子も分母も同じ倍率で変わるので，割り算で消えるからです。</p>
 <blockquote>
-<p><strong><span class="math inline">\(n\)</span> で割るか <span class="math inline">\(n-1\)</span> で割るかは <span class="math inline">\(r\)</span> に影響しません。</strong> R の
-<code>sd()</code> や <code>cov()</code> は <span class="math inline">\(n-1\)</span> で割る定義ですが，<span class="math inline">\(r\)</span>
+<p><strong><span class="math inline">\(n\)</span>
+で割る流儀もあります。</strong> 教科書によっては，共分散や標準偏差を
+<span class="math inline">\(n-1\)</span> ではなく <span class="math inline">\(n\)</span> で割って定義します。 <span class="math inline">\(r\)</span>
 は共分散を標準偏差の積で割った<strong>比</strong>なので，どちらの流儀でも
 <span class="math inline">\(0.8717538\)</span> と同じ値になります。</p>
+<p><strong>この資料は R に合わせて <span class="math inline">\(n-1\)</span> で統一します。</strong>
+<code>sd()</code>・<code>cov()</code>・<code>scale()</code>
+がすべてこの定義なので， 書かれている式をそのまま R
+で打って確かめられます。</p>
 </blockquote>
 <p><strong>使った数学</strong>：平均・分散・共分散の定義と，割り算で単位が消えること。</p>
 </details>
@@ -2971,18 +2981,18 @@ z_{y_i}\]</span></p>
 1\)</span> に収まるのか
 </summary>
 <p>標準化した値には，定義からすぐ出る性質が2つあります。</p>
-<p><span class="math display">\[\sum z_x^2 = n, \qquad \sum z_y^2 = n,
-\qquad \sum z_x z_y = n r\]</span></p>
-<p>（3つめは導出①の <span class="math inline">\(r = \frac{1}{n}\sum z_x
-z_y\)</span> を移項しただけです。）</p>
+<p><span class="math display">\[\sum z_x^2 = n-1, \qquad \sum z_y^2 =
+n-1, \qquad \sum z_x z_y = (n-1)\,r\]</span></p>
+<p>（3つめは導出①の <span class="math inline">\(r = \frac{1}{n-1}\sum
+z_x z_y\)</span> を移項しただけです。）</p>
 <p>ここで<strong>二乗は決して負にならない</strong>という，ただそれだけの事実を使います。</p>
 <p><span class="math display">\[\sum (z_x - z_y)^2 \ge 0\]</span></p>
 <p>左辺を展開すると</p>
 <p><span class="math display">\[\sum z_x^2 - 2\sum z_x z_y + \sum z_y^2
-= n - 2nr + n = 2n(1 - r)\]</span></p>
-<p>これが <span class="math inline">\(0\)</span> 以上なので <span class="math inline">\(1 - r \ge 0\)</span>，つまり <span class="math inline">\(r \le 1\)</span> が出ます。</p>
+= (n-1) - 2(n-1)r + (n-1) = 2(n-1)(1 - r)\]</span></p>
+<p>これが <span class="math inline">\(0\)</span> 以上で，<span class="math inline">\(n \ge 2\)</span> なら <span class="math inline">\(2(n-1) &gt; 0\)</span> ですから <span class="math inline">\(1 - r \ge 0\)</span>，つまり <span class="math inline">\(r \le 1\)</span> が出ます。</p>
 <p>同じことを足し算の側でやると</p>
-<p><span class="math display">\[\sum (z_x + z_y)^2 = 2n(1 + r) \ge
+<p><span class="math display">\[\sum (z_x + z_y)^2 = 2(n-1)(1 + r) \ge
 0\]</span></p>
 <p>から <span class="math inline">\(r \ge -1\)</span> が出ます。あわせて
 <span class="math inline">\(-1 \le r \le 1\)</span> です。</p>
@@ -2991,8 +3001,10 @@ z_y\)</span> を移項しただけです。）</p>
 z_y\)</span> のときだけです。これは「標準化したら完全に同じ値」，つまり
 <span class="math inline">\(y\)</span> が <span class="math inline">\(x\)</span>
 の1次式でぴったり書ける（すべての点が1本の右上がりの直線に乗る）場合です。<span class="math inline">\(r = -1\)</span> は右下がりの直線です。</p>
-<p><strong>数値で確かめる</strong>：iris では <span class="math inline">\(\sum(z_x - z_y)^2 = 38.4739\)</span>，理論値 <span class="math inline">\(2n(1-r) = 2 \times 150 \times (1 - 0.8717538) =
-38.4739\)</span> で一致します。足し算の側も <span class="math inline">\(\sum(z_x + z_y)^2 = 561.5261\)</span>，<span class="math inline">\(2n(1+r) = 561.5261\)</span> で一致します。</p>
+<p><strong>数値で確かめる</strong>：iris では <span class="math inline">\(n - 1 = 149\)</span> で，<span class="math inline">\(\sum z_x^2 = 149\)</span>，<span class="math inline">\(\sum z_x z_y = 129.8913\)</span>（<span class="math inline">\(= 149 \times 0.8717538\)</span>）です。 <span class="math inline">\(\sum(z_x - z_y)^2 = 38.2174\)</span>，理論値 <span class="math inline">\(2(n-1)(1-r) = 2 \times 149 \times (1 - 0.8717538)
+= 38.2174\)</span> で一致します。 足し算の側も <span class="math inline">\(\sum(z_x + z_y)^2 = 557.7826\)</span>，<span class="math inline">\(2(n-1)(1+r) = 557.7826\)</span> で一致します。
+<strong><code>scale()</code>
+で標準化すれば，そのまま手元で確かめられます。</strong></p>
 <p><strong>使った数学</strong>：二乗は負にならない，という事実だけ。特別な定理は使っていません。</p>
 </details>
 </div>
