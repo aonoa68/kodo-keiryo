@@ -32,6 +32,20 @@ if (requireNamespace("ragg", quietly = TRUE)) {
 
 ---
 
+## 準備：パッケージの読み込み
+
+この回のコードは，すべて `tidyverse` を読み込んだ状態で動きます。
+RStudioを起動したら，**まずこれを実行してください。**
+
+```{r}
+library(tidyverse)
+```
+
+> 毎回必要です。読み込まないまま `filter()` や `ggplot()` を使うと，
+> 「関数が見つかりません」というエラーになります。
+
+---
+
 ## 1. dplyrとは
 
 `dplyr` は，データフレームを操作するための強力なパッケージです。
@@ -62,8 +76,9 @@ glimpse(msleep)
 |------|------|
 | `name` | 動物名 |
 | `genus` | 属 |
-| `vore` | 食性（herbi, omni, carni, insecti） |
+| `vore` | 食性（herbi, omni, carni, insecti）**7件が欠損** |
 | `order` | 目 |
+| `conservation` | 保全状況（絶滅危惧の区分など） |
 | `sleep_total` | 1日の総睡眠時間（時間） |
 | `sleep_rem` | REM睡眠時間（時間） |
 | `sleep_cycle` | 睡眠サイクル（時間） |
