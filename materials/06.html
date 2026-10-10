@@ -2963,6 +2963,24 @@ RStudioを起動したら，<strong>まずこれを実行してください。</
 {"columns":[{"label":["vore"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["mean_sleep"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sd_sleep"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"carni","2":"19","3":"10.378947","4":"4.669116"},{"1":"herbi","2":"32","3":"9.509375","4":"4.878746"},{"1":"insecti","2":"5","3":"14.940000","4":"5.920557"},{"1":"omni","2":"20","3":"10.925000","4":"2.949019"},{"1":"NA","2":"7","3":"10.185714","4":"3.004124"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+<div id="出てきた-na-の行は何か" class="section level3">
+<h3>出てきた <code>&lt;NA&gt;</code> の行は何か</h3>
+<p>出力の最後に <code>&lt;NA&gt;</code>
+という行があります。<strong>これは「NAという食性」ではありません。</strong>
+<code>msleep</code>
+には<strong>食性が記録されていない動物が7種</strong>あり，その7種がひとまとめにされて集計されています。</p>
+<p><code>group_by()</code>
+は，欠損値も1つのグループとして扱います。黙って捨てたりはしません。
+「そういうデータがある」と見せてくれている，と考えてください。</p>
+<blockquote>
+<p><strong>この行をどう扱うかは，分析する人が決めます。</strong></p>
+<ul>
+<li>食性どうしを比べるのが目的なら，<strong>除く</strong>（4節でそうしています）</li>
+<li>「食性が不明な動物がこれだけいる」こと自体が情報なら，<strong>残す</strong></li>
+</ul>
+<p>どちらでも構いませんが，<strong>除いたことを自覚しておく</strong>のが大事です。
+気づかないうちに7種が消えているのと，理由があって除くのとは違います。</p>
+</blockquote>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># irisデータ：種ごとの平均と標準偏差</span></span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>iris <span class="sc">|&gt;</span></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">|&gt;</span></span>
@@ -2979,6 +2997,7 @@ RStudioを起動したら，<strong>まずこれを実行してください。</
   </script>
 </div>
 <hr />
+</div>
 </div>
 <div id="countカテゴリの頻度集計" class="section level2">
 <h2>3. count()：カテゴリの頻度集計</h2>
@@ -3004,6 +3023,9 @@ RStudioを起動したら，<strong>まずこれを実行してください。</
 <h2>4. 集計結果をグラフ化する</h2>
 <div id="棒グラフ平均値の比較" class="section level3">
 <h3>棒グラフ（平均値の比較）</h3>
+<p>ここでは食性どうしを比べたいので，2節で見た <code>&lt;NA&gt;</code>
+の行を <strong><code>filter(!is.na(vore))</code>
+で除いてから</strong>集計します。</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># 集計データを作成</span></span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>sleep_summary <span class="ot">&lt;-</span> msleep <span class="sc">|&gt;</span></span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(vore)) <span class="sc">|&gt;</span></span>
@@ -3056,14 +3078,30 @@ RStudioを起動したら，<strong>まずこれを実行してください。</
 {"columns":[{"label":["mean_rem"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"1.87541"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># 欠損値のある行を除いてから集計</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>msleep <span class="sc">|&gt;</span></span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(sleep_rem)) <span class="sc">|&gt;</span></span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="fu">group_by</span>(vore) <span class="sc">|&gt;</span></span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
-<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>    <span class="at">mean_rem =</span> <span class="fu">mean</span>(sleep_rem)</span>
-<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>  )</span></code></pre></div>
+<blockquote>
+<p><strong><code>n()</code> と <code>na.rm = TRUE</code>
+を並べるときは注意してください。</strong></p>
+<p><code>n()</code>
+は<strong>行数</strong>を数えるだけで，欠損があるかどうかは見ていません。
+一方 <code>mean(x, na.rm = TRUE)</code> は欠損を除いて計算します。
+つまり同じ <code>summarise()</code>
+の中に並べると，<strong><code>n</code>
+と「平均に使われた件数」がずれます。</strong></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>msleep <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">mean_brain =</span> <span class="fu">mean</span>(brainwt, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co"># n は 83 と出るが，平均に使われたのは 56 件（brainwt は27件が欠損）</span></span></code></pre></div>
+<p>実際に使われた件数を数えたいときは <code>sum(!is.na(brainwt))</code>
+を使います。 レポートや論文で n
+を書くときは，<strong>どちらの数字なのかをはっきりさせてください。</strong></p>
+</blockquote>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># 欠損値のある行を除いてから集計</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>msleep <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(sleep_rem)) <span class="sc">|&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>  <span class="fu">group_by</span>(vore) <span class="sc">|&gt;</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>    <span class="at">mean_rem =</span> <span class="fu">mean</span>(sleep_rem)</span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>  )</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["vore"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["mean_rem"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"carni","2":"10","3":"2.290000"},{"1":"herbi","2":"24","3":"1.366667"},{"1":"insecti","2":"4","3":"3.525000"},{"1":"omni","2":"18","3":"1.955556"},{"1":"NA","2":"5","3":"1.880000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -3075,8 +3113,8 @@ RStudioを起動したら，<strong>まずこれを実行してください。</
 <h2>6. 実際のCSVファイルの読み込み</h2>
 <p>ここまではRに最初から入っているデータを使ってきました。
 自分で集めたデータを読み込むときは，次のように書きます。</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># CSVファイルの読み込み（readr パッケージ，tidyverse に含まれる）</span></span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/my_data.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># CSVファイルの読み込み（readr パッケージ，tidyverse に含まれる）</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/my_data.csv&quot;</span>)</span></code></pre></div>
 <div id="日本語が化けるとき-文字コードの問題" class="section level3">
 <h3>日本語が化けるとき ―― 文字コードの問題</h3>
 <p><code>read_csv()</code> は <strong>UTF-8</strong>
@@ -3100,11 +3138,11 @@ Shift_JIS（CP932）になります。</strong>
 </blockquote>
 <p>対処は2つあります。</p>
 <p><strong>① 読み込むときに文字コードを指定する</strong></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># Windows版Excelで保存したCSVは，たいていこちら</span></span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/my_data.csv&quot;</span>, <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">encoding =</span> <span class="st">&quot;CP932&quot;</span>))</span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="co"># すでにUTF-8になっているCSV（指定しなくても読めます）</span></span>
-<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/my_data.csv&quot;</span>, <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># Windows版Excelで保存したCSVは，たいていこちら</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/my_data.csv&quot;</span>, <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">encoding =</span> <span class="st">&quot;CP932&quot;</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="co"># すでにUTF-8になっているCSV（指定しなくても読めます）</span></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/my_data.csv&quot;</span>, <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>))</span></code></pre></div>
 <p><strong>② 保存するときにUTF-8にしておく（こちらを推奨）</strong></p>
 <p>Excelの「名前を付けて保存」で，ファイルの種類を
 <strong><code>CSV UTF-8 (コンマ区切り)</code></strong> にします。
@@ -3121,13 +3159,13 @@ Shift_JIS（CP932）になります。</strong>
 <h3>Excelファイルを直接読む方法もあります</h3>
 <p><code>.xlsx</code>
 のまま読めば，<strong>文字コードの問題は起きません。</strong></p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># install.packages(&quot;readxl&quot;)   # 最初の1回だけ</span></span>
-<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/my_data.xlsx&quot;</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a><span class="co"># シートを指定する場合</span></span>
-<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/my_data.xlsx&quot;</span>, <span class="at">sheet =</span> <span class="st">&quot;データ&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># install.packages(&quot;readxl&quot;)   # 最初の1回だけ</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/my_data.xlsx&quot;</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="co"># シートを指定する場合</span></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/my_data.xlsx&quot;</span>, <span class="at">sheet =</span> <span class="st">&quot;データ&quot;</span>)</span></code></pre></div>
 <p>Excelで管理しているデータなら，CSVに変換せずこちらのほうが確実です。</p>
 <blockquote>
 <p><code>readxl</code> は tidyverse
@@ -3146,32 +3184,32 @@ Shift_JIS（CP932）になります。</strong>
 <ul>
 <li><code>Petal.Length</code> の平均・標準偏差・サンプルサイズ</li>
 </ul>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>iris <span class="sc">|&gt;</span></span>
-<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="fu">group_by</span>(___) <span class="sc">|&gt;</span></span>
-<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>    <span class="at">n    =</span> <span class="fu">n</span>(),</span>
-<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(___),</span>
-<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>    <span class="at">sd   =</span> <span class="fu">sd</span>(___)</span>
-<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>iris <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>  <span class="fu">group_by</span>(___) <span class="sc">|&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>    <span class="at">n    =</span> <span class="fu">n</span>(),</span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(___),</span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>    <span class="at">sd   =</span> <span class="fu">sd</span>(___)</span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>  )</span></code></pre></div>
 </div>
 <div id="演習2集計結果のグラフ化" class="section level3">
 <h3>演習2：集計結果のグラフ化</h3>
 <p>演習1で作った集計結果を使って，エラーバー付きの棒グラフを作成してください。</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co"># まず集計</span></span>
-<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>petal_summary <span class="ot">&lt;-</span> iris <span class="sc">|&gt;</span></span>
-<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">|&gt;</span></span>
-<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>    <span class="at">mean_petal =</span> <span class="fu">mean</span>(Petal.Length),</span>
-<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>    <span class="at">sd_petal   =</span> <span class="fu">sd</span>(Petal.Length)</span>
-<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>  )</span>
-<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a></span>
-<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a><span class="co"># グラフ</span></span>
-<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a><span class="fu">ggplot</span>(petal_summary, <span class="fu">aes</span>(<span class="at">x =</span> ___, <span class="at">y =</span> ___, <span class="at">fill =</span> ___)) <span class="sc">+</span></span>
-<span id="cb18-11"><a href="#cb18-11" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb18-12"><a href="#cb18-12" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> ___ <span class="sc">-</span> ___, <span class="at">ymax =</span> ___ <span class="sc">+</span> ___), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb18-13"><a href="#cb18-13" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;種ごとの花びらの長さ（平均±SD）&quot;</span>,</span>
-<span id="cb18-14"><a href="#cb18-14" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;___&quot;</span>, <span class="at">y =</span> <span class="st">&quot;___&quot;</span>) <span class="sc">+</span></span>
-<span id="cb18-15"><a href="#cb18-15" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="co"># まず集計</span></span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>petal_summary <span class="ot">&lt;-</span> iris <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">|&gt;</span></span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>    <span class="at">mean_petal =</span> <span class="fu">mean</span>(Petal.Length),</span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a>    <span class="at">sd_petal   =</span> <span class="fu">sd</span>(Petal.Length)</span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a>  )</span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a><span class="co"># グラフ</span></span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a><span class="fu">ggplot</span>(petal_summary, <span class="fu">aes</span>(<span class="at">x =</span> ___, <span class="at">y =</span> ___, <span class="at">fill =</span> ___)) <span class="sc">+</span></span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb19-12"><a href="#cb19-12" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> ___ <span class="sc">-</span> ___, <span class="at">ymax =</span> ___ <span class="sc">+</span> ___), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb19-13"><a href="#cb19-13" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;種ごとの花びらの長さ（平均±SD）&quot;</span>,</span>
+<span id="cb19-14"><a href="#cb19-14" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;___&quot;</span>, <span class="at">y =</span> <span class="st">&quot;___&quot;</span>) <span class="sc">+</span></span>
+<span id="cb19-15"><a href="#cb19-15" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
 </div>
 <div id="演習3countの応用" class="section level3">
 <h3>演習3：count()の応用</h3>
