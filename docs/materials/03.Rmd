@@ -256,7 +256,7 @@ ggplot(data = iris, aes(x = Species, y = Sepal.Length)) +
 
 ### 箱ひげ図の読み方
 
-**この図は，4つの部品でできています。**
+**この図は，次の部品でできています。**
 
 | 部品 | 表しているもの |
 |---|---|
@@ -308,7 +308,6 @@ ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
 | `color` | 色（線・点） | `color = Species` |
 | `fill` | 塗りつぶし色 | `fill = Species` |
 | `size` | 点の大きさ | `size = Petal.Width` |
-| `linewidth` | 線の太さ | `linewidth = 1.2`（今回は使いません） |
 | `shape` | 点の形 | `shape = Species` |
 
 ---
