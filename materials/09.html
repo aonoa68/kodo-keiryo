@@ -3231,6 +3231,19 @@ X-squared = 454.5, df = 1, p-value &lt; 2.2e-16</code></pre>
 </table>
 <p>p &lt; .05
 ならば「性別と生存は独立でない」（関連がある）と結論できます。</p>
+<blockquote>
+<p><strong>出力の「Yates’ continuity correction」とは。</strong></p>
+<p>2×2 の表のとき，R
+は既定で<strong>イェーツの連続性補正</strong>を適用します。
+カイ二乗検定は「とびとびの度数」を「なめらかな分布」で近似しているので，そのズレを少し埋め合わせる調整です。
+<span class="math inline">\(\chi^2\)</span> がわずかに小さくなり，<span class="math inline">\(p\)</span>
+値は大きめ，つまり<strong>慎重な側</strong>に出ます。</p>
+<p>今回は補正あり <span class="math inline">\(454.5\)</span>，補正なし
+<span class="math inline">\(456.9\)</span> で，結論は変わりません。
+外すときは <code>chisq.test(tab, correct = FALSE)</code>
+と書きます。<strong>2×2
+以外の表では，そもそも適用されません。</strong></p>
+</blockquote>
 </div>
 <div id="前提条件期待度数が小さいときは使えない" class="section level3">
 <h3>前提条件：期待度数が小さいときは使えない</h3>
@@ -3309,13 +3322,24 @@ X-squared = 454.5, df = 1, p-value &lt; 2.2e-16</code></pre>
 (k-1)}}\]</span></p>
 <p>（n = 総度数，k = 行数・列数の小さい方）</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="co"># 効果量の計算（手動）</span></span>
-<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a>chi2 <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(tab)<span class="sc">$</span>statistic</span>
-<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>n    <span class="ot">&lt;-</span> <span class="fu">sum</span>(tab)</span>
-<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a>k    <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">nrow</span>(tab), <span class="fu">ncol</span>(tab))</span>
-<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a>V    <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(chi2 <span class="sc">/</span> (n <span class="sc">*</span> (k <span class="sc">-</span> <span class="dv">1</span>)))</span>
-<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a><span class="fu">round</span>(V, <span class="dv">3</span>)</span></code></pre></div>
-<pre><code>## X-squared 
-##     0.454</code></pre>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a><span class="co"># 効果量は「関連の強さ」なので，連続性補正を外した χ² を使います</span></span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>chi2 <span class="ot">&lt;-</span> <span class="fu">unname</span>(<span class="fu">chisq.test</span>(tab, <span class="at">correct =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>statistic)   <span class="co"># unname() で「X-squared」という名前を外す</span></span>
+<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a>n    <span class="ot">&lt;-</span> <span class="fu">sum</span>(tab)</span>
+<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a>k    <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">nrow</span>(tab), <span class="fu">ncol</span>(tab))</span>
+<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a>V    <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(chi2 <span class="sc">/</span> (n <span class="sc">*</span> (k <span class="sc">-</span> <span class="dv">1</span>)))</span>
+<span id="cb34-7"><a href="#cb34-7" tabindex="-1"></a><span class="fu">round</span>(V, <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## [1] 0.456</code></pre>
+<blockquote>
+<p><strong>なぜ <code>correct = FALSE</code> なのか。</strong>
+イェーツ補正は，<span class="math inline">\(p\)</span>
+値を慎重な側に寄せるための調整でした。 一方 <span class="math inline">\(V\)</span>
+が表したいのは「<strong>関連がどれくらい強いか</strong>」であって，偶然かどうかの判定ではありません。
+目的が違うので，効果量は補正を外した <span class="math inline">\(\chi^2\)</span> から計算するのが一般的です。</p>
+<p>今回は補正あり <span class="math inline">\(V =
+0.454\)</span>，補正なし <span class="math inline">\(V = 0.456\)</span>
+で解釈は変わりませんが，
+<strong>セルの度数が小さい表では差が開きます。</strong></p>
+</blockquote>
 <div id="クラメールのvの目安" class="section level3">
 <h3>クラメールのVの目安</h3>
 <table>
@@ -3421,11 +3445,10 @@ m\,\chi^2\]</span></p>
 <span class="math inline">\(\chi^2\)</span>・<span class="math inline">\(p\)</span>・<span class="math inline">\(V\)</span>
 を並べて報告します。</p>
 </blockquote>
-<p>なお，本文のコードは
-<code>chisq.test(tab)$statistic</code>（イェーツ補正後）を使っているので
-<span class="math inline">\(V = 0.454\)</span> となります。補正なしなら
-<span class="math inline">\(0.4556\)</span> です。補正項が <span class="math inline">\(n\)</span>
-に依存するぶん，上の表は補正なしで計算すると倍率がきれいに消えます。</p>
+<p>なお，上の表も本文5節も，どちらも<strong>補正なし</strong>の <span class="math inline">\(\chi^2\)</span> から <span class="math inline">\(V\)</span> を計算しています（<span class="math inline">\(V = 0.4556\)</span>）。補正項は <span class="math inline">\(n\)</span>
+に依存するため，補正を入れたまま倍率を変えると <span class="math inline">\(V\)</span> がわずかに動いてしまい，「<span class="math inline">\(V\)</span> は <span class="math inline">\(n\)</span>
+に振り回されない」という性質が見えにくくなるからです。参考までに，補正ありで計算すると
+<span class="math inline">\(V = 0.454\)</span> です。</p>
 <p><strong>使った数学</strong>：数え上げ（自由度），および比を取ると共通の倍率が消えること。</p>
 </details>
 <hr />
@@ -3453,7 +3476,12 @@ m\,\chi^2\]</span></p>
 <blockquote>
 <p>性別と生存の独立性を検定するためにカイ二乗検定を実施した。
 その結果，性別と生存の間には有意な関連が認められた， χ²(1, N = 2201) =
-454.5, p &lt; .001, <em>V</em> = .45。</p>
+454.5, p &lt; .001, <em>V</em> = .46。</p>
+</blockquote>
+<blockquote>
+<p><span class="math inline">\(\chi^2\)</span> と <span class="math inline">\(p\)</span> は <code>chisq.test()</code>
+の既定（イェーツ補正あり）の値， <span class="math inline">\(V\)</span>
+は補正を外して計算した値です。検定と効果量で目的が違うためで，食い違いではありません。</p>
 </blockquote>
 <hr />
 </div>
