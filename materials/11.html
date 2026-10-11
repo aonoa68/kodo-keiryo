@@ -2934,6 +2934,18 @@ RStudioを起動したら，<strong>まずこれを実行してください。</
 {"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["before"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["after"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"7.1","3":"8.2"},{"1":"2","2":"5.5","3":"6.2"},{"1":"3","2":"6.3","3":"5.8"},{"1":"4","2":"6.5","3":"6.1"},{"1":"5","2":"6.3","3":"7.8"},{"1":"6","2":"5.9","3":"6.5"},{"1":"7","2":"7.2","3":"7.1"},{"1":"8","2":"5.9","3":"6.6"},{"1":"9","2":"7.6","3":"9.0"},{"1":"10","2":"5.9","3":"7.6"},{"1":"11","2":"7.0","3":"7.6"},{"1":"12","2":"7.8","3":"8.5"},{"1":"13","2":"4.9","3":"4.8"},{"1":"14","2":"5.8","3":"6.8"},{"1":"15","2":"5.9","3":"6.4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+<blockquote>
+<p><strong><code>set.seed(42)</code> は何をしているか。</strong>
+<code>rnorm()</code>
+は<strong>毎回ちがう乱数</strong>を返します。そのままでは実行するたびに数値が変わり，
+手元の結果と資料の結果が一致しません。 <code>set.seed()</code>
+で乱数の出発点を固定しておくと，<strong>誰がいつ実行しても同じ数値</strong>になります。
+カッコの中の数字（ここでは42）は何でもよく，「同じ数字なら同じ結果」という意味だけを持ちます。</p>
+<p>上のコードを <code>set.seed(42)</code>
+の行から実行すれば，この資料とまったく同じ表が出ます。
+違う数値が出た人は，<code>set.seed()</code> の行を実行し忘れています。
+<strong>第12回の習熟度確認テストでも使うので，ここで覚えてください。</strong></p>
+</blockquote>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># 基本統計量</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>sleep_data <span class="sc">|&gt;</span></span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
@@ -3027,19 +3039,54 @@ RStudioを起動したら，<strong>まずこれを実行してください。</
 ## 0.6266667</code></pre>
 <div id="結果の読み方" class="section level3">
 <h3>結果の読み方</h3>
-<pre><code>Paired t-test
+<pre><code>    Paired t-test
 
-t = 3.6211, df = 14, p-value = 0.002784
+data:  sleep_data$after and sleep_data$before
+t = 3.6211, df = 14, p-value = 0.00278
+alternative hypothesis: true mean difference is not equal to 0
 95 percent confidence interval:
- 0.2554937 0.9978397
+ 0.2554933 0.9978400
 sample estimates:
-mean of the differences
-                 0.6266667</code></pre>
-<ul>
-<li><code>mean of the differences</code>：差の平均（= after の平均 −
-before の平均）</li>
-<li>信頼区間が 0 を含まなければ有意</li>
-</ul>
+mean difference
+      0.6266667</code></pre>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t</code></td>
+<td>t統計量（差の平均 ÷ 差の標準誤差）</td>
+</tr>
+<tr>
+<td><code>df</code></td>
+<td>自由度（<span class="math inline">\(n - 1 =
+14\)</span>。<strong><span class="math inline">\(2n\)</span>
+ではない</strong>）</td>
+</tr>
+<tr>
+<td><code>p-value</code></td>
+<td>p値（&lt; 0.05 で有意）</td>
+</tr>
+<tr>
+<td><code>95% CI</code></td>
+<td><strong>差</strong>の95%信頼区間（0を含まなければ有意）</td>
+</tr>
+<tr>
+<td><code>mean difference</code></td>
+<td>差の平均（= after の平均 − before の平均）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>第10回の出力と見比べてください。</strong>
+独立2標本では各群の平均が2つ出ましたが， 対応ありでは
+<strong><code>mean difference</code> が1つだけ</strong>です。
+分析しているのが「2つの群」ではなく「15個の差」だからです（導出①）。</p>
+</blockquote>
 <details open>
 <summary>
 <strong>導出①</strong>：対応のある<span class="math inline">\(t\)</span>検定は，新しい検定ではない
@@ -3066,15 +3113,36 @@ n)\]</span></p>
 <p>2つの測定値の対を，1つの差に畳んでしまう。これが「対応を取る」という操作の中身です。<span class="math inline">\(n\)</span> 組の対から <span class="math inline">\(n\)</span>
 個の差が作られるので，分析に使うデータの個数は <span class="math inline">\(2n\)</span> ではなく <span class="math inline">\(n\)</span> になります。</p>
 <p><strong>使った数学</strong>：引き算と，第10回の1標本<span class="math inline">\(t\)</span>検定。新しい道具は何も要りません。</p>
+<blockquote>
+<p><strong>前提も「差」について考えます。</strong>
+必要なのは，前後それぞれの値が正規分布することではなく，<strong>差 <span class="math inline">\(d_i\)</span> が正規分布すること</strong>です。
+差を1標本として扱っているので，前提も1標本t検定のものがそのまま当てはまります。</p>
+</blockquote>
 </details>
 <hr />
 </div>
 </div>
 <div id="効果量cohenの-d対応あり" class="section level2">
 <h2>5. 効果量：Cohenの <em>d</em>（対応あり）</h2>
+<p>対応ありの場合，効果量は<strong>差の平均を，差の標準偏差で割って</strong>求めます。</p>
+<p><span class="math display">\[d_z = \frac{\bar{d}}{s_d}\]</span></p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>d_paired <span class="ot">&lt;-</span> <span class="fu">mean</span>(diff_sleep) <span class="sc">/</span> <span class="fu">sd</span>(diff_sleep)</span>
 <span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">round</span>(d_paired, <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## [1] 0.93</code></pre>
+<p><span class="math inline">\(d_z = 0.93\)</span>
+ですから，第10回の目安（0.2＝小／0.5＝中／0.8＝大）では<strong>大きい効果</strong>です。</p>
+<blockquote>
+<p><strong>第10回の <em>d</em> とは分母が違います。</strong>
+独立2標本では<strong>2群のばらつき</strong>（プールした標準偏差）で割りましたが，
+対応ありでは<strong>差のばらつき</strong> <span class="math inline">\(s_d\)</span> で割ります。 差のばらつきは <span class="math inline">\(-2\mathrm{Cov}\)</span>
+のぶん小さい（導出②）ので， <strong>同じデータでも対応ありの <span class="math inline">\(d\)</span> のほうが大きく出ます。</strong>
+実際このデータを独立2標本流に計算すると <span class="math inline">\(d =
+0.64\)</span> で，<span class="math inline">\(d_z = 0.93\)</span>
+とはかなり違います。</p>
+<p>どちらも「Cohenの <em>d</em>」と呼ばれるため混同されがちです。
+区別するため，対応ありのほうを <strong><span class="math inline">\(d_z\)</span></strong> と書くことがあります。
+<strong>論文で読むときは，分母が何かを確かめてください。</strong></p>
+</blockquote>
 <hr />
 </div>
 <div id="独立t検定との比較" class="section level2">
@@ -3093,6 +3161,40 @@ n)\]</span></p>
 ## sample estimates:
 ## mean of x mean of y 
 ##  7.000000  6.373333</code></pre>
+<blockquote>
+<p><code>paired = FALSE</code>
+にすると，第10回と同じ<strong>Welch法</strong>の独立2標本t検定になります
+（出力の1行目が <code>Welch Two Sample t-test</code>
+に変わっていることを確認してください）。</p>
+</blockquote>
+<p><strong>同じデータなのに，結論が変わりました。</strong></p>
+<table>
+<thead>
+<tr>
+<th>分析の仕方</th>
+<th align="right"><span class="math inline">\(t\)</span></th>
+<th align="right"><span class="math inline">\(df\)</span></th>
+<th align="right"><span class="math inline">\(p\)</span></th>
+<th>判定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>対応あり（正しい）</td>
+<td align="right">3.62</td>
+<td align="right">14</td>
+<td align="right"><strong>0.0028</strong></td>
+<td>有意</td>
+</tr>
+<tr>
+<td>対応なし（誤り）</td>
+<td align="right">1.75</td>
+<td align="right">25.59</td>
+<td align="right">0.0921</td>
+<td>有意でない</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
 <p>対応のある分析の方が一般的に検出力が高い（個人差を除去できるため）。
 データ構造を正しく理解して，適切な分析を選ぶことが重要。</p>
@@ -3164,11 +3266,10 @@ n)\]</span></p>
 </thead>
 <tbody>
 <tr>
-<td>独立2標本（Student法）</td>
+<td>独立2標本（§6の出力・Welch法）</td>
 <td align="right"><span class="math inline">\(n_1 + n_2 =
 30\)</span></td>
-<td align="right"><span class="math inline">\(n_1 + n_2 - 2 =
-28\)</span></td>
+<td align="right"><span class="math inline">\(25.59\)</span></td>
 </tr>
 <tr>
 <td>対応あり</td>
@@ -3178,9 +3279,13 @@ n)\]</span></p>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p>等分散を仮定するStudent法なら，自由度はちょうど <span class="math inline">\(n_1 + n_2 - 2 = 28\)</span> です。
+§6では第10回の方針どおりWelch法を使ったので，<span class="math inline">\(25.59\)</span> という小数になっています。</p>
+</blockquote>
 <p>自由度が小さいほど<span class="math inline">\(t\)</span>分布の裾は重くなり，有意と判定されるための臨界値は大きくなります。つまり不利です。</p>
 <p>それでも対応を取るほうが得なのは，<strong>分母の縮小がこの不利を上回る</strong>からです。臨界値は
-<span class="math inline">\(2.0484\)</span>（自由度28）から <span class="math inline">\(2.1448\)</span>（自由度14）へ <span class="math inline">\(4.7\%\)</span> 大きくなるだけですが，分母のほうは
+<span class="math inline">\(2.0571\)</span>（自由度25.59）から <span class="math inline">\(2.1448\)</span>（自由度14）へ <span class="math inline">\(4.3\%\)</span> 大きくなるだけですが，分母のほうは
 <span class="math inline">\(0.483\)</span> 倍まで縮みます。<span class="math inline">\(t\)</span>
 が倍以上になる効果のほうが，はるかに大きいのです。</p>
 <p>ただし，これは<strong>相関が正のとき</strong>の話です。式に戻って考えます。</p>
@@ -3217,6 +3322,16 @@ n)\]</span></p>
 {"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["プログラム前"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["プログラム後"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"7.1","3":"8.2"},{"1":"2","2":"5.5","3":"6.2"},{"1":"3","2":"6.3","3":"5.8"},{"1":"4","2":"6.5","3":"6.1"},{"1":"5","2":"6.3","3":"7.8"},{"1":"6","2":"5.9","3":"6.5"},{"1":"7","2":"7.2","3":"7.1"},{"1":"8","2":"5.9","3":"6.6"},{"1":"9","2":"7.6","3":"9.0"},{"1":"10","2":"5.9","3":"7.6"},{"1":"11","2":"7.0","3":"7.6"},{"1":"12","2":"7.8","3":"8.5"},{"1":"13","2":"4.9","3":"4.8"},{"1":"14","2":"5.8","3":"6.8"},{"1":"15","2":"5.9","3":"6.4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+<blockquote>
+<p><strong>列名が <code>before</code> / <code>after</code>
+に戻らないことに注意。</strong> §3で
+<code>factor(..., labels = c(&quot;プログラム前&quot;, &quot;プログラム後&quot;))</code>
+とラベルを付け替えたので， <code>names_from = time</code>
+はそのラベルを列名にします。 日本語の列名は <code>df$プログラム前</code>
+のようには書けず， <strong><code>df$\</code>プログラム前``
+とバッククォートで囲む</strong>必要があります。
+あとで分析に使う列は，<strong>英数字の名前のままにしておくほうが楽です。</strong></p>
+</blockquote>
 <hr />
 </div>
 <div id="演習" class="section level2">
