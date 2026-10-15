@@ -3065,7 +3065,7 @@ int main(void) {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fl">1e7</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">mean</span>(x))</span></code></pre></div>
 <pre><code>##    ユーザ   システム       経過  
-##      0.019      0.002      0.022</code></pre>
+##      0.020      0.003      0.022</code></pre>
 <p>一瞬で終わります。では，まったく同じ計算を<strong>Rのループで</strong>書いてみます。</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">system.time</span>({</span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="dv">0</span></span>
@@ -3073,7 +3073,7 @@ int main(void) {
 <span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  s <span class="sc">/</span> <span class="fu">length</span>(x)</span>
 <span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    ユーザ   システム       経過  
-##      0.154      0.004      0.159</code></pre>
+##      0.152      0.001      0.153</code></pre>
 <p>上の2つの「経過」を見比べてください。<strong>同じ計算でも，<code>mean()</code>
 のほうが明確に速く終わっています</strong>（実行環境によって数値は変わります）。</p>
 <p>理由は，<code>mean()</code>
@@ -3834,6 +3834,18 @@ RStudioを閉じるときに出る「<strong>Save workspace image to
 <span id="cb72-3"><a href="#cb72-3" tabindex="-1"></a></span>
 <span id="cb72-4"><a href="#cb72-4" tabindex="-1"></a><span class="co"># 演習4-2：</span></span>
 <span id="cb72-5"><a href="#cb72-5" tabindex="-1"></a><span class="co"># （ここに説明を書く）</span></span></code></pre></div>
+<hr />
+</div>
+<div id="模範解答" class="section level3">
+<h3>模範解答</h3>
+<p>演習1〜4の解答例を置いてあります。自分で解いたあとに見てください。</p>
+<p><strong>→ <a href="02_model_answer.R">第2回
+演習の模範解答（<code>.R</code> ファイル）</a></strong></p>
+<blockquote>
+<p>ブラウザで中身が表示されます。保存するときは右クリック
+→「リンク先を別名で保存」。
+RStudioで開いて，上から順に実行して確かめてください。</p>
+</blockquote>
 <hr />
 </div>
 </div>
