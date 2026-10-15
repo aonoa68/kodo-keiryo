@@ -1,0 +1,400 @@
+---
+title: "第4回　データの可視化（2）：グラフのカスタマイズと保存"
+subtitle: "行動計量学（行動科学分析法入門）"
+author: "小野原 彩香"
+date: "令和8年度"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
+                      fig.width = 7, fig.height = 4)
+library(tidyverse)
+
+# 図の日本語が文字化けしないようにする（ragg があるときだけ有効にする）
+if (requireNamespace("ragg", quietly = TRUE)) {
+  knitr::opts_chunk$set(dev = "ragg_png")
+}
+```
+
+---
+
+## 本日の目標
+
+1. `theme()` を使ってグラフの見た目を整える
+2. グラフを論文・レポート向けに整形できる
+3. グラフをファイルに保存できる（`ggsave()`）
+
+---
+
+## 0. 前回の補足：プロジェクトと，終了時に聞かれる「保存」
+
+本題に入る前に，前回うまく説明できていなかった2つを片づけます。
+どちらも「ファイルがどこに行ったか分からない」「前に書いたコードが動かない」の原因になるところです。
+
+### 0-1. プロジェクトとは何か
+
+**プロジェクトとは，1つのフォルダを「分析のひとまとまり」としてRStudioに覚えさせる仕組み**です。
+作ると，そのフォルダの中に `○○.Rproj` というファイルが1つできます。これがプロジェクトの本体です。
+
+プロジェクトを使うと，次の4つが自動で片づきます。
+
+| 困ること | プロジェクトを使うと |
+|---|---|
+| ファイルを読み込むとき，長いパスを書かないといけない | **そのフォルダが自動で作業場所になる**ので，`read.csv("data/kekka.csv")` のように短く書ける |
+| `setwd("C:/Users/...")` を毎回書き換えている | **書かなくてよくなる**（`setwd()` は使わないのが現代的な流儀です） |
+| 別の課題のデータや変数が混ざる | 分析ごとにフォルダが分かれ，**開いていたタブもそのまま復元される** |
+| USBや別のPCに移したらパスが全部壊れた | **フォルダごと移動してもそのまま動く** |
+
+**作り方**
+
+1. `File` → `New Project...`
+2. `New Directory` → `New Project`
+3. `Directory name` にフォルダ名，`Create project as subdirectory of` に置き場所を指定
+4. `Create Project`
+
+この授業では，たとえば `kodo-keiryo` という名前のプロジェクトを1つ作り，
+その中に回ごとの `.R` ファイルを置いていくとよいでしょう。
+
+> **フォルダ名と置き場所の注意**
+>
+> - 名前に**日本語・スペースを使わない**（`第3回 課題` ではなく `week03` のように）
+> - **OneDrive / iCloud の同期フォルダは避ける**。同期とRの書き込みがぶつかって保存に失敗することがあります
+>
+> すでにフォルダがある人は，手順2で `Existing Directory` を選べば，そのフォルダをプロジェクトにできます。
+
+**開き方**：`.Rproj` ファイルをダブルクリックします。
+RStudioの**右上**に今開いているプロジェクト名が出ているので，そこから切り替えることもできます。
+いまどこで作業しているか確かめたいときは `getwd()` を実行します。
+
+### 0-2. 終了するときに聞かれる「保存」は2種類ある
+
+RStudioを閉じようとすると保存を聞かれますが，**聞かれているものが2種類あり，答えが逆になります。**
+
+**① スクリプト（`.R` ファイル）の保存 → 必ず保存する**
+
+タブの名前が**赤くなっていたり `*` が付いていたら未保存**です。これはあなたが書いたコードそのもの，つまり成果物です。`Ctrl + S`（Macは `Cmd + S`）で保存してください。
+
+**② 「Save workspace image to ~/.RData?」 → 保存しなくてよい（`Don't Save`）**
+
+こちらが前回質問のあったものです。これは
+**「いま変数に入っているデータを，次回も残しておきますか」**という質問です。
+`Save` / `Don't Save` / `Cancel` の3択なら，**`Don't Save` を選んでください。**
+
+| | 中身 | 答え |
+|---|---|---|
+| `.R` ファイル | 書いたコード | **保存する** |
+| `.RData`（ワークスペース） | 実行してできた変数・データ | **保存しなくてよい** |
+| `.Rhistory` | コンソールに打った履歴 | 保存しなくてよい |
+
+**なぜ保存しなくてよいのか。** コードが残っていれば，変数は実行し直せば作り直せます。
+むしろ保存すると困ることが起きます。
+
+> 前回の古い変数が残ったまま次回が始まるので，
+> **コードを直したのに結果が変わらない**，逆に
+> **コードを消したのに動いてしまう**（消したはずの変数がまだメモリにいる）ということが起きます。
+> そうなると，そのコードを他の人に渡しても動きません。
+>
+> **「まっさらな状態から上から順に実行すれば，同じ結果になる」**という状態を保つこと。
+> これが分析の**再現性**で，この授業でずっと大事にしてほしい考え方です。
+
+**毎回聞かれないようにする設定（おすすめ）**
+
+1. `Tools` → `Global Options...` → `General`
+2. **`Save workspace to .RData on exit:`** を **`Never`** にする
+3. **`Restore .RData into workspace at startup`** の**チェックを外す**
+
+これで聞かれなくなり，起動のたびにまっさらな状態から始まります。
+
+> **例外**：計算に何十分もかかった結果だけは，残したいことがあります。
+> そのときはワークスペース全体ではなく，必要なものだけを明示的に保存します。
+>
+> ```r
+> saveRDS(kekka, "kekka.rds")   # 保存
+> kekka <- readRDS("kekka.rds") # 読み込み
+> ```
+
+---
+
+## 準備：パッケージの読み込み
+
+この回のコードは，すべて `tidyverse` を読み込んだ状態で動きます。
+RStudioを起動したら，**まずこれを実行してください。**
+
+```{r}
+library(tidyverse)
+```
+
+> 毎回必要です。読み込まないまま `filter()` や `ggplot()` を使うと，
+> 「関数が見つかりません」というエラーになります。
+
+---
+
+## 1. テーマ（theme）によるデザイン変更
+
+ggplot2には，グラフ全体の見た目を変える**テーマ**が用意されています。
+
+```{r}
+# デフォルトのグラフ
+p <- ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point() +
+  labs(title = "デフォルトのテーマ", x = "がく片の長さ", y = "花びらの長さ")
+p
+```
+
+### 主なテーマ一覧
+
+```{r}
+p + theme_bw()      # 白黒テーマ（論文向き）
+```
+
+```{r}
+p + theme_classic() # クラシック（軸線のみ，論文で人気）
+```
+
+```{r}
+p + theme_minimal() # ミニマル（シンプル）
+```
+
+```{r}
+p + theme_dark()    # ダーク（プレゼン向き）
+```
+
+> **論文・レポートには `theme_bw()` または `theme_classic()` がおすすめです。**
+
+---
+
+## 2. 色のカスタマイズ
+
+### 手動で色を指定する
+
+```{r}
+ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point() +
+  scale_color_manual(values = c("setosa" = "#E74C3C",
+                                 "versicolor" = "#3498DB",
+                                 "virginica" = "#2ECC71")) +
+  theme_classic()
+```
+
+### 組み込みのカラーパレット
+
+```{r}
+# ColorBrewerパレット（カテゴリ変数向き）
+ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point() +
+  scale_color_brewer(palette = "Set1") +
+  theme_bw()
+```
+
+---
+
+## 3. 軸・凡例のカスタマイズ
+
+```{r}
+ggplot(data = iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
+  geom_boxplot() +
+  scale_x_discrete(labels = c("setosa" = "セトサ",
+                               "versicolor" = "バーシカラー",
+                               "virginica" = "バージニカ")) +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(
+    title = "種ごとのがく片の長さ",
+    x = "種",
+    y = "がく片の長さ (cm)",
+    fill = "アヤメの種"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom",        # 凡例の位置
+    plot.title = element_text(size = 14, face = "bold"),  # タイトルの書式
+    axis.title = element_text(size = 12)                  # 軸タイトルの書式
+  )
+```
+
+---
+
+## 4. 複数グラフを並べる（facet）
+
+`facet_wrap()` で変数ごとにグラフを分割できます。
+
+```{r}
+ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length)) +
+  geom_point(color = "steelblue") +
+  facet_wrap(~ Species) +
+  labs(title = "種ごとの散布図", x = "がく片の長さ", y = "花びらの長さ") +
+  theme_bw()
+```
+
+---
+
+## 5. 回帰直線を追加する
+
+点の散らばりに**傾向を表す線**を重ねると，関係の向きが見やすくなります。
+
+```{r}
+ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE) +   # 回帰直線 + 信頼区間
+  labs(title = "散布図と回帰直線",
+       x = "がく片の長さ (cm)", y = "花びらの長さ (cm)") +
+  theme_bw()
+```
+
+実行すると，次のメッセージが出ます。
+
+```
+`geom_smooth()` using formula = 'y ~ x'
+```
+
+**これは失敗ではありません。** 第3回のヒストグラムのときと同じで，「`y ~ x` という式（＝直線）を当てはめました」という案内です。
+
+### 線が3本あるのはなぜか
+
+`aes()` の中に `color = Species` があるので，**種ごとに別々の線**が引かれます。全体で1本ではありません。
+
+3本をよく見ると，**傾きがそれぞれ違います。**
+
+| 種 | 線の様子 |
+|---|---|
+| setosa | ほぼ横ばい。がく片が長くても，花びらの長さはあまり変わらない |
+| versicolor | 右上がり |
+| virginica | はっきり右上がり |
+
+### グループを分けないとどう見えるか
+
+`color = Species` を外すと，全体で1本になります。並べて見てください。
+
+```{r}
+ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(title = "種を区別しない場合", x = "がく片の長さ (cm)", y = "花びらの長さ (cm)") +
+  theme_bw()
+```
+
+**1本にすると，3本のどれよりも急な線になります。**
+
+これは「がく片が長いほど花びらが長い」という関係が強いからではなく，**setosaが左下に，virginicaが右上にかたまっている**ためです。種の違いが，あたかも1つの傾向のように見えてしまっています。
+
+> **同じデータでも，グループを分けるかどうかで結論が変わることがあります。**
+> 色分けせずに1本の線を引いていたら，「がく片の長さで花びらの長さがよく説明できる」と
+> 読んでしまうところでした。**まず分けて見る**のが安全です。
+
+### この線と帯は何か
+
+> **線**は，点の散らばりの真ん中あたりを通るように引いた直線です（**回帰直線**といいます）。
+> **影の帯**は，その線の位置の**不確かさ**を表します。データが少ないところや散らばりが大きいところで広くなります。
+> 帯が不要なら `se = FALSE` と書きます。
+>
+> 計算の中身と解釈のしかたは**第8回以降**で扱います。今日は「傾向を目で見るための補助線」として使います。
+
+> **線が引けたからといって，原因と結果の関係があるとは限りません。**
+> 「がく片が長いから花びらが長くなる」とは言えません。どちらも「その種はもともと大きい」という
+> 共通の理由で説明できるかもしれないからです。線は関係の**向き**を見せるだけです。
+
+---
+
+## 6. グラフの保存（ggsave）
+
+作成したグラフをファイルに保存するには `ggsave()` を使います。
+
+```{r, eval=FALSE}
+# グラフを変数に保存しておく
+my_plot <- ggplot(data = iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(title = "種ごとのがく片の長さ")
+
+# PNG形式で保存
+ggsave(filename = "my_plot.png",
+       plot = my_plot,
+       width = 8,       # 幅（インチ）
+       height = 5,      # 高さ（インチ）
+       dpi = 300)       # 解像度（論文用は300以上推奨）
+
+# PDF形式で保存（ベクター形式，高品質）
+ggsave(filename = "my_plot.pdf",
+       plot = my_plot,
+       width = 8,
+       height = 5)
+```
+
+### 解像度の目安
+
+| 用途 | dpi |
+|------|-----|
+| 画面・Web表示 | 72〜96 |
+| 印刷・プレゼン | 150〜200 |
+| 論文投稿 | 300〜600 |
+
+---
+
+## 7. よく使うグラフのまとめ
+
+| グラフの種類 | 用途 | geom関数 |
+|-------------|------|---------|
+| 散布図 | 2変数の関係 | `geom_point()` |
+| ヒストグラム | 1変数の分布 | `geom_histogram()` |
+| 棒グラフ | カテゴリのカウント・集計値 | `geom_bar()` / `geom_col()` |
+| 箱ひげ図 | グループ間の分布比較 | `geom_boxplot()` |
+| 折れ線グラフ | 時系列・連続変化 | `geom_line()` |
+| バイオリン図 | 箱ひげ図より詳細な分布 | `geom_violin()` |
+
+---
+
+## 演習
+
+### 演習1：テーマの比較
+
+第3回で作ったグラフのいずれかに，`theme_classic()` と `theme_bw()` を適用し，
+どちらが見やすいか比較してください。
+
+### 演習2：論文用グラフの作成
+
+以下の要件を満たすグラフを作成してください。
+
+- **データ**：`iris`
+- **グラフの種類**：箱ひげ図
+- **x軸**：Species，**y軸**：Petal.Length
+- **色**：`fill = Species`，カラーパレットは `"Pastel2"`
+- **テーマ**：`theme_bw()`
+- **日本語のラベル**：タイトル・軸ラベルを日本語で
+- **凡例の位置**：右下（`legend.position = "right"`）
+
+```{r, eval=FALSE}
+ggplot(data = iris, aes(x = ___, y = ___, fill = ___)) +
+  geom_boxplot() +
+  scale_fill_brewer(palette = "___") +
+  labs(title = "___", x = "___", y = "___") +
+  theme_bw() +
+  theme(legend.position = "___")
+```
+
+### 演習3：グラフの保存
+
+演習2で作ったグラフを `kadai_02.png`（dpi = 300，幅 = 7インチ，高さ = 5インチ）で保存してください。
+
+---
+
+## 本日のまとめ
+
+- `theme_bw()` / `theme_classic()` で論文向きのデザインにできる
+- `scale_color_manual()` や `scale_color_brewer()` で色をカスタマイズ
+- `facet_wrap()` で変数ごとに分割したグラフを作れる
+- `geom_smooth()` で回帰直線を追加できる
+- `ggsave()` でグラフをPNG・PDFなどで保存できる
+
+---
+
+## 宿題・予習
+
+- 演習3のグラフを保存し，次回の授業で提出できるよう準備しておく
+- 次回から **データの加工（dplyr）** に入ります
+- 教科書のdplyr関連の章に目を通しておく
