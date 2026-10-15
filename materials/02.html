@@ -3065,7 +3065,7 @@ int main(void) {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fl">1e7</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">mean</span>(x))</span></code></pre></div>
 <pre><code>##    ユーザ   システム       経過  
-##      0.020      0.001      0.020</code></pre>
+##      0.019      0.003      0.023</code></pre>
 <p>一瞬で終わります。では，まったく同じ計算を<strong>Rのループで</strong>書いてみます。</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">system.time</span>({</span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="dv">0</span></span>
@@ -3073,7 +3073,7 @@ int main(void) {
 <span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  s <span class="sc">/</span> <span class="fu">length</span>(x)</span>
 <span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    ユーザ   システム       経過  
-##      0.154      0.001      0.156</code></pre>
+##      0.152      0.001      0.153</code></pre>
 <p>上の2つの「経過」を見比べてください。<strong>同じ計算でも，<code>mean()</code>
 のほうが明確に速く終わっています</strong>（実行環境によって数値は変わります）。</p>
 <p>理由は，<code>mean()</code>
@@ -3858,11 +3858,24 @@ RStudioを閉じるときに出る「<strong>Save workspace image to
 <li><strong>演習1〜4を1つの <code>.R</code>
 ファイルにまとめて保存し，次回の授業で開ける状態にしておく</strong>
 <ul>
-<li>完了の条件は，<strong>ファイルを先頭から順に実行して，同じ結果が再現できること</strong>です</li>
+<li>完了の条件は，<strong>保存した <code>.R</code>
+ファイルを開き直し，上から順にコードを実行して，同じ結果が得られること</strong></li>
+<li>実行は，コードの行にカーソルを置いて
+<code>Ctrl + Enter</code>（Macは <code>Cmd + Enter</code>）。
+全部を確かめたいときは<strong>全選択して
+<code>Ctrl + Enter</code></strong> です</li>
+<li><code>source(&quot;ファイル名.R&quot;)</code> や <code>Source</code>
+ボタンでまとめて実行すると，
+<strong>計算結果が表示されないことがあります</strong>（7節参照）。
+まとめて実行して値を見たいときは <code>print(bmi)</code>
+のように書いてください</li>
 <li>RStudioの Environment
 に値が残っていることと，手順がファイルに保存されていることは別です</li>
 <li><strong>Rを再起動し，右上の Environment
-に以前の変数が残っていないことを確認してから</strong>，スクリプトを先頭から実行してください（RStudioには前回の変数を復元する設定があるため，再起動しただけでは空にならないことがあります）</li>
+に以前の変数が残っていないことを確認してから</strong>，
+スクリプトを上から順に実行してください
+（前回の変数を復元する設定があるため，再起動しただけでは空にならないことがあります。
+この設定は<a href="04.html#%E5%89%8D%E5%9B%9E%E3%81%AE%E8%A3%9C%E8%B6%B3%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%81%A8%E7%B5%82%E4%BA%86%E6%99%82%E3%81%AB%E8%81%9E%E3%81%8B%E3%82%8C%E3%82%8B%E4%BF%9D%E5%AD%98">第4回の0-2</a>で切り方を説明します）</li>
 </ul></li>
 <li><strong>次回使うPCで <code>library(tidyverse)</code>
 が実行できることを確認しておく</strong>
