@@ -3065,7 +3065,7 @@ int main(void) {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fl">1e7</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">mean</span>(x))</span></code></pre></div>
 <pre><code>##    ユーザ   システム       経過  
-##      0.020      0.004      0.025</code></pre>
+##      0.020      0.002      0.022</code></pre>
 <p>一瞬で終わります。では，まったく同じ計算を<strong>Rのループで</strong>書いてみます。</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">system.time</span>({</span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="dv">0</span></span>
@@ -3073,7 +3073,7 @@ int main(void) {
 <span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  s <span class="sc">/</span> <span class="fu">length</span>(x)</span>
 <span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    ユーザ   システム       経過  
-##      0.154      0.001      0.156</code></pre>
+##      0.156      0.002      0.157</code></pre>
 <p>上の2つの「経過」を見比べてください。<strong>同じ計算でも，<code>mean()</code>
 のほうが明確に速く終わっています</strong>（実行環境によって数値は変わります）。</p>
 <p>理由は，<code>mean()</code>
@@ -3743,6 +3743,13 @@ Rさえ動いていれば演習は進められます。インストールがう�
 ファイルに書いて実行します。
 サイトにはRmd版も置いてありますが，そちらを使うかどうかは任意です。</p>
 </blockquote>
+</div>
+<div id="作業フォルダと終了時に聞かれる保存について" class="section level3">
+<h3>作業フォルダと，終了時に聞かれる保存について</h3>
+<p>ファイルをどこに置くか（<strong>プロジェクト</strong>）と，
+RStudioを閉じるときに出る「<strong>Save workspace image to
+~/.RData?</strong>」の意味は， 第4回の資料にまとめてあります。</p>
+<p><strong>→ <a href="04.html#%E5%89%8D%E5%9B%9E%E3%81%AE%E8%A3%9C%E8%B6%B3%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%81%A8%E7%B5%82%E4%BA%86%E6%99%82%E3%81%AB%E8%81%9E%E3%81%8B%E3%82%8C%E3%82%8B%E4%BF%9D%E5%AD%98">プロジェクトと，終了時に聞かれる「保存」</a></strong></p>
 <hr />
 </div>
 </div>
