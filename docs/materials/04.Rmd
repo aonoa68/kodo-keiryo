@@ -314,7 +314,7 @@ ggsave(filename = "my_plot.pdf",
 - **色**：`fill = Species`，カラーパレットは `"Pastel2"`
 - **テーマ**：`theme_bw()`
 - **日本語のラベル**：タイトル・軸ラベルを日本語で
-- **凡例の位置**：右（`legend.position = "right"`）
+- **凡例の位置**：下（`legend.position = "bottom"`）
 
 ```{r, eval=FALSE}
 ggplot(data = iris, aes(x = ___, y = ___, fill = ___)) +
