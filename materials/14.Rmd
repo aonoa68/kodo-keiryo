@@ -344,7 +344,15 @@ TukeyHSD(result)
 
 ### 演習2：視覚化
 
-演習1の Tukey HSD の結果を，`tukey_df` を使って信頼区間のプロットで表示してください。
+演習1の Tukey HSD の結果を，信頼区間のプロットで表示してください。
+
+> `tukey_df` は**5節で作った変数**です。5節のコードを実行していなければ存在しません。
+> 演習1から始めた場合は，次の2行で作り直してください。
+>
+> ```r
+> tukey_df <- as.data.frame(TukeyHSD(result)$Species)
+> tukey_df$comparison <- rownames(tukey_df)
+> ```
 
 ### 演習3：総合レポート（最終課題の練習）
 
