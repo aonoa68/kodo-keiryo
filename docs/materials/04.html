@@ -3129,7 +3129,9 @@ setosa
 全体（傾き1.86・<span class="math inline">\(r\)</span> = 0.87）と
 virginica（傾き0.75・<span class="math inline">\(r\)</span> =
 0.86）を比べると， 傾きは2倍以上違うのに相関係数はほぼ同じです。
-傾きは「xが1増えるとyがいくつ増えるか」，相関係数は「点が線のまわりにどれだけ集まっているか」を表します。</p>
+傾きは，<strong>xが1増えたときに回帰直線上のyの予測値がどれだけ変わるか</strong>を表します（単位はyの単位です）。
+相関係数は，<strong>2つの変数の直線的な関係の向きと強さ</strong>を，単位によらない
+<span class="math inline">\(-1\)</span> から <span class="math inline">\(1\)</span> までの値で表します。</p>
 </blockquote>
 </div>
 <div id="この線と帯は何か" class="section level3">
@@ -3137,8 +3139,11 @@ virginica（傾き0.75・<span class="math inline">\(r\)</span> =
 <blockquote>
 <p><strong>線</strong>は，点の散らばりの真ん中あたりを通るように引いた直線です（<strong>回帰直線</strong>といいます）。
 <strong>影の帯</strong>は，各xにおける<strong>平均的なyの値をどれくらい確かに推定できるか</strong>を表す95%信頼区間です。
-直線を当てはめた今回は，<strong>xの平均のあたりで最も狭く，そこから離れるほど広がります</strong>
-（このデータのがく片の長さの平均は5.84 cm）。
+直線を当てはめた今回は，<strong>xの平均のあたりで最も狭く，そこから離れるほど広がります</strong>。
+全体で1本引いた図では，がく片の長さの全体平均5.84
+cm付近で最も狭くなります。
+種ごとに線を引いた図では，<strong>それぞれの種の平均付近</strong>で最も狭くなります
+（種ごとの線は，その種のデータだけを使って別々に当てはめられています）。
 「データの95%がこの帯に入る」という意味ではありません。 帯が不要なら
 <code>se = FALSE</code> と書きます。</p>
 <p>計算の中身と解釈のしかたは<strong>第8回以降</strong>で扱います。今日は「傾向を目で見るための補助線」として使います。</p>
@@ -3185,6 +3190,8 @@ virginica（傾き0.75・<span class="math inline">\(r\)</span> =
 うまくいかないときは PNG で保存するか，次のように書いてください。</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">&quot;my_plot.pdf&quot;</span>, my_plot, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">5</span>,</span>
 <span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>       <span class="at">device =</span> grDevices<span class="sc">::</span>cairo_pdf)</span></code></pre></div>
+<p><code>cairo_pdf</code>
+も環境によっては使えないことがあります。<strong>確実なのはPNGです。</strong></p>
 </blockquote>
 <div id="解像度の目安" class="section level3">
 <h3>解像度の目安</h3>
