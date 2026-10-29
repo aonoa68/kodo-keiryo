@@ -43,7 +43,7 @@ p_base + theme_bw()
 
 p2 <- ggplot(data = iris, aes(x = Species, y = Petal.Length, fill = Species)) +
   geom_boxplot() +
-  scale_fill_brewer(palette = "Pastel2") +
+  scale_fill_brewer(palette = "Set2") +
   labs(title = "種ごとの花びらの長さ",
        x = "種",
        y = "花びらの長さ (cm)",

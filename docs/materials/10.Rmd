@@ -140,7 +140,7 @@ mtcars |>
   ggplot(aes(x = am, y = mpg, fill = am)) +
   geom_boxplot() +
   geom_jitter(width = 0.1, alpha = 0.5) +
-  scale_fill_brewer(palette = "Pastel1") +
+  scale_fill_brewer(palette = "Set2") +
   labs(title = "トランスミッション別の燃費", x = "トランスミッション", y = "燃費 (mpg)") +
   theme_bw() +
   theme(legend.position = "none")
