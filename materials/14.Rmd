@@ -252,7 +252,7 @@ ggplot(tukey_df, aes(x = comparison, y = diff)) +
 p_box <- ggplot(iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
   geom_boxplot(outlier.shape = NA, alpha = 0.7) +
   geom_jitter(width = 0.1, alpha = 0.3, size = 1.5) +
-  scale_fill_brewer(palette = "Pastel1") +
+  scale_fill_brewer(palette = "Set2") +
   labs(title = "種ごとのがく片の長さ（Tukey HSD: すべての群間に p < .001）",
        x = "種", y = "がく片の長さ (cm)") +
   theme_bw() +

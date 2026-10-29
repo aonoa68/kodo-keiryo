@@ -142,7 +142,7 @@ ggplot(sleep_long, aes(x = time, y = sleep, group = id)) +
   geom_point(aes(color = time), size = 3, alpha = 0.8) +
   stat_summary(aes(group = 1), fun = mean, geom = "line",
                linewidth = 1.5, color = "steelblue", linetype = "dashed") +
-  scale_color_brewer(palette = "Set1") +
+  scale_color_brewer(palette = "Dark2") +
   labs(title = "睡眠改善プログラム前後の睡眠時間",
        x = "時点", y = "睡眠時間（時間）", color = "時点") +
   theme_bw() +

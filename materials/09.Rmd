@@ -434,7 +434,7 @@ titanic_pct <- titanic_summary |>
 
 ggplot(titanic_pct, aes(x = Sex, y = pct, fill = Survived)) +
   geom_col() +
-  scale_fill_manual(values = c("No" = "#E74C3C", "Yes" = "#2ECC71"),
+  scale_fill_manual(values = c("No" = "#D95F02", "Yes" = "#1B9E77"),
                     labels = c("No" = "死亡", "Yes" = "生存")) +
   labs(title = "タイタニック：性別と生存率",
        x = "性別", y = "割合（%）", fill = "生存") +

@@ -60,7 +60,7 @@ ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
 # 箱ひげ図
 ggplot(data = iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
   geom_boxplot() +
-  scale_fill_brewer(palette = "Pastel1") +
+  scale_fill_brewer(palette = "Set2") +
   labs(title = "種ごとのがく片の長さ", x = "種", y = "がく片の長さ (cm)") +
   theme_bw() +
   theme(legend.position = "none")

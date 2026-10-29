@@ -228,7 +228,7 @@ iris |>
 ggplot(iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
   geom_boxplot() +
   geom_jitter(width = 0.1, alpha = 0.3) +
-  scale_fill_brewer(palette = "Pastel1") +
+  scale_fill_brewer(palette = "Set2") +
   labs(title = "種ごとのがく片の長さ",
        x = "種", y = "がく片の長さ (cm)") +
   theme_bw() +
@@ -378,7 +378,7 @@ iris_summary <- iris |>
 ggplot(iris_summary, aes(x = Species, y = mean, fill = Species)) +
   geom_col(width = 0.6) +
   geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.15) +
-  scale_fill_brewer(palette = "Pastel1") +
+  scale_fill_brewer(palette = "Set2") +
   labs(title = "種ごとのがく片の長さ（平均±SD）",
        x = "種", y = "がく片の長さ (cm)") +
   theme_bw() +

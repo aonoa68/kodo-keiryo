@@ -133,9 +133,10 @@ p + theme_dark()    # ダーク（プレゼン向き）
 ```{r}
 ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
   geom_point() +
-  scale_color_manual(values = c("setosa" = "#E74C3C",
-                                 "versicolor" = "#3498DB",
-                                 "virginica" = "#2ECC71")) +
+  # 色は自分で決められます。ここでは Dark2 パレットの3色を書き出しました
+  scale_color_manual(values = c("setosa" = "#1B9E77",
+                                 "versicolor" = "#D95F02",
+                                 "virginica" = "#7570B3")) +
   theme_classic()
 ```
 
@@ -145,11 +146,11 @@ ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
 # ColorBrewerパレット（カテゴリ変数向き）
 ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
   geom_point() +
-  scale_color_brewer(palette = "Set1") +
+  scale_color_brewer(palette = "Dark2") +
   theme_bw()
 ```
 
-> **`"Set1"` 以外に何があるか，どこで調べるか**
+> **`"Dark2"` 以外に何があるか，どこで調べるか**
 >
 > パレットの名前は `RColorBrewer` というパッケージが持っています
 > （`tidyverse` を入れると一緒に入るので，追加のインストールは要りません）。
@@ -169,19 +170,27 @@ ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
 > 名前と使える色数を表で見たいときは `RColorBrewer::brewer.pal.info`，
 > 関数の説明は `?scale_color_brewer` で読めます。
 >
-> **色数の上限があります。** 例えば `Pastel2` は8色までなので，
+> **色数の上限があります。** 例えば `Set2` は8色までなので，
 > 9つ以上のグループを塗り分けようとすると色が足りなくなります。
 > `iris` は3種なのでどれを選んでも足ります。
 
 > **色の選び方には，好み以外の基準もあります**
 >
-> `Set1` や `Pastel1` は，色の見え方が多数派と異なる人には区別しにくい組み合わせです。
-> 人に見せる資料に使うなら，**`Dark2`・`Set2`・`Paired`** を選んでください。
+> **この授業の資料では `Dark2` と `Set2` を使っています。** 色の見え方は人によって違い，
+> 日本では男性の約5%に，赤と緑が近い色に見える型があります。
+> `Set1` や `Pastel1`（よく見かける既定のパレットです）はこの点で配慮されておらず，
+> **赤と緑を隣り合わせに使うと，一部の人には同じ色に見えます。**
+>
 > 配慮されたパレットだけを表示するには次のようにします。
 >
 > ```r
 > RColorBrewer::display.brewer.all(colorblindFriendly = TRUE)
 > ```
+>
+> カテゴリ変数向き（qual）で配慮されているのは **`Dark2`・`Set2`・`Paired`** の3つだけです。
+> 発表や論文に使う図では，ここから選んでください。
+> 色のほかに**形（`shape =`）や線の種類（`linetype =`）も変える**と，
+> 白黒で印刷されても読めます。
 
 ---
 
@@ -193,7 +202,7 @@ ggplot(data = iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
   scale_x_discrete(labels = c("setosa" = "セトサ",
                                "versicolor" = "バーシカラー",
                                "virginica" = "バージニカ")) +
-  scale_fill_brewer(palette = "Pastel1") +
+  scale_fill_brewer(palette = "Set2") +
   labs(
     title = "種ごとのがく片の長さ",
     x = "種",
@@ -399,7 +408,7 @@ ggsave(filename = "my_plot.pdf",
 - **データ**：`iris`
 - **グラフの種類**：箱ひげ図
 - **x軸**：Species，**y軸**：Petal.Length
-- **色**：`fill = Species`，カラーパレットは `"Pastel2"`
+- **色**：`fill = Species`，カラーパレットは `"Set2"`
 - **テーマ**：`theme_bw()`
 - **日本語のラベル**：タイトル・軸ラベルを日本語で
 - **凡例の位置**：下（`legend.position = "bottom"`）
@@ -431,6 +440,11 @@ ggplot(data = iris, aes(x = ___, y = ___, fill = ___)) +
 
 ## 宿題・予習
 
-- 演習3のグラフを保存し，次回の授業で提出できるよう準備しておく
+- **演習3で保存した `kadai_02.png` を開いて，画像ができていることを確認する**
+  - **提出は要りません。** 自分のパソコンに保存できていれば完了です
+  - どこに保存されたか分からなくなったら `getwd()` で確認してください
+  - 画像の大きさが **2100 × 1500 ピクセル**になっていれば，`dpi = 300` が効いています
+    （Windows はファイルを右クリック →「プロパティ」→「詳細」，
+    Mac は右クリック →「情報を見る」で確認できます）
 - 次回から **データの加工（dplyr）** に入ります
 - 教科書のdplyr関連の章に目を通しておく
