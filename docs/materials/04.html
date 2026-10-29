@@ -3035,12 +3035,18 @@ RStudioを起動したら，<strong>まずこれを実行してください。</
 というパッケージが持っています （<code>tidyverse</code>
 を入れると一緒に入るので，追加のインストールは要りません）。
 <strong>一覧を図で見る</strong>には，コンソールで次を実行してください。</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>RColorBrewer<span class="sc">::</span><span class="fu">display.brewer.all</span>()</span></code></pre></div>
-<p>3つのグループに分かれて表示されます。<strong>種・性別のように順序のないもの</strong>に使うのは
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>RColorBrewer<span class="sc">::</span><span class="fu">display.brewer.all</span>(<span class="at">type =</span> <span class="st">&quot;qual&quot;</span>)</span></code></pre></div>
+<p><strong>種・性別のように順序のないもの</strong>に使うのは
 <strong>qual</strong>（qualitative＝質的）のグループで，次の8つです。</p>
 <p><code>Accent</code> <code>Dark2</code> <code>Paired</code>
 <code>Pastel1</code> <code>Pastel2</code> <code>Set1</code>
 <code>Set2</code> <code>Set3</code></p>
+<p><code>type</code> を付けずに <code>display.brewer.all()</code>
+と書くと全35個が出ますが， <strong>Plots
+ペインが狭いと縦に潰れて読めません。</strong> その場合は Plots
+ペイン上部の <strong><code>Zoom</code></strong>
+ボタンで別ウィンドウに出すか， 上のように <code>type</code>
+で絞ってください。</p>
 <p>残りは，順序のある量に使う <strong>seq</strong>（薄い→濃い）と，
 中央を基準に両側へ分かれる
 <strong>div</strong>（例：マイナス←0→プラス）です。
@@ -3061,7 +3067,9 @@ RStudioを起動したら，<strong>まずこれを実行してください。</
 <code>Pastel1</code>（よく見かける既定のパレットです）はこの点で配慮されておらず，
 <strong>赤と緑を隣り合わせに使うと，一部の人には同じ色に見えます。</strong></p>
 <p>配慮されたパレットだけを表示するには次のようにします。</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>RColorBrewer<span class="sc">::</span><span class="fu">display.brewer.all</span>(<span class="at">colorblindFriendly =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>RColorBrewer<span class="sc">::</span><span class="fu">display.brewer.all</span>(<span class="at">type =</span> <span class="st">&quot;qual&quot;</span>, <span class="at">colorblindFriendly =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><code>Dark2</code>・<code>Set2</code>・<code>Paired</code>
+の3行だけが出ます。</p>
 <p>カテゴリ変数向き（qual）で配慮されているのは
 <strong><code>Dark2</code>・<code>Set2</code>・<code>Paired</code></strong>
 の3つだけです。 発表や論文に使う図では，ここから選んでください。

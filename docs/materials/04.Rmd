@@ -193,13 +193,18 @@ ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
 > **一覧を図で見る**には，コンソールで次を実行してください。
 >
 > ```r
-> RColorBrewer::display.brewer.all()
+> RColorBrewer::display.brewer.all(type = "qual")
 > ```
 >
-> 3つのグループに分かれて表示されます。**種・性別のように順序のないもの**に使うのは
+> **種・性別のように順序のないもの**に使うのは
 > **qual**（qualitative＝質的）のグループで，次の8つです。
 >
 > `Accent` `Dark2` `Paired` `Pastel1` `Pastel2` `Set1` `Set2` `Set3`
+>
+> `type` を付けずに `display.brewer.all()` と書くと全35個が出ますが，
+> **Plots ペインが狭いと縦に潰れて読めません。**
+> その場合は Plots ペイン上部の **`Zoom`** ボタンで別ウィンドウに出すか，
+> 上のように `type` で絞ってください。
 >
 > 残りは，順序のある量に使う **seq**（薄い→濃い）と，
 > 中央を基準に両側へ分かれる **div**（例：マイナス←0→プラス）です。
@@ -220,8 +225,10 @@ ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
 > 配慮されたパレットだけを表示するには次のようにします。
 >
 > ```r
-> RColorBrewer::display.brewer.all(colorblindFriendly = TRUE)
+> RColorBrewer::display.brewer.all(type = "qual", colorblindFriendly = TRUE)
 > ```
+>
+> `Dark2`・`Set2`・`Paired` の3行だけが出ます。
 >
 > カテゴリ変数向き（qual）で配慮されているのは **`Dark2`・`Set2`・`Paired`** の3つだけです。
 > 発表や論文に使う図では，ここから選んでください。
