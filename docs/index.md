@@ -56,7 +56,7 @@ ISBN 978-4-297-12170-9
 |---:|---|---|---|---|
 | 1 | 10/2 | ガイダンス：行動計量学とは何か／Rとデータ分析の位置づけ | [HTML](materials/01.html) ・ [Rmd](materials/01.Rmd) | — |
 | 2 | 10/9 | R・RStudioの導入：インストールと基本操作 | [HTML](materials/02.html) ・ [Rmd](materials/02.Rmd)<br>**[→ インストール手順](materials/02-install.html)**<br>[演習の模範解答](materials/02_model_answer.R) | — |
-| 3 | 10/16 | データの可視化(1)：ggplot2によるグラフ作成の基礎 | [HTML](materials/03.html) ・ [Rmd](materials/03.Rmd) | [グラフで見る](https://aonoa68.github.io/teaching/guide/visualize/) |
+| 3 | 10/16 | データの可視化(1)：ggplot2によるグラフ作成の基礎 | [HTML](materials/03.html) ・ [Rmd](materials/03.Rmd)<br>[演習の模範解答](materials/03_model_answer.R) | [グラフで見る](https://aonoa68.github.io/teaching/guide/visualize/) |
 | — | **10/23** | **休講**（担当教員の研究出張のため。第4回以降を1週ずつ繰り下げます） | — | — |
 | 4 | 10/30 | データの可視化(2)：グラフのカスタマイズと保存 | [HTML](materials/04.html) ・ [Rmd](materials/04.Rmd) | [グラフで見る](https://aonoa68.github.io/teaching/guide/visualize/) |
 | 5 | 11/6 | データの加工(1)：dplyrによるデータ整形 | [HTML](materials/05.html) ・ [Rmd](materials/05.Rmd) | — |
