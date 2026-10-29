@@ -2868,10 +2868,11 @@ border-radius: 0px;
 <li>RStudioを起動する</li>
 <li>前回保存した <code>.R</code> ファイルを開く（<code>File</code> →
 <code>Open File...</code>）</li>
-<li>1行目の <code>library(tidyverse)</code> から順に
-<code>Ctrl + Enter</code>（Mac は
-<code>Cmd + Enter</code>）で実行する</li>
-<li><strong>散布図・ヒストグラム・箱ひげ図の3つが表示されれば完了です</strong></li>
+<li><strong>全選択（<code>Ctrl + A</code>）してから
+<code>Ctrl + Enter</code></strong>（Mac は <code>Cmd + A</code> →
+<code>Cmd + Enter</code>）で， まとめて実行する</li>
+<li><strong>散布図・ヒストグラム・箱ひげ図の3つが表示されれば完了です</strong>
+（図は Plots タブの左右の矢印でさかのぼれます）</li>
 </ol>
 <blockquote>
 <p><strong>うまくいかないときは</strong></p>
@@ -2879,15 +2880,20 @@ border-radius: 0px;
 <li><strong>「関数 ‘ggplot’
 を見つけることができませんでした」というエラー</strong> →
 <code>library(tidyverse)</code>
-の行を実行していません。1行目から実行してください。 なお
+の行が実行されていません。全選択して実行し直してください。 なお
 <code>iris</code>
 はR本体に入っているデータなので，これは読み込まなくても使えます</li>
 <li><strong>ファイルがどこにあるか分からない</strong> →
 作り直しても構いません。 演習1〜3のコードは<a href="03.html#%E6%BC%94%E7%BF%92">第3回の演習</a>にあります。
 保存先の決め方は<a href="03.html#%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E4%BF%9D%E5%AD%98%E5%85%88%E3%81%A8%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88">第3回の0-1</a>を見てください</li>
 <li><strong>コードは走るのに図が出ない</strong> →
-<code>source(&quot;ファイル名.R&quot;)</code> でまとめて実行していませんか。
-1行ずつ <code>Ctrl + Enter</code> で実行してください</li>
+<code>source(&quot;ファイル名.R&quot;)</code> や <code>Source</code> ボタンで
+実行していませんか。この方法では図が表示されません。 <strong>全選択して
+<code>Ctrl + Enter</code></strong> で実行してください</li>
+<li><strong>どこで失敗しているのか分からない</strong> →
+そのときだけ，1行目にカーソルを置いて <code>Ctrl + Enter</code>
+を繰り返し，止まる行を探してください。
+<strong>ふだんは全選択で構いません</strong></li>
 </ul>
 </blockquote>
 </div>
