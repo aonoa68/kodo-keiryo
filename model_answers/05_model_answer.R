@@ -34,6 +34,13 @@ msleep |>
 # filter() はその行を落とします。つまり「NAの動物は結果に出てこない」ことになります。
 sum(is.na(msleep$vore))   # 7件
 
+# 問：欠損7件は，1 で取り出した雑食20件に入っていますか。
+#     入っていません。vore が NA の行は vore == "omni" の判定が NA になり，
+#     filter() は TRUE でない行を落とすためです。
+#     「omni でない」という条件（vore != "omni"）でも同じく拾われません。
+#     欠損だけを見たいときは filter(is.na(vore)) と書きます。
+msleep |> filter(is.na(vore)) |> select(name, sleep_total)
+
 
 # ------------------------------------------------------------
 # 演習2：select() の練習
@@ -45,10 +52,14 @@ msleep_small <- msleep |>
 
 msleep_small
 
-# 列の順番は書いた順になります。
-# 「この4列以外を捨てる」と書くこともできます（結果は同じではありません。
-#  下は列の並びが元のままになります）。
-#   msleep |> select(name, vore, sleep_total, bodywt)
+# 逆に「要らない列を捨てる」書き方もできます（列名に - を付けます）。
+msleep |>
+  select(-genus, -order, -conservation, -sleep_rem, -sleep_cycle, -awake, -brainwt)
+
+# 今回はどちらも同じ結果になります。元のデータでこの4列が
+# name → vore → sleep_total → bodywt の順に並んでいるためです。
+# select() は書いた順に列を並べるので，順番を変えたいときは正の指定を使います。
+#   msleep |> select(bodywt, name)   # bodywt が先に来る
 
 
 # ------------------------------------------------------------
@@ -70,6 +81,17 @@ msleep |>
   arrange(awake_ratio) |>
   head(10)
 
-# awake は「24 - sleep_total」なので，awake_ratio が大きい動物は
-# そのまま睡眠時間が短い動物です。上位は キリン（0.92）・ゴンドウクジラ・ウマ・
-# ノロジカ・ロバ の順で，大型の動物が並びます。
+# 問：上位に並ぶのはどんな動物ですか。sleep_total と見比べて気づいたことは。
+#     awake はほぼ「24 - sleep_total」です（83件中81件が合計ちょうど24時間。
+#     Pilot whale と Common porpoise の2件だけ24.05になっています）。
+#     そのため awake_ratio が大きい動物は，そのまま睡眠時間が短い動物です。
+#     上位は キリン（0.92）・ゴンドウクジラ・ウマ・ノロジカ・ロバ の順で，
+#     大型の草食動物と海生の動物が並びます。
+#     awake_ratio は sleep_total から決まる値なので，新しい情報は増えていません。
+#     それでも「1日のうちどれだけ起きているか」という割合にすると，
+#     動物どうしを比べやすくなります。
+msleep |>
+  select(name, sleep_total, awake) |>
+  mutate(awake_ratio = awake / 24) |>
+  arrange(desc(awake_ratio)) |>
+  head(5)
