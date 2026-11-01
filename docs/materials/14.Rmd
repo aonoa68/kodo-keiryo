@@ -12,6 +12,8 @@ output:
     df_print: paged
 ---
 
+<p style="margin:0 0 1.5em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
                       fig.width = 8, fig.height = 5)
@@ -409,3 +411,7 @@ TukeyHSD(result)
 - 演習3（総合問題）を完成させ，スクリプトを保存する
 - 次回（第15回）は**最終まとめと習熟度確認テスト（第3回）**です
 - 第1〜14回の内容全体を見直しておいてください
+
+---
+
+<p style="margin:2em 0 1em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>

@@ -12,6 +12,8 @@ output:
     df_print: paged
 ---
 
+<p style="margin:0 0 1.5em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
                       fig.width = 7, fig.height = 4)
@@ -132,3 +134,7 @@ t.test(after, before, paired = TRUE)
 - 一元配置分散分析（one-way ANOVA）の論理
 
 教科書の分散分析の章を読んでおいてください。
+
+---
+
+<p style="margin:2em 0 1em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>

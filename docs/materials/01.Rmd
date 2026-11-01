@@ -12,6 +12,8 @@ output:
     df_print: paged
 ---
 
+<p style="margin:0 0 1.5em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
@@ -272,3 +274,7 @@ PCの機種や設定の都合で，どうしてもインストールできない
 - PCを必ず持参してください
 - 教科書の **Chapter 0**（R入門）に目を通しておくと理解が深まります
 - 準備学習・復習を含め，**1回あたり4時間程度**の学習を想定しています
+
+---
+
+<p style="margin:2em 0 1em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>

@@ -12,6 +12,8 @@ output:
     df_print: paged
 ---
 
+<p style="margin:0 0 1.5em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
                       fig.width = 7, fig.height = 4)
@@ -148,7 +150,7 @@ data_summary <- data_clean |>
 
 # 4. グラフを作る
 ggplot(data_clean, aes(x = group, y = score, fill = group)) +
-  geom_boxplot() + theme_bw()
+  geom_boxplot() + scale_fill_brewer(palette = "Set2") + theme_bw()
 
 # 5. 統計検定を実行する
 aov(score ~ group, data = data_clean) |>
@@ -187,3 +189,7 @@ Rを使ったデータ分析は，最初は難しく感じるかもしれませ�
 ここで学んだスキルは，卒業論文・研究・仕事の様々な場面で活きてきます。
 
 ぜひ，今後も積極的にRを使い続けてください！
+
+---
+
+<p style="margin:2em 0 1em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>

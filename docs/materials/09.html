@@ -2847,6 +2847,10 @@ border-radius: 0px;
 </div>
 
 
+<p style="margin:0 0 1.5em 0;">
+<a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">←
+授業トップへ戻る</a>
+</p>
 <hr />
 <div id="本日の目標" class="section level2">
 <h2>本日の目標</h2>
@@ -3531,9 +3535,10 @@ m\,\chi^2\]</span></p>
 <span id="cb40-9"><a href="#cb40-9" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pct =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
 <span id="cb40-10"><a href="#cb40-10" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> cyl, <span class="at">y =</span> pct, <span class="at">fill =</span> am)) <span class="sc">+</span></span>
 <span id="cb40-11"><a href="#cb40-11" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb40-12"><a href="#cb40-12" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;シリンダー数とトランスミッションの関係&quot;</span>,</span>
-<span id="cb40-13"><a href="#cb40-13" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;シリンダー数&quot;</span>, <span class="at">y =</span> <span class="st">&quot;割合（%）&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;トランスミッション&quot;</span>) <span class="sc">+</span></span>
-<span id="cb40-14"><a href="#cb40-14" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<span id="cb40-12"><a href="#cb40-12" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span></span>
+<span id="cb40-13"><a href="#cb40-13" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;シリンダー数とトランスミッションの関係&quot;</span>,</span>
+<span id="cb40-14"><a href="#cb40-14" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;シリンダー数&quot;</span>, <span class="at">y =</span> <span class="st">&quot;割合（%）&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;トランスミッション&quot;</span>) <span class="sc">+</span></span>
+<span id="cb40-15"><a href="#cb40-15" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
 <hr />
 </div>
 </div>
@@ -3559,6 +3564,11 @@ m\,\chi^2\]</span></p>
 <li>次回は <strong>t検定（2群の平均値の比較）</strong> を学びます</li>
 <li>教科書のt検定に関する章を読んでおく</li>
 </ul>
+<hr />
+<p style="margin:2em 0 1em 0;">
+<a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">←
+授業トップへ戻る</a>
+</p>
 </div>
 
 

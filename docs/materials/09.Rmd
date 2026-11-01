@@ -12,6 +12,8 @@ output:
     df_print: paged
 ---
 
+<p style="margin:0 0 1.5em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
                       fig.width = 7, fig.height = 4)
@@ -515,6 +517,7 @@ mtcars |>
   mutate(pct = n / sum(n) * 100) |>
   ggplot(aes(x = cyl, y = pct, fill = am)) +
   geom_col() +
+  scale_fill_brewer(palette = "Set2") +
   labs(title = "シリンダー数とトランスミッションの関係",
        x = "シリンダー数", y = "割合（%）", fill = "トランスミッション") +
   theme_bw()
@@ -539,3 +542,7 @@ mtcars |>
 - 演習2の結果をレポート形式でまとめる（1〜2文）
 - 次回は **t検定（2群の平均値の比較）** を学びます
 - 教科書のt検定に関する章を読んでおく
+
+---
+
+<p style="margin:2em 0 1em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>

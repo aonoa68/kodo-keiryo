@@ -12,6 +12,8 @@ output:
     df_print: paged
 ---
 
+<p style="margin:0 0 1.5em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
@@ -792,3 +794,7 @@ quiz_scores <- c(65, 78, 82, 55, 90, 71, 68, 85, 77, 60)
   - すでにインストール済みなら，入れ直す必要はありません
   - 別のPCを使う場合は `install.packages("tidyverse")` から
 - 教科書の **Chapter 0**（Rの導入）を読み返しておく（今日の内容の復習になります）
+
+---
+
+<p style="margin:2em 0 1em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>
