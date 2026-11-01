@@ -12,6 +12,8 @@ output:
     df_print: paged
 ---
 
+<p style="margin:0 0 1.5em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library(tidyverse)
@@ -166,6 +168,7 @@ sleep_summary <- msleep |>
 # 棒グラフ（geom_col で集計済みデータを使う）
 ggplot(sleep_summary, aes(x = vore, y = mean_sleep, fill = vore)) +
   geom_col() +
+  scale_fill_brewer(palette = "Set2") +
   labs(title = "食性ごとの平均睡眠時間",
        x = "食性", y = "平均睡眠時間（時間）",
        fill = "食性") +
@@ -180,6 +183,7 @@ ggplot(sleep_summary, aes(x = vore, y = mean_sleep, fill = vore)) +
   geom_errorbar(aes(ymin = mean_sleep - sd_sleep,
                     ymax = mean_sleep + sd_sleep),
                 width = 0.2) +
+  scale_fill_brewer(palette = "Set2") +
   labs(title = "食性ごとの平均睡眠時間（±SD）",
        x = "食性", y = "平均睡眠時間（時間）") +
   theme_bw() +
@@ -335,6 +339,7 @@ petal_summary <- iris |>
 ggplot(petal_summary, aes(x = ___, y = ___, fill = ___)) +
   geom_col() +
   geom_errorbar(aes(ymin = ___ - ___, ymax = ___ + ___), width = 0.2) +
+  scale_fill_brewer(palette = "Set2") +
   labs(title = "種ごとの花びらの長さ（平均±SD）",
        x = "___", y = "___") +
   theme_bw()
@@ -364,3 +369,7 @@ ggplot(petal_summary, aes(x = ___, y = ___, fill = ___)) +
 - 本日の演習を仕上げ，スクリプトを保存しておく
 - 次回は**習熟度確認テスト（第1回）**と復習です
 - 第2〜6回で学んだ内容（可視化・加工）を見直しておく
+
+---
+
+<p style="margin:2em 0 1em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>

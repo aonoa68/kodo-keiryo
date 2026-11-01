@@ -12,6 +12,8 @@ output:
     df_print: paged
 ---
 
+<p style="margin:0 0 1.5em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
                       fig.width = 7, fig.height = 4)
@@ -540,3 +542,7 @@ ggplot(data = iris, aes(x = ___, y = ___, fill = ___)) +
   - 詰まったときは[模範解答](03_model_answer.R)を見て構いません
 - 次回は **グラフのカスタマイズと保存**（画像ファイルとして書き出す方法）を学びます
 - 教科書の可視化に関する章を読んでおくと理解が深まります
+
+---
+
+<p style="margin:2em 0 1em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>

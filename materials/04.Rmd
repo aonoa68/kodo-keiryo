@@ -12,6 +12,8 @@ output:
     df_print: paged
 ---
 
+<p style="margin:0 0 1.5em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
                       fig.width = 7, fig.height = 4)
@@ -217,7 +219,7 @@ ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
 
 > **色の選び方には，好み以外の基準もあります**
 >
-> **この授業の資料では `Dark2` と `Set2` を使っています。** 色の見え方は人によって違い，
+> **この回以降の資料では `Dark2`（線や点の色）と `Set2`（塗りつぶし）を使っています。** 色の見え方は人によって違い，
 > 日本では男性の約5%に，赤と緑が近い色に見える型があります。
 > `Set1` や `Pastel1`（よく見かける既定のパレットです）はこの点で配慮されておらず，
 > **赤と緑を隣り合わせに使うと，一部の人には同じ色に見えます。**
@@ -285,6 +287,7 @@ ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length)) +
 ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
   geom_point(alpha = 0.6) +
   geom_smooth(method = "lm", se = TRUE) +   # 回帰直線 + 信頼区間
+  scale_color_brewer(palette = "Dark2") +
   labs(title = "散布図と回帰直線",
        x = "がく片の長さ (cm)", y = "花びらの長さ (cm)") +
   theme_bw()
@@ -374,6 +377,7 @@ ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length)) +
 # グラフを変数に保存しておく
 my_plot <- ggplot(data = iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
   geom_boxplot() +
+  scale_fill_brewer(palette = "Set2") +
   theme_bw() +
   labs(title = "種ごとのがく片の長さ")
 
@@ -500,3 +504,7 @@ ggplot(data = iris, aes(x = ___, y = ___, fill = ___)) +
     Mac は右クリック →「情報を見る」で確認できます）
 - 次回から **データの加工（dplyr）** に入ります
 - 教科書のdplyr関連の章に目を通しておく
+
+---
+
+<p style="margin:2em 0 1em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>
