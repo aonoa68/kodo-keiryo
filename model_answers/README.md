@@ -42,11 +42,16 @@
 
    ```sh
    cd docs/materials && Rscript -e 'rmarkdown::render("NN.Rmd", quiet=TRUE)'
-   cd ../.. && git add -A && git commit && git push origin main && mkdocs gh-deploy --force
+   cd ../.. && git add -A && git commit && git push origin main
+   mkdocs gh-deploy --force --site-dir /tmp/kodo-keiryo-build
    ```
 
    再レンダリングしたら、**HTMLからbase64画像を1枚デコードして目で見ること。**
    `ragg` が読めていないと図の日本語がすべて □ になりますが、grep では検出できません。
+
+   **ビルド先は必ず Dropbox の外にすること。** `site/` を Dropbox 内に置くと、
+   mkdocs が書いた直後に Dropbox が古い版へ巻き戻し、競合コピーを作ることがある。
+   2026/11/01 にこれで第5回の古い資料が一度公開された。
 
 ## 公開済み
 
@@ -54,12 +59,12 @@
 |---:|---|
 | 2 | 第2回の実施後 |
 | 3 | 2026/10/29 |
+| 4 | 2026/11/01 |
 
 ## 未公開（このフォルダ）
 
 | 回 | 内容 | 公開予定 |
 |---:|---|---|
-| 4 | テーマ比較・論文用グラフ・保存 | 10/30 の授業後 |
 | 5 | filter・select・mutate | 11/6 の授業後 |
 | 6 | 集計・エラーバー・count | 11/13 の授業後 |
 | 8 | 相関・cor.test・相関行列 | 11/27 の授業後 |
