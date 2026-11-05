@@ -2951,6 +2951,26 @@ RStudioを起動したら，<strong>まずこれを実行してください。</
 <div id="クロス集計表分割表" class="section level2">
 <h2>2. クロス集計表（分割表）</h2>
 <p>2つのカテゴリ変数の組み合わせごとの件数を表にしたものです。</p>
+<blockquote>
+<p><strong>書き方</strong>　<code>table(列1, 列2)</code></p>
+<ul>
+<li><strong>元のデータ（1行＝1人）から</strong>，組み合わせごとの件数を数えます</li>
+<li><code>table(mtcars$cyl, mtcars$am)</code> のように <code>$</code>
+で列を取り出して渡します</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><strong>書き方</strong>　<code>xtabs(件数の列 ~ 行の列 + 列の列, data = データ)</code></p>
+<ul>
+<li><strong>すでに件数が集計されている</strong>データから表を作ります</li>
+<li><code>~</code> の<strong>左に件数の列</strong>，<strong>右に
+<code>+</code> でつないだ2つのカテゴリ列</strong></li>
+<li>件数の列がない（1行＝1人の）データなら，左を空にして
+<code>xtabs(~ Sex + Survived, data = ...)</code> と書きます</li>
+</ul>
+<p><strong><code>table()</code> は数える，<code>xtabs()</code>
+は数えてあるものを並べ直す</strong>，と覚えると迷いません。</p>
+</blockquote>
 <div id="例タイタニック号の乗客データ" class="section level3">
 <h3>例：タイタニック号の乗客データ</h3>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># R組み込みの Titanic データ</span></span>
@@ -3000,6 +3020,19 @@ RStudioを起動したら，<strong>まずこれを実行してください。</
 <pre><code>##     はい いいえ
 ## A群   80     20
 ## B群   50     50</code></pre>
+<blockquote>
+<p><strong>書き方</strong>　<code>prop.table(表, margin = 1)</code></p>
+<ul>
+<li><strong><code>margin = 1</code></strong> …
+<strong>行ごと</strong>に合計が1（100%）になるように割合へ直します</li>
+<li><strong><code>margin = 2</code></strong> …
+<strong>列ごと</strong>に合計が1になります</li>
+<li><strong>省略すると表全体</strong>の合計が1になります</li>
+</ul>
+<p>「行ごと」か「列ごと」かで意味がまったく変わります。
+ここでは「A群のうち何%が『はい』か」を見たいので <code>margin = 1</code>
+です。</p>
+</blockquote>
 <p>A群は80%，B群は50%。かなり違って見えます。では，この表を<strong>そのまま5倍</strong>にしてみます。</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>large <span class="ot">&lt;-</span> small <span class="sc">*</span> <span class="dv">5</span></span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>large</span></code></pre></div>
@@ -3185,6 +3218,20 @@ P(B)\]</span></p>
 <h2>4. Rでカイ二乗検定を実行する</h2>
 <div id="chisq.test" class="section level3">
 <h3>chisq.test()</h3>
+<blockquote>
+<p><strong>書き方</strong>　<code>chisq.test(クロス集計表)</code></p>
+<ul>
+<li><strong>（）に入れるのはクロス集計表</strong>です（<code>table()</code>
+や <code>xtabs()</code> で作ったもの）</li>
+<li>元の2列をそのまま <code>chisq.test(データ$列1, データ$列2)</code>
+と渡しても動きます。 その場合はRが中で表を作ります</li>
+<li><strong>2×2の表では，既定でイェーツの連続性補正が入ります</strong>（下で説明します）。
+外すときは <code>correct = FALSE</code></li>
+<li>結果に <code>$expected</code>
+を付けると<strong>期待度数</strong>が見られます
+（<code>chisq.test(tab)$expected</code>）。前提条件の確認に使います</li>
+</ul>
+</blockquote>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># クロス集計表の作成</span></span>
 <span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">xtabs</span>(Freq <span class="sc">~</span> Sex <span class="sc">+</span> Survived, <span class="at">data =</span> titanic_summary)</span>
 <span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>tab</span></code></pre></div>
@@ -3262,6 +3309,15 @@ X-squared = 454.5, df = 1, p-value &lt; 2.2e-16</code></pre>
 ## A群  5.5    4.5
 ## B群  5.5    4.5</code></pre>
 <p>5を下回るセルがあります。このようなときは，近似を使わず<strong>正確に確率を計算する</strong>フィッシャーの正確確率検定を使います。</p>
+<blockquote>
+<p><strong>書き方</strong>　<code>fisher.test(クロス集計表)</code></p>
+<ul>
+<li><strong>（）に入れるものは <code>chisq.test()</code>
+と同じ</strong>クロス集計表です</li>
+<li>近似を使わないので，<strong>期待度数が小さくても使えます</strong></li>
+<li>そのかわり計算量が多く，<strong>表が大きい・人数が多いと時間がかかります</strong></li>
+</ul>
+</blockquote>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">fisher.test</span>(sparse)</span></code></pre></div>
 <pre><code>## 
 ##  Fisher&#39;s Exact Test for Count Data

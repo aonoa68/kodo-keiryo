@@ -3068,6 +3068,24 @@ z_y\)</span> のときだけです。これは「標準化したら完全に同�
 <h2>3. Rで相関係数を計算する</h2>
 <div id="cor相関係数の計算" class="section level3">
 <h3>cor()：相関係数の計算</h3>
+<blockquote>
+<p><strong>書き方</strong>　<code>cor(x, y)</code></p>
+<ul>
+<li><strong><code>x</code>, <code>y</code></strong> …
+数値の列を2つ。<code>iris$Sepal.Length</code> のように <code>$</code>
+で取り出します</li>
+<li><strong>データフレームを1つだけ</strong>渡すと，<strong>全部の組み合わせの相関行列</strong>が返ります</li>
+<li>そのとき<strong>文字やカテゴリの列が混ざっているとエラー</strong>になります。
+<code>select()</code> で数値の列だけにしてから渡してください
+（<code>cor(iris)</code> はエラー。<code>iris</code>
+には種名の列があるためです）</li>
+<li>欠損があると <code>NA</code>
+になります。<code>use = &quot;complete.obs&quot;</code>
+で欠損のある行を除けます</li>
+<li><code>method = &quot;spearman&quot;</code>
+で順位相関も出せます（<strong>既定はピアソン</strong>）</li>
+</ul>
+</blockquote>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># 2変数の相関係数</span></span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">cor</span>(iris<span class="sc">$</span>Sepal.Length, iris<span class="sc">$</span>Petal.Length)</span></code></pre></div>
 <pre><code>## [1] 0.8717538</code></pre>
@@ -3096,6 +3114,17 @@ z_y\)</span> のときだけです。これは「標準化したら完全に同�
 <div id="cor.test相関の有意性検定" class="section level2">
 <h2>4. cor.test()：相関の有意性検定</h2>
 <p>相関係数が「偶然ではなく本当に存在する」かどうかを検定します。</p>
+<blockquote>
+<p><strong>書き方</strong>　<code>cor.test(x, y)</code></p>
+<ul>
+<li>入れるものは <code>cor()</code>
+と同じ，<strong>2つの数値の列</strong>です</li>
+<li><strong><code>cor()</code>
+と違い，データフレームをまとめて渡すことはできません。</strong>
+相関行列の全部を検定したいときは，1組ずつ呼びます</li>
+<li>返ってくるのは数値1つではなく，t値・自由度・p値・信頼区間を含む<strong>結果一式</strong>です</li>
+</ul>
+</blockquote>
 <div id="仮説の設定" class="section level3">
 <h3>仮説の設定</h3>
 <ul>

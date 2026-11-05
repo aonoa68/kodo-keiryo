@@ -77,6 +77,15 @@ library(tidyverse)
 
 > 本授業では **Tukey HSD 法** を中心に扱います。
 
+> **書き方**　`pairwise.t.test(数値の列, グループの列, p.adjust.method = "方法")`
+>
+> - **`~` を使いません。** 数値とグループを**カンマで区切って2つ並べます**
+>   （`TukeyHSD()` や `aov()` と書き方が違うので注意）
+> - **`p.adjust.method =`** … 調整の方法。`"bonferroni"` `"holm"` など。
+>   **省略すると `"holm"`** が使われます
+> - 結果は**p値だけの表**です。平均差や信頼区間は出ません。
+>   そこが `TukeyHSD()` との違いです
+
 <details open>
 <summary>**導出①**：ボンフェローニ補正はなぜ効くのか ―― 独立を仮定しない不等式</summary>
 
@@ -180,6 +189,15 @@ $$p_{(1)} \text{ は } \frac{\alpha}{m}，\quad p_{(2)} \text{ は } \frac{\alph
 result_anova <- aov(Sepal.Length ~ Species, data = iris)
 summary(result_anova)
 ```
+
+> **書き方**　`TukeyHSD(aov()の結果)`
+>
+> - **（）に入れるのは，`aov()` の結果そのもの**です。データでも式でもありません
+> - **`lm()` の結果を渡すとエラー**になります
+>   （`'TukeyHSD' をクラス "lm" のオブジェクトに適用できるメソッドがありません`）。
+>   かならず `aov()` で作ってください
+> - 群が3つなら比較は3組，4つなら6組と，**全部の組み合わせ**が出ます
+> - `summary()` は要りません。そのまま表示すれば結果が読めます
 
 ```{r}
 # Tukey HSD 多重比較
