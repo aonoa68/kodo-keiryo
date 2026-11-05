@@ -3231,12 +3231,20 @@ Cloud</strong>（無料アカウント）を使って
 <div id="この回で使った関数" class="section level2">
 <h2>この回で使った関数</h2>
 <p>出てきた順に並べています。<strong>（）の中に何を入れるか</strong>を確かめたいときに見てください。</p>
+<div class="fn-table">
 <table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th>関数</th>
 <th>すること</th>
 <th>（）の中に入れるもの</th>
+<th>例</th>
 </tr>
 </thead>
 <tbody>
@@ -3244,9 +3252,19 @@ Cloud</strong>（無料アカウント）を使って
 <td><code>library()</code></td>
 <td>パッケージを読み込む</td>
 <td>パッケージ名。<strong>引用符なし</strong></td>
+<td><code>library(tidyverse)</code></td>
 </tr>
 </tbody>
 </table>
+</div>
+<blockquote>
+<p><strong>もっと詳しく知りたいときは</strong> <code>?関数名</code>
+と実行してください（例：<code>?mean</code>）。 右下の
+<strong>Help</strong>
+タブに，その関数の説明と，（）に書ける項目が全部出ます。 読み方は
+<strong><a href="02.html#help">第2回「ヘルプの読み方」</a></strong>
+にまとめてあります。</p>
+</blockquote>
 <hr />
 </div>
 <div id="本日のまとめ" class="section level2">
@@ -3276,6 +3294,26 @@ Cloud</strong>（無料アカウント）を使って
 授業トップへ戻る</a>
 </p>
 <style>
+
+.fn-table table {
+table-layout: fixed;
+width: 100%;
+font-size: 0.85em;
+}
+.fn-table table th,
+.fn-table table td { vertical-align: top; }
+.fn-table table th:nth-child(1), .fn-table table td:nth-child(1) { width: 18%; }
+.fn-table table th:nth-child(2), .fn-table table td:nth-child(2) { width: 19%; }
+.fn-table table th:nth-child(3), .fn-table table td:nth-child(3) { width: 31%; }
+.fn-table table th:nth-child(4), .fn-table table td:nth-child(4) { width: 32%; }
+.fn-table table code {
+white-space: normal;
+word-break: normal;
+overflow-wrap: anywhere;
+padding: 0;
+background: transparent;
+}
+
 .copy-wrap { position: relative; }
 .copy-wrap > .copy-btn {
 position: absolute;

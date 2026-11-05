@@ -463,43 +463,51 @@ iris |>
 
 出てきた順に並べています。**（）の中に何を入れるか**を確かめたいときに見てください。
 
-| 関数 | すること | （）の中に入れるもの |
-|---|---|---|
-| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** |
-| `set.seed()` | 乱数を毎回同じにする | 整数（何でもよい） |
-| `factor()` | カテゴリ（水準つき）に変える | 元の列, `levels =`（順序）, `labels =`（表示名） |
-| `rep()` | 同じ値をくり返す | くり返す値, `each =` または `times =` |
-| `numeric()` | 数値を入れる空の入れ物を作る | 長さ（個数） |
-| `rnorm()` | 正規分布の乱数を作る | 個数, `mean =`（既定0）, `sd =`（既定1） |
-| `min()` | 最小値 | 数値の列 |
-| `t.test()` | t検定 | `数値 ~ グループ, data =` または2つの列。既定は**ウェルチ**。対応ありは `paired = TRUE` |
-| `anova()` | 結果を分散分析表にする | `aov()` や `lm()` の結果 |
-| `aov()` | 分散分析をする | `数値 ~ グループ`, `data =` |
-| `c()` | 複数の値を1つに束ねる | 束ねたい値を `,` で並べる |
-| `mean()` | 平均 | 数値の列。欠損があるときは `na.rm = TRUE` |
-| `group_by()` | グループに分ける | データ, 分ける基準の列 |
-| `summarise()` | グループごとに1行にまとめる | データ, `新しい列名 = 集計の式` |
-| `n()` | そのグループの件数 | **何も入れません**（`n()` と書く） |
-| `sd()` | 標準偏差 | 数値の列。欠損があるときは `na.rm = TRUE` |
-| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て |
-| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など |
-| `geom_boxplot()` | 箱ひげ図を描く | 見た目の指定（省略可） |
-| `geom_jitter()` | 点を少しずらして描く（重なり防止） | `width =`, `height =` |
-| `scale_fill_brewer()` | 塗りつぶしの色をColorBrewerの組にする | `palette = "Set2"` など |
-| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` |
-| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） |
-| `theme()` | 細かい見た目を個別に変える | `axis.text = element_text(...)` など |
-| `summary()` | 要約を表示する | データフレーム，または分析結果 |
-| `shapiro.test()` | 正規性を検定する | 数値の列 |
-| `bartlett.test()` | 等分散性を検定する | `数値 ~ グループ`, `data =` |
-| `oneway.test()` | 等分散を仮定しない一元配置分散分析 | `数値 ~ グループ`, `data =`, `var.equal =` |
-| `round()` | 四捨五入する | 数値, 桁数（省略すると整数） |
-| `sum()` | 合計 | 数値の列 |
-| `geom_col()` | 値をそのまま棒の高さにする | `aes(y = 値)` が必要 |
-| `geom_errorbar()` | エラーバーを描く | `aes(ymin =, ymax =)`, `width =` |
+::: {.fn-table}
+
+| 関数 | すること | （）の中に入れるもの | 例 |
+|---|---|---|---|
+| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** | `library(tidyverse)` |
+| `set.seed()` | 乱数を毎回同じにする | 整数（何でもよい） | `set.seed(123)` |
+| `factor()` | カテゴリ（水準つき）に変える | 元の列, `levels =`（順序）, `labels =`（表示名） | `factor(mtcars$am, labels = c("AT", "MT"))` |
+| `rep()` | 同じ値をくり返す | くり返す値, `each =` または `times =` | `rep(1:3, each = 2)` |
+| `numeric()` | 数値を入れる空の入れ物を作る | 長さ（個数） | `numeric(10)` |
+| `rnorm()` | 正規分布の乱数を作る | 個数, `mean =`（既定0）, `sd =`（既定1） | `rnorm(50, mean = 10, sd = 2)` |
+| `min()` | 最小値 | 数値の列 | `min(msleep$sleep_total)` |
+| `t.test()` | t検定 | `数値 ~ グループ, data =` または2つの列。既定は**ウェルチ**。対応ありは `paired = TRUE` | `t.test(mpg ~ am, data = mtcars)` |
+| `anova()` | 結果を分散分析表にする | `aov()` や `lm()` の結果 | `anova(lm(weight ~ group, data = PlantGrowth))` |
+| `aov()` | 分散分析をする | `数値 ~ グループ`, `data =` | `aov(weight ~ group, data = PlantGrowth)` |
+| `c()` | 複数の値を1つに束ねる | 束ねたい値を `,` で並べる | `c(85, 72, 91)` |
+| `mean()` | 平均 | 数値の列。欠損があるときは `na.rm = TRUE` | `mean(iris$Sepal.Length)` |
+| `group_by()` | グループに分ける | データ, 分ける基準の列 | `group_by(msleep, vore)` |
+| `summarise()` | グループごとに1行にまとめる | データ, `新しい列名 = 集計の式` | `summarise(msleep, 平均 = mean(sleep_total))` |
+| `n()` | そのグループの件数 | **何も入れません**（`n()` と書く） | `summarise(msleep, 件数 = n())` |
+| `sd()` | 標準偏差 | 数値の列。欠損があるときは `na.rm = TRUE` | `sd(iris$Sepal.Length)` |
+| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て | `ggplot(iris, aes(x = Sepal.Length, y = Petal.Length))` |
+| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など | `aes(x = Species, y = Petal.Length)` |
+| `geom_boxplot()` | 箱ひげ図を描く | 見た目の指定（省略可） | `geom_boxplot()` |
+| `geom_jitter()` | 点を少しずらして描く（重なり防止） | `width =`, `height =` | `geom_jitter(width = 0.1)` |
+| `scale_fill_brewer()` | 塗りつぶしの色をColorBrewerの組にする | `palette = "Set2"` など | `scale_fill_brewer(palette = "Set2")` |
+| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` | `labs(title = "花びらの長さ", x = "種", y = "長さ (cm)")` |
+| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） | `theme_bw()` |
+| `theme()` | 細かい見た目を個別に変える | `axis.text = element_text(...)` など | `theme(axis.text = element_text(size = 12))` |
+| `summary()` | 要約を表示する | データフレーム，または分析結果 | `summary(iris)` |
+| `shapiro.test()` | 正規性を検定する | 数値の列 | `shapiro.test(PlantGrowth$weight)` |
+| `bartlett.test()` | 等分散性を検定する | `数値 ~ グループ`, `data =` | `bartlett.test(weight ~ group, data = PlantGrowth)` |
+| `oneway.test()` | 等分散を仮定しない一元配置分散分析 | `数値 ~ グループ`, `data =`, `var.equal =` | `oneway.test(weight ~ group, data = PlantGrowth)` |
+| `round()` | 四捨五入する | 数値, 桁数（省略すると整数） | `round(3.14159, 2)` |
+| `sum()` | 合計 | 数値の列 | `sum(iris$Sepal.Length)` |
+| `geom_col()` | 値をそのまま棒の高さにする | `aes(y = 値)` が必要 | `geom_col()` |
+| `geom_errorbar()` | エラーバーを描く | `aes(ymin =, ymax =)`, `width =` | `geom_errorbar(aes(ymin = m - s, ymax = m + s), width = 0.2)` |
+
+:::
 
 パイプ `|>` は関数ではなく記号です。`データ |> 関数()` と書くと，
 データがその関数の**1つめの（）の中身**として渡されます。
+
+> **もっと詳しく知りたいときは** `?関数名` と実行してください（例：`?set.seed`）。
+> 右下の **Help** タブに，その関数の説明と，（）に書ける項目が全部出ます。
+> 読み方は **[第2回「ヘルプの読み方」](02.html#help)** にまとめてあります。
 
 ---
 
@@ -528,6 +536,6 @@ iris |>
 # 授業サイト用：コードブロックに「コピー」ボタンを付ける。
 # この .Rmd だけをダウンロードして Knit したときは，
 # ファイルが無いので何も起きない（エラーにはならない）。
-.btn <- "../../_includes/copy-code.html"
+.btn <- "../../_includes/site-extras.html"
 if (file.exists(.btn)) cat(readLines(.btn, warn = FALSE), sep = "\n")
 ```

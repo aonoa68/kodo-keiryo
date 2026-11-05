@@ -520,19 +520,29 @@ ggplot(data = iris, aes(x = ___, y = ___, fill = ___)) +
 
 出てきた順に並べています。**（）の中に何を入れるか**を確かめたいときに見てください。
 
-| 関数 | すること | （）の中に入れるもの |
-|---|---|---|
-| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** |
-| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て |
-| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など |
-| `head()` | 先頭の数行を取り出す | データ, 行数（省略すると6行） |
-| `str()` | データの構造（型と中身）を表示する | データフレーム |
-| `summary()` | 要約を表示する | データフレーム，または分析結果 |
-| `geom_point()` | 点を描く（散布図） | `size =`・`color =` など見た目（省略可） |
-| `geom_histogram()` | ヒストグラムを描く | `binwidth =` か `bins =`（**省略すると30本**で注意が出る） |
-| `geom_bar()` | 件数を数えて棒グラフにする | `y` は書かない（Rが数える） |
-| `geom_boxplot()` | 箱ひげ図を描く | 見た目の指定（省略可） |
-| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` |
+::: {.fn-table}
+
+| 関数 | すること | （）の中に入れるもの | 例 |
+|---|---|---|---|
+| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** | `library(tidyverse)` |
+| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て | `ggplot(iris, aes(x = Sepal.Length, y = Petal.Length))` |
+| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など | `aes(x = Species, y = Petal.Length)` |
+| `head()` | 先頭の数行を取り出す | データ, 行数（省略すると6行） | `head(iris, 3)` |
+| `str()` | データの構造（型と中身）を表示する | データフレーム | `str(iris)` |
+| `summary()` | 要約を表示する | データフレーム，または分析結果 | `summary(iris)` |
+| `geom_point()` | 点を描く（散布図） | `size =`・`color =` など見た目（省略可） | `geom_point(size = 2)` |
+| `geom_histogram()` | ヒストグラムを描く | `binwidth =` か `bins =`（**省略すると30本**で注意が出る） | `geom_histogram(binwidth = 0.3)` |
+| `geom_bar()` | 件数を数えて棒グラフにする | `y` は書かない（Rが数える） | `geom_bar()` |
+| `geom_boxplot()` | 箱ひげ図を描く | 見た目の指定（省略可） | `geom_boxplot()` |
+| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` | `labs(title = "花びらの長さ", x = "種", y = "長さ (cm)")` |
+| `saveRDS()` | 結果を1つファイルに保存する | 保存するもの, ファイル名 | `saveRDS(result, "result.rds")` |
+| `readRDS()` | 保存した結果を読み込む | ファイル名 | `readRDS("result.rds")` |
+
+:::
+
+> **もっと詳しく知りたいときは** `?関数名` と実行してください（例：`?ggplot`）。
+> 右下の **Help** タブに，その関数の説明と，（）に書ける項目が全部出ます。
+> 読み方は **[第2回「ヘルプの読み方」](02.html#help)** にまとめてあります。
 
 ---
 
@@ -572,6 +582,6 @@ ggplot(data = iris, aes(x = ___, y = ___, fill = ___)) +
 # 授業サイト用：コードブロックに「コピー」ボタンを付ける。
 # この .Rmd だけをダウンロードして Knit したときは，
 # ファイルが無いので何も起きない（エラーにはならない）。
-.btn <- "../../_includes/copy-code.html"
+.btn <- "../../_includes/site-extras.html"
 if (file.exists(.btn)) cat(readLines(.btn, warn = FALSE), sep = "\n")
 ```

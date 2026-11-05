@@ -177,31 +177,39 @@ aov(score ~ group, data = data_clean) |>
 
 出てきた順に並べています。**（）の中に何を入れるか**を確かめたいときに見てください。
 
-| 関数 | すること | （）の中に入れるもの |
-|---|---|---|
-| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** |
-| `read_csv()` | CSVファイルを読み込む | ファイルのパス（引用符あり）。文字化けには `locale =` |
-| `filter()` | **行**を絞り込む | データ, 残す行の条件。`,` で並べると「かつ」 |
-| `is.na()` | 欠損値かどうか調べる | 列。`!is.na()` で「欠損でない」 |
-| `mutate()` | 列を作る・書き換える | データ, `新しい列名 = 計算式` |
-| `scale()` | 平均0・標準偏差1に標準化する | 数値の列。**行列が返る**点に注意 |
-| `arrange()` | 並び替える | データ, 基準にする列。降順は `desc()` で包む |
-| `desc()` | 降順にする | 列名（`arrange()` の中だけ） |
-| `group_by()` | グループに分ける | データ, 分ける基準の列 |
-| `summarise()` | グループごとに1行にまとめる | データ, `新しい列名 = 集計の式` |
-| `n()` | そのグループの件数 | **何も入れません**（`n()` と書く） |
-| `mean()` | 平均 | 数値の列。欠損があるときは `na.rm = TRUE` |
-| `sd()` | 標準偏差 | 数値の列。欠損があるときは `na.rm = TRUE` |
-| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て |
-| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など |
-| `geom_boxplot()` | 箱ひげ図を描く | 見た目の指定（省略可） |
-| `scale_fill_brewer()` | 塗りつぶしの色をColorBrewerの組にする | `palette = "Set2"` など |
-| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） |
-| `aov()` | 分散分析をする | `数値 ~ グループ`, `data =` |
-| `summary()` | 要約を表示する | データフレーム，または分析結果 |
+::: {.fn-table}
+
+| 関数 | すること | （）の中に入れるもの | 例 |
+|---|---|---|---|
+| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** | `library(tidyverse)` |
+| `read_csv()` | CSVファイルを読み込む | ファイルのパス（引用符あり）。文字化けには `locale =` | `read_csv("data/my_data.csv")` |
+| `filter()` | **行**を絞り込む | データ, 残す行の条件。`,` で並べると「かつ」 | `filter(msleep, sleep_total >= 12)` |
+| `is.na()` | 欠損値かどうか調べる | 列。`!is.na()` で「欠損でない」 | `filter(msleep, is.na(vore))` |
+| `mutate()` | 列を作る・書き換える | データ, `新しい列名 = 計算式` | `mutate(msleep, sleep_min = sleep_total * 60)` |
+| `scale()` | 平均0・標準偏差1に標準化する | 数値の列。**行列が返る**点に注意 | `scale(iris$Sepal.Length)` |
+| `arrange()` | 並び替える | データ, 基準にする列。降順は `desc()` で包む | `arrange(msleep, desc(sleep_total))` |
+| `desc()` | 降順にする | 列名（`arrange()` の中だけ） | `arrange(msleep, desc(bodywt))` |
+| `group_by()` | グループに分ける | データ, 分ける基準の列 | `group_by(msleep, vore)` |
+| `summarise()` | グループごとに1行にまとめる | データ, `新しい列名 = 集計の式` | `summarise(msleep, 平均 = mean(sleep_total))` |
+| `n()` | そのグループの件数 | **何も入れません**（`n()` と書く） | `summarise(msleep, 件数 = n())` |
+| `mean()` | 平均 | 数値の列。欠損があるときは `na.rm = TRUE` | `mean(iris$Sepal.Length)` |
+| `sd()` | 標準偏差 | 数値の列。欠損があるときは `na.rm = TRUE` | `sd(iris$Sepal.Length)` |
+| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て | `ggplot(iris, aes(x = Sepal.Length, y = Petal.Length))` |
+| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など | `aes(x = Species, y = Petal.Length)` |
+| `geom_boxplot()` | 箱ひげ図を描く | 見た目の指定（省略可） | `geom_boxplot()` |
+| `scale_fill_brewer()` | 塗りつぶしの色をColorBrewerの組にする | `palette = "Set2"` など | `scale_fill_brewer(palette = "Set2")` |
+| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） | `theme_bw()` |
+| `aov()` | 分散分析をする | `数値 ~ グループ`, `data =` | `aov(weight ~ group, data = PlantGrowth)` |
+| `summary()` | 要約を表示する | データフレーム，または分析結果 | `summary(iris)` |
+
+:::
 
 パイプ `|>` は関数ではなく記号です。`データ |> 関数()` と書くと，
 データがその関数の**1つめの（）の中身**として渡されます。
+
+> **もっと詳しく知りたいときは** `?関数名` と実行してください（例：`?read_csv`）。
+> 右下の **Help** タブに，その関数の説明と，（）に書ける項目が全部出ます。
+> 読み方は **[第2回「ヘルプの読み方」](02.html#help)** にまとめてあります。
 
 ---
 
@@ -231,6 +239,6 @@ Rを使ったデータ分析は，最初は難しく感じるかもしれませ�
 # 授業サイト用：コードブロックに「コピー」ボタンを付ける。
 # この .Rmd だけをダウンロードして Knit したときは，
 # ファイルが無いので何も起きない（エラーにはならない）。
-.btn <- "../../_includes/copy-code.html"
+.btn <- "../../_includes/site-extras.html"
 if (file.exists(.btn)) cat(readLines(.btn, warn = FALSE), sep = "\n")
 ```

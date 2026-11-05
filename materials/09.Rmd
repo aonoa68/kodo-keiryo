@@ -529,41 +529,49 @@ mtcars |>
 
 出てきた順に並べています。**（）の中に何を入れるか**を確かめたいときに見てください。
 
-| 関数 | すること | （）の中に入れるもの |
-|---|---|---|
-| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** |
-| `as.data.frame()` | データフレームに変換する | 表や行列 |
-| `head()` | 先頭の数行を取り出す | データ, 行数（省略すると6行） |
-| `group_by()` | グループに分ける | データ, 分ける基準の列 |
-| `summarise()` | グループごとに1行にまとめる | データ, `新しい列名 = 集計の式` |
-| `sum()` | 合計 | 数値の列 |
-| `xtabs()` | 式でクロス表を作る | `~ 列 + 列`, `data =` |
-| `matrix()` | 数値を行列の形に並べる | 値, `nrow =`, `byrow = TRUE`（横に詰める） |
-| `c()` | 複数の値を1つに束ねる | 束ねたい値を `,` で並べる |
-| `list()` | 複数のものをまとめて1つにする | まとめたいもの |
-| `round()` | 四捨五入する | 数値, 桁数（省略すると整数） |
-| `prop.table()` | 度数を割合に直す | 表, `1`（行ごと）か `2`（列ごと） |
-| `chisq.test()` | カイ二乗検定 | クロス表。2×2では既定で連続性の補正が入る（`correct = FALSE` で外す） |
-| `fisher.test()` | フィッシャーの正確確率検定 | クロス表 |
-| `unname()` | 名前（ラベル）を外す | 名前の付いた値 |
-| `min()` | 最小値 | 数値の列 |
-| `nrow()` | 行数を数える | データ |
-| `ncol()` | 列数を数える | データ |
-| `sqrt()` | 平方根 | 数値 |
-| `mutate()` | 列を作る・書き換える | データ, `新しい列名 = 計算式` |
-| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て |
-| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など |
-| `geom_col()` | 値をそのまま棒の高さにする | `aes(y = 値)` が必要 |
-| `scale_fill_manual()` | 塗りつぶしの色を自分で決める | `values = c(...)` |
-| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` |
-| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） |
-| `table()` | 度数を数えてクロス表を作る | 1つまたは2つの列 |
-| `factor()` | カテゴリ（水準つき）に変える | 元の列, `levels =`（順序）, `labels =`（表示名） |
-| `n()` | そのグループの件数 | **何も入れません**（`n()` と書く） |
-| `scale_fill_brewer()` | 塗りつぶしの色をColorBrewerの組にする | `palette = "Set2"` など |
+::: {.fn-table}
+
+| 関数 | すること | （）の中に入れるもの | 例 |
+|---|---|---|---|
+| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** | `library(tidyverse)` |
+| `as.data.frame()` | データフレームに変換する | 表や行列 | `as.data.frame(table(mtcars$cyl))` |
+| `head()` | 先頭の数行を取り出す | データ, 行数（省略すると6行） | `head(iris, 3)` |
+| `group_by()` | グループに分ける | データ, 分ける基準の列 | `group_by(msleep, vore)` |
+| `summarise()` | グループごとに1行にまとめる | データ, `新しい列名 = 集計の式` | `summarise(msleep, 平均 = mean(sleep_total))` |
+| `sum()` | 合計 | 数値の列 | `sum(iris$Sepal.Length)` |
+| `xtabs()` | 式でクロス表を作る | `~ 列 + 列`, `data =` | `xtabs(~ cyl + am, data = mtcars)` |
+| `matrix()` | 数値を行列の形に並べる | 値, `nrow =`, `byrow = TRUE`（横に詰める） | `matrix(c(16, 4, 10, 10), nrow = 2, byrow = TRUE)` |
+| `c()` | 複数の値を1つに束ねる | 束ねたい値を `,` で並べる | `c(85, 72, 91)` |
+| `list()` | 複数のものをまとめて1つにする | まとめたいもの | `list(c("A群", "B群"), c("はい", "いいえ"))` |
+| `round()` | 四捨五入する | 数値, 桁数（省略すると整数） | `round(3.14159, 2)` |
+| `prop.table()` | 度数を割合に直す | 表, `1`（行ごと）か `2`（列ごと） | `prop.table(tab, 1)` |
+| `chisq.test()` | カイ二乗検定 | クロス表。2×2では既定で連続性の補正が入る（`correct = FALSE` で外す） | `chisq.test(tab)` |
+| `fisher.test()` | フィッシャーの正確確率検定 | クロス表 | `fisher.test(tab)` |
+| `unname()` | 名前（ラベル）を外す | 名前の付いた値 | `unname(c(a = 1, b = 2))` |
+| `min()` | 最小値 | 数値の列 | `min(msleep$sleep_total)` |
+| `nrow()` | 行数を数える | データ | `nrow(msleep)` |
+| `ncol()` | 列数を数える | データ | `ncol(msleep)` |
+| `sqrt()` | 平方根 | 数値 | `sqrt(16)` |
+| `mutate()` | 列を作る・書き換える | データ, `新しい列名 = 計算式` | `mutate(msleep, sleep_min = sleep_total * 60)` |
+| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て | `ggplot(iris, aes(x = Sepal.Length, y = Petal.Length))` |
+| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など | `aes(x = Species, y = Petal.Length)` |
+| `geom_col()` | 値をそのまま棒の高さにする | `aes(y = 値)` が必要 | `geom_col()` |
+| `scale_fill_manual()` | 塗りつぶしの色を自分で決める | `values = c(...)` | `scale_fill_manual(values = c("#66C2A5", "#FC8D62", "#8DA0CB"))` |
+| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` | `labs(title = "花びらの長さ", x = "種", y = "長さ (cm)")` |
+| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） | `theme_bw()` |
+| `table()` | 度数を数えてクロス表を作る | 1つまたは2つの列 | `table(mtcars$cyl, mtcars$am)` |
+| `factor()` | カテゴリ（水準つき）に変える | 元の列, `levels =`（順序）, `labels =`（表示名） | `factor(mtcars$am, labels = c("AT", "MT"))` |
+| `n()` | そのグループの件数 | **何も入れません**（`n()` と書く） | `summarise(msleep, 件数 = n())` |
+| `scale_fill_brewer()` | 塗りつぶしの色をColorBrewerの組にする | `palette = "Set2"` など | `scale_fill_brewer(palette = "Set2")` |
+
+:::
 
 パイプ `|>` は関数ではなく記号です。`データ |> 関数()` と書くと，
 データがその関数の**1つめの（）の中身**として渡されます。
+
+> **もっと詳しく知りたいときは** `?関数名` と実行してください（例：`?as.data.frame`）。
+> 右下の **Help** タブに，その関数の説明と，（）に書ける項目が全部出ます。
+> 読み方は **[第2回「ヘルプの読み方」](02.html#help)** にまとめてあります。
 
 ---
 
@@ -594,6 +602,6 @@ mtcars |>
 # 授業サイト用：コードブロックに「コピー」ボタンを付ける。
 # この .Rmd だけをダウンロードして Knit したときは，
 # ファイルが無いので何も起きない（エラーにはならない）。
-.btn <- "../../_includes/copy-code.html"
+.btn <- "../../_includes/site-extras.html"
 if (file.exists(.btn)) cat(readLines(.btn, warn = FALSE), sep = "\n")
 ```

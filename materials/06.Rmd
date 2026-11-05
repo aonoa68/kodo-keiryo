@@ -358,36 +358,44 @@ ggplot(petal_summary, aes(x = ___, y = ___, fill = ___)) +
 
 出てきた順に並べています。**（）の中に何を入れるか**を確かめたいときに見てください。
 
-| 関数 | すること | （）の中に入れるもの |
-|---|---|---|
-| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** |
-| `summarise()` | グループごとに1行にまとめる | データ, `新しい列名 = 集計の式` |
-| `mean()` | 平均 | 数値の列。欠損があるときは `na.rm = TRUE` |
-| `n()` | そのグループの件数 | **何も入れません**（`n()` と書く） |
-| `sd()` | 標準偏差 | 数値の列。欠損があるときは `na.rm = TRUE` |
-| `min()` | 最小値 | 数値の列 |
-| `max()` | 最大値 | 数値の列 |
-| `group_by()` | グループに分ける | データ, 分ける基準の列 |
-| `count()` | 件数を数えて表にする | データ, 数える基準の列 |
-| `filter()` | **行**を絞り込む | データ, 残す行の条件。`,` で並べると「かつ」 |
-| `is.na()` | 欠損値かどうか調べる | 列。`!is.na()` で「欠損でない」 |
-| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て |
-| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など |
-| `geom_col()` | 値をそのまま棒の高さにする | `aes(y = 値)` が必要 |
-| `scale_fill_brewer()` | 塗りつぶしの色をColorBrewerの組にする | `palette = "Set2"` など |
-| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` |
-| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） |
-| `geom_errorbar()` | エラーバーを描く | `aes(ymin =, ymax =)`, `width =` |
-| `theme()` | 細かい見た目を個別に変える | `axis.text = element_text(...)` など |
-| `across()` | 複数の列に同じ処理をかける | 列の選び方, かける関数 |
-| `everything()` | 残りの全部の列 | **何も入れません** |
-| `sum()` | 合計 | 数値の列 |
-| `read_csv()` | CSVファイルを読み込む | ファイルのパス（引用符あり）。文字化けには `locale =` |
-| `locale()` | 文字コードなどの読み取り設定 | `encoding = "CP932"` など |
-| `read_excel()` | Excelファイルを読み込む | ファイルのパス, `sheet =`（シート名か番号） |
+::: {.fn-table}
+
+| 関数 | すること | （）の中に入れるもの | 例 |
+|---|---|---|---|
+| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** | `library(tidyverse)` |
+| `summarise()` | グループごとに1行にまとめる | データ, `新しい列名 = 集計の式` | `summarise(msleep, 平均 = mean(sleep_total))` |
+| `mean()` | 平均 | 数値の列。欠損があるときは `na.rm = TRUE` | `mean(iris$Sepal.Length)` |
+| `n()` | そのグループの件数 | **何も入れません**（`n()` と書く） | `summarise(msleep, 件数 = n())` |
+| `sd()` | 標準偏差 | 数値の列。欠損があるときは `na.rm = TRUE` | `sd(iris$Sepal.Length)` |
+| `min()` | 最小値 | 数値の列 | `min(msleep$sleep_total)` |
+| `max()` | 最大値 | 数値の列 | `max(msleep$sleep_total)` |
+| `group_by()` | グループに分ける | データ, 分ける基準の列 | `group_by(msleep, vore)` |
+| `count()` | 件数を数えて表にする | データ, 数える基準の列 | `count(msleep, vore)` |
+| `filter()` | **行**を絞り込む | データ, 残す行の条件。`,` で並べると「かつ」 | `filter(msleep, sleep_total >= 12)` |
+| `is.na()` | 欠損値かどうか調べる | 列。`!is.na()` で「欠損でない」 | `filter(msleep, is.na(vore))` |
+| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て | `ggplot(iris, aes(x = Sepal.Length, y = Petal.Length))` |
+| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など | `aes(x = Species, y = Petal.Length)` |
+| `geom_col()` | 値をそのまま棒の高さにする | `aes(y = 値)` が必要 | `geom_col()` |
+| `scale_fill_brewer()` | 塗りつぶしの色をColorBrewerの組にする | `palette = "Set2"` など | `scale_fill_brewer(palette = "Set2")` |
+| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` | `labs(title = "花びらの長さ", x = "種", y = "長さ (cm)")` |
+| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） | `theme_bw()` |
+| `geom_errorbar()` | エラーバーを描く | `aes(ymin =, ymax =)`, `width =` | `geom_errorbar(aes(ymin = m - s, ymax = m + s), width = 0.2)` |
+| `theme()` | 細かい見た目を個別に変える | `axis.text = element_text(...)` など | `theme(axis.text = element_text(size = 12))` |
+| `across()` | 複数の列に同じ処理をかける | 列の選び方, かける関数 | `across(where(is.numeric), mean)` |
+| `everything()` | 残りの全部の列 | **何も入れません** | `select(msleep, name, everything())` |
+| `sum()` | 合計 | 数値の列 | `sum(iris$Sepal.Length)` |
+| `read_csv()` | CSVファイルを読み込む | ファイルのパス（引用符あり）。文字化けには `locale =` | `read_csv("data/my_data.csv")` |
+| `locale()` | 文字コードなどの読み取り設定 | `encoding = "CP932"` など | `locale(encoding = "CP932")` |
+| `read_excel()` | Excelファイルを読み込む | ファイルのパス, `sheet =`（シート名か番号） | `read_excel("data/my_data.xlsx", sheet = 1)` |
+
+:::
 
 パイプ `|>` は関数ではなく記号です。`データ |> 関数()` と書くと，
 データがその関数の**1つめの（）の中身**として渡されます。
+
+> **もっと詳しく知りたいときは** `?関数名` と実行してください（例：`?summarise`）。
+> 右下の **Help** タブに，その関数の説明と，（）に書ける項目が全部出ます。
+> 読み方は **[第2回「ヘルプの読み方」](02.html#help)** にまとめてあります。
 
 ---
 
@@ -416,6 +424,6 @@ ggplot(petal_summary, aes(x = ___, y = ___, fill = ___)) +
 # 授業サイト用：コードブロックに「コピー」ボタンを付ける。
 # この .Rmd だけをダウンロードして Knit したときは，
 # ファイルが無いので何も起きない（エラーにはならない）。
-.btn <- "../../_includes/copy-code.html"
+.btn <- "../../_includes/site-extras.html"
 if (file.exists(.btn)) cat(readLines(.btn, warn = FALSE), sep = "\n")
 ```

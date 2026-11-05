@@ -130,33 +130,41 @@ iris |>
 
 出てきた順に並べています。**（）の中に何を入れるか**を確かめたいときに見てください。
 
-| 関数 | すること | （）の中に入れるもの |
-|---|---|---|
-| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** |
-| `c()` | 複数の値を1つに束ねる | 束ねたい値を `,` で並べる |
-| `mean()` | 平均 | 数値の列。欠損があるときは `na.rm = TRUE` |
-| `sd()` | 標準偏差 | 数値の列。欠損があるときは `na.rm = TRUE` |
-| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て |
-| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など |
-| `geom_point()` | 点を描く（散布図） | `size =`・`color =` など見た目（省略可） |
-| `scale_color_brewer()` | 点や線の色をColorBrewerの組にする | `palette = "Dark2"` など |
-| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` |
-| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） |
-| `geom_boxplot()` | 箱ひげ図を描く | 見た目の指定（省略可） |
-| `scale_fill_brewer()` | 塗りつぶしの色をColorBrewerの組にする | `palette = "Set2"` など |
-| `theme()` | 細かい見た目を個別に変える | `axis.text = element_text(...)` など |
-| `filter()` | **行**を絞り込む | データ, 残す行の条件。`,` で並べると「かつ」 |
-| `select()` | **列**を選ぶ | データ, 残す列名。頭に `-` で除外 |
-| `mutate()` | 列を作る・書き換える | データ, `新しい列名 = 計算式` |
-| `arrange()` | 並び替える | データ, 基準にする列。降順は `desc()` で包む |
-| `desc()` | 降順にする | 列名（`arrange()` の中だけ） |
-| `head()` | 先頭の数行を取り出す | データ, 行数（省略すると6行） |
-| `group_by()` | グループに分ける | データ, 分ける基準の列 |
-| `summarise()` | グループごとに1行にまとめる | データ, `新しい列名 = 集計の式` |
-| `n()` | そのグループの件数 | **何も入れません**（`n()` と書く） |
+::: {.fn-table}
+
+| 関数 | すること | （）の中に入れるもの | 例 |
+|---|---|---|---|
+| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** | `library(tidyverse)` |
+| `c()` | 複数の値を1つに束ねる | 束ねたい値を `,` で並べる | `c(85, 72, 91)` |
+| `mean()` | 平均 | 数値の列。欠損があるときは `na.rm = TRUE` | `mean(iris$Sepal.Length)` |
+| `sd()` | 標準偏差 | 数値の列。欠損があるときは `na.rm = TRUE` | `sd(iris$Sepal.Length)` |
+| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て | `ggplot(iris, aes(x = Sepal.Length, y = Petal.Length))` |
+| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など | `aes(x = Species, y = Petal.Length)` |
+| `geom_point()` | 点を描く（散布図） | `size =`・`color =` など見た目（省略可） | `geom_point(size = 2)` |
+| `scale_color_brewer()` | 点や線の色をColorBrewerの組にする | `palette = "Dark2"` など | `scale_color_brewer(palette = "Dark2")` |
+| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` | `labs(title = "花びらの長さ", x = "種", y = "長さ (cm)")` |
+| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） | `theme_bw()` |
+| `geom_boxplot()` | 箱ひげ図を描く | 見た目の指定（省略可） | `geom_boxplot()` |
+| `scale_fill_brewer()` | 塗りつぶしの色をColorBrewerの組にする | `palette = "Set2"` など | `scale_fill_brewer(palette = "Set2")` |
+| `theme()` | 細かい見た目を個別に変える | `axis.text = element_text(...)` など | `theme(axis.text = element_text(size = 12))` |
+| `filter()` | **行**を絞り込む | データ, 残す行の条件。`,` で並べると「かつ」 | `filter(msleep, sleep_total >= 12)` |
+| `select()` | **列**を選ぶ | データ, 残す列名。頭に `-` で除外 | `select(msleep, name, vore)` |
+| `mutate()` | 列を作る・書き換える | データ, `新しい列名 = 計算式` | `mutate(msleep, sleep_min = sleep_total * 60)` |
+| `arrange()` | 並び替える | データ, 基準にする列。降順は `desc()` で包む | `arrange(msleep, desc(sleep_total))` |
+| `desc()` | 降順にする | 列名（`arrange()` の中だけ） | `arrange(msleep, desc(bodywt))` |
+| `head()` | 先頭の数行を取り出す | データ, 行数（省略すると6行） | `head(iris, 3)` |
+| `group_by()` | グループに分ける | データ, 分ける基準の列 | `group_by(msleep, vore)` |
+| `summarise()` | グループごとに1行にまとめる | データ, `新しい列名 = 集計の式` | `summarise(msleep, 平均 = mean(sleep_total))` |
+| `n()` | そのグループの件数 | **何も入れません**（`n()` と書く） | `summarise(msleep, 件数 = n())` |
+
+:::
 
 パイプ `|>` は関数ではなく記号です。`データ |> 関数()` と書くと，
 データがその関数の**1つめの（）の中身**として渡されます。
+
+> **もっと詳しく知りたいときは** `?関数名` と実行してください（例：`?c`）。
+> 右下の **Help** タブに，その関数の説明と，（）に書ける項目が全部出ます。
+> 読み方は **[第2回「ヘルプの読み方」](02.html#help)** にまとめてあります。
 
 ---
 
@@ -185,6 +193,6 @@ iris |>
 # 授業サイト用：コードブロックに「コピー」ボタンを付ける。
 # この .Rmd だけをダウンロードして Knit したときは，
 # ファイルが無いので何も起きない（エラーにはならない）。
-.btn <- "../../_includes/copy-code.html"
+.btn <- "../../_includes/site-extras.html"
 if (file.exists(.btn)) cat(readLines(.btn, warn = FALSE), sep = "\n")
 ```
