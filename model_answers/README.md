@@ -77,12 +77,45 @@
 第7・12・15回は習熟度確認テストの回で演習がありません
 （問題と解答例はテスト実施後に各回のページへ掲載する、と資料に書いてあります）。
 
+## 「この回で使った関数」の表
+
+各回の表は**手で書いていない**。素は次の3つ（リポジトリ直下 `tools/`）。
+
+| ファイル | 役割 |
+|---|---|
+| `function_reference.py` | 107関数の「すること／（）の中身／例」の辞書 |
+| `build_function_tables.py` | 各 `.Rmd` の「この回で使った関数」の節を作り直す |
+| `verify_examples.py` | 辞書の「例」を全部Rで実行して動くか確かめる |
+
+関数が出てくる順は、各 `.Rmd` のコードから自動で拾っている
+（実行チャンク ```{r} と、実行しないコード例 ```r の両方。引用ブロックの中も見る）。
+**辞書に無い関数が資料に出てくると、`build_function_tables.py` が
+その関数名を出して止まる。**
+
+直し方：
+
+```bash
+# 1. tools/function_reference.py を編集する
+python3 tools/verify_examples.py          # 例が動くか確かめる（失敗0件にする）
+python3 tools/build_function_tables.py    # 各 .Rmd の表を作り直す
+# 2. docs/materials で全16本を再レンダリング
+# 3. mkdocs gh-deploy --force --site-dir /tmp/kodo-keiryo-build
+```
+
+辞書に書いた既定値（`t.test()` はウェルチ、`head()` は6行など）は
+`formals()` で実機確認したもの。推測で書き足さないこと。
+
+ヘルプの読み方は第2回の `{#help}` 節にまとめてあり、各回の表から
+`02.html#help` でリンクしている。**この節の見出しの `{#help}` を消すと
+全14回のリンクが切れる。**
+
 ## コードの「コピー」ボタン
 
-各回の HTML に出るコピーボタンの実体は `_includes/copy-code.html`（リポジトリ直下）。
+各回の HTML に出るコピーボタンの実体は `_includes/site-extras.html`（リポジトリ直下）。
+このファイルには関数表のCSSも入っている。
 各 `.Rmd` の末尾の `copy-button` チャンクが `file.exists()` で読み込んでいる。
 
-- ボタンの見た目や文言を変えるときは `_includes/copy-code.html` を直して**全16本を再レンダリング**する
+- ボタンや表の見た目を変えるときは `_includes/site-extras.html` を直して**全16本を再レンダリング**する
   （HTML に埋め込まれるので、ファイルだけ直しても反映されない）
 - YAML の `includes: after_body:` は**使わないこと**。学生が `.Rmd` だけダウンロードして
   Knit したとき、pandoc が「not found」で停止する。チャンク経由なら黙って何もしない
