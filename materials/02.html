@@ -3063,7 +3063,7 @@ int main(void) {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fl">1e7</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">mean</span>(x))</span></code></pre></div>
 <pre><code>##   ユーザ システム     経過 
-##    0.020    0.004    0.024</code></pre>
+##    0.020    0.003    0.023</code></pre>
 <p>一瞬で終わります。では，まったく同じ計算を<strong>Rのループで</strong>書いてみます。</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">system.time</span>({</span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="dv">0</span></span>
@@ -3071,7 +3071,7 @@ int main(void) {
 <span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  s <span class="sc">/</span> <span class="fu">length</span>(x)</span>
 <span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##   ユーザ システム     経過 
-##    0.286    0.002    0.292</code></pre>
+##    0.279    0.002    0.281</code></pre>
 <p>上の2つの「経過」を見比べてください。<strong>同じ計算でも，<code>mean()</code>
 のほうが明確に速く終わっています</strong>（実行環境によって数値は変わります）。</p>
 <p>理由は，<code>mean()</code>
@@ -3590,22 +3590,50 @@ Rは <code>mean()</code> も <code>sd()</code>
 </div>
 <div id="基本的な統計関数" class="section level2">
 <h2>5. 基本的な統計関数</h2>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a><span class="co"># データを作成</span></span>
-<span id="cb57-2"><a href="#cb57-2" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">15</span>, <span class="dv">14</span>, <span class="dv">10</span>, <span class="dv">18</span>, <span class="dv">20</span>, <span class="dv">13</span>, <span class="dv">16</span>, <span class="dv">11</span>, <span class="dv">17</span>)</span>
-<span id="cb57-3"><a href="#cb57-3" tabindex="-1"></a></span>
-<span id="cb57-4"><a href="#cb57-4" tabindex="-1"></a><span class="co"># 基本統計量をまとめて確認</span></span>
-<span id="cb57-5"><a href="#cb57-5" tabindex="-1"></a><span class="fu">summary</span>(data)</span></code></pre></div>
+<blockquote>
+<p><strong>書き方</strong>　<code>c(値, 値, 値, ...)</code></p>
+<ul>
+<li>複数の値を<strong>1つのまとまり（ベクトル）にする</strong>関数です。<code>c</code>
+は combine（つなぐ）の頭文字</li>
+<li>数値でも文字でも作れます（<code>c(&quot;A&quot;, &quot;B&quot;)</code>）。<strong>混ぜると全部が文字</strong>になります</li>
+</ul>
+<p><strong><code>c()</code>
+を忘れても，エラーにならないことがあります。</strong></p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a><span class="fu">mean</span>(<span class="dv">12</span>, <span class="dv">15</span>, <span class="dv">14</span>)      <span class="co"># 12 と表示される（平均ではない）</span></span>
+<span id="cb57-2"><a href="#cb57-2" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">15</span>, <span class="dv">14</span>))   <span class="co"># 13.66667（これが平均）</span></span></code></pre></div>
+<p><code>mean()</code>
+の2つめの（）は平均を取る相手ではなく，別の設定のための場所だからです。
+<strong>「数値をいくつか渡すときは，まず <code>c()</code>
+でまとめる」</strong>と覚えてください。</p>
+</blockquote>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a><span class="co"># データを作成</span></span>
+<span id="cb58-2"><a href="#cb58-2" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">15</span>, <span class="dv">14</span>, <span class="dv">10</span>, <span class="dv">18</span>, <span class="dv">20</span>, <span class="dv">13</span>, <span class="dv">16</span>, <span class="dv">11</span>, <span class="dv">17</span>)</span>
+<span id="cb58-3"><a href="#cb58-3" tabindex="-1"></a></span>
+<span id="cb58-4"><a href="#cb58-4" tabindex="-1"></a><span class="co"># 基本統計量をまとめて確認</span></span>
+<span id="cb58-5"><a href="#cb58-5" tabindex="-1"></a><span class="fu">summary</span>(data)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   10.00   12.25   14.50   14.60   16.75   20.00</code></pre>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a><span class="co"># 個別に計算</span></span>
-<span id="cb59-2"><a href="#cb59-2" tabindex="-1"></a><span class="fu">mean</span>(data)     <span class="co"># 平均</span></span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a><span class="co"># 個別に計算</span></span>
+<span id="cb60-2"><a href="#cb60-2" tabindex="-1"></a><span class="fu">mean</span>(data)     <span class="co"># 平均</span></span></code></pre></div>
 <pre><code>## [1] 14.6</code></pre>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" tabindex="-1"></a><span class="fu">median</span>(data)   <span class="co"># 中央値</span></span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a><span class="fu">median</span>(data)   <span class="co"># 中央値</span></span></code></pre></div>
 <pre><code>## [1] 14.5</code></pre>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" tabindex="-1"></a><span class="fu">sd</span>(data)       <span class="co"># 標準偏差</span></span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" tabindex="-1"></a><span class="fu">sd</span>(data)       <span class="co"># 標準偏差</span></span></code></pre></div>
 <pre><code>## [1] 3.204164</code></pre>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" tabindex="-1"></a><span class="fu">var</span>(data)      <span class="co"># 分散</span></span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" tabindex="-1"></a><span class="fu">var</span>(data)      <span class="co"># 分散</span></span></code></pre></div>
 <pre><code>## [1] 10.26667</code></pre>
+<blockquote>
+<p><strong>書き方</strong>　<code>mean(x)</code> /
+<code>median(x)</code> / <code>sd(x)</code> / <code>var(x)</code></p>
+<ul>
+<li><strong><code>x</code></strong> … 数値のまとまり。<code>c()</code>
+で作ったものでも，データフレームの1列でもよい</li>
+<li>欠損（<code>NA</code>）が1つでも混ざっていると，<strong>答えが
+<code>NA</code> になります</strong> （<code>mean(c(1, 2, NA))</code> は
+<code>NA</code>）。 そのときは <code>mean(x, na.rm = TRUE)</code>
+と書きます（第6回で詳しく扱います）</li>
+</ul>
+</blockquote>
 <blockquote>
 <p><strong>分母に注意してください。</strong></p>
 <p>Rの <code>var()</code> は，分母が
@@ -3614,6 +3642,14 @@ Rは <code>mean()</code> も <code>sd()</code>
 の式を習った人は，手計算と値が合わないことがあります。
 <strong>この授業では，分散・標準偏差は原則として
 <code>var()</code>・<code>sd()</code> で求めます。</strong></p>
+</blockquote>
+<blockquote>
+<p><strong>書き方</strong>　<code>summary(x)</code></p>
+<ul>
+<li><strong>数値のまとまり</strong>を入れると，最小値から最大値までをまとめて出します</li>
+<li><strong>データフレーム</strong>を入れると，<strong>列ごとに</strong>まとめて出します（<code>summary(iris)</code>）</li>
+<li>あとの回では，<strong>分析の結果</strong>を入れて中身を読む使い方もします（第13回など）</li>
+</ul>
 </blockquote>
 <p><code>summary()</code>
 の出力は英語なので，対応を確認しておきます。</p>
@@ -3660,11 +3696,43 @@ Rは <code>mean()</code> も <code>sd()</code>
 <div id="パッケージのインストールと読み込み" class="section level2">
 <h2>6. パッケージのインストールと読み込み</h2>
 <p>パッケージは，Rの機能を拡張するためのツールセットです。</p>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" tabindex="-1"></a><span class="co"># パッケージのインストール（最初の1回だけ）</span></span>
-<span id="cb67-2"><a href="#cb67-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
-<span id="cb67-3"><a href="#cb67-3" tabindex="-1"></a></span>
-<span id="cb67-4"><a href="#cb67-4" tabindex="-1"></a><span class="co"># パッケージの読み込み（毎回必要）</span></span>
-<span id="cb67-5"><a href="#cb67-5" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" tabindex="-1"></a><span class="co"># パッケージのインストール（最初の1回だけ）</span></span>
+<span id="cb68-2"><a href="#cb68-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
+<span id="cb68-3"><a href="#cb68-3" tabindex="-1"></a></span>
+<span id="cb68-4"><a href="#cb68-4" tabindex="-1"></a><span class="co"># パッケージの読み込み（毎回必要）</span></span>
+<span id="cb68-5"><a href="#cb68-5" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<blockquote>
+<p><strong>書き方</strong>　<code>install.packages(&quot;パッケージ名&quot;)</code>
+… <strong>引用符が要ります</strong></p>
+<p><strong>書き方</strong>　<code>library(パッケージ名)</code> …
+<strong>引用符は要りません</strong></p>
+<p><strong>ここは毎年いちばん間違えるところです。</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>書くもの</th>
+<th>引用符</th>
+<th>実行する回数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>install.packages(&quot;tidyverse&quot;)</code></td>
+<td><strong>要る</strong></td>
+<td>そのPCで1回だけ</td>
+</tr>
+<tr class="even">
+<td><code>library(tidyverse)</code></td>
+<td><strong>要らない</strong></td>
+<td>Rを起動するたび毎回</td>
+</tr>
+</tbody>
+</table>
+<p>理由は，インストールするときはRがまだその名前を知らない（<strong>ただの文字</strong>として渡す）のに対し，
+読み込むときは<strong>すでに入っているものの名前を指す</strong>からです。
+なお <code>library(&quot;tidyverse&quot;)</code>
+と引用符を付けても動きますが，付けないのが普通です。</p>
+</blockquote>
 <blockquote>
 <p><strong>インストール</strong>（<code>install.packages()</code>）は，そのPCで1回だけでOK。
 <strong>読み込み</strong>（<code>library()</code>）はRを起動するたびに必要です。</p>
@@ -3770,7 +3838,7 @@ RStudioを閉じるときに出る「<strong>Save workspace image to
 資料に載っていない使い方も，ここを見れば分かります。</p>
 <div id="出し方" class="section level3">
 <h3>出し方</h3>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" tabindex="-1"></a>?sd</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" tabindex="-1"></a>?sd</span></code></pre></div>
 <p>関数名の前に <code>?</code> を付けて実行すると，右下の
 <strong>Help</strong> タブに説明が出ます。
 スクリプトの上で関数名にカーソルを置いて <strong>F1</strong>
@@ -3839,25 +3907,25 @@ RStudioを閉じるときに出る「<strong>Save workspace image to
 <h3>Examples は動かすのがいちばん早い</h3>
 <p>ページのいちばん下の <strong>Examples</strong>
 は，コピーしてそのまま実行できます。</p>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" tabindex="-1"></a><span class="fu">example</span>(sd)</span></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" tabindex="-1"></a><span class="fu">example</span>(sd)</span></code></pre></div>
 <p>と打つと，その例を上から順に実行してくれます。
 <strong>読むより動かすほうが早く分かります。</strong>
 値を少し変えて，結果がどう変わるか試してみてください。</p>
 </div>
 <div id="filter-は候補が2つ出ます" class="section level3">
 <h3><code>?filter</code> は候補が2つ出ます</h3>
-<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" tabindex="-1"></a>?filter</span></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" tabindex="-1"></a>?filter</span></code></pre></div>
 <p>と打つと，<code>dplyr</code> と <code>stats</code>
 の2つが候補に並びます。
 <strong>同じ名前の関数が2つあるためです</strong>（第5回で出てきます）。
 この授業で使うのは <code>dplyr</code> のほうです。
 最初から絞りたいときは，パッケージ名を付けます。</p>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" tabindex="-1"></a>?dplyr<span class="sc">::</span>filter</span></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" tabindex="-1"></a>?dplyr<span class="sc">::</span>filter</span></code></pre></div>
 </div>
 <div id="パッケージ全体を見る" class="section level3">
 <h3>パッケージ全体を見る</h3>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" tabindex="-1"></a>?ggplot2                    <span class="co"># パッケージ全体の説明</span></span>
-<span id="cb74-2"><a href="#cb74-2" tabindex="-1"></a><span class="fu">help</span>(<span class="at">package =</span> <span class="st">&quot;ggplot2&quot;</span>)   <span class="co"># そのパッケージの関数の一覧</span></span></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" tabindex="-1"></a>?ggplot2                    <span class="co"># パッケージ全体の説明</span></span>
+<span id="cb75-2"><a href="#cb75-2" tabindex="-1"></a><span class="fu">help</span>(<span class="at">package =</span> <span class="st">&quot;ggplot2&quot;</span>)   <span class="co"># そのパッケージの関数の一覧</span></span></code></pre></div>
 <blockquote>
 <p><strong>英語で書かれています。全部読む必要はありません。</strong>
 <strong>Usage</strong>（書き方）と
@@ -3872,13 +3940,13 @@ RStudioを閉じるときに出る「<strong>Save workspace image to
 <h3>演習1：電卓として使ってみる</h3>
 <p>3節で作ったスクリプトに書いて実行しましょう。</p>
 <p><strong>下の3行はコメントなので，そのまま実行しても何も起こりません。各問題の下に，自分で計算式を書いてください。</strong></p>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" tabindex="-1"></a><span class="co"># 問1：100を7で割った余りを求めなさい</span></span>
-<span id="cb75-2"><a href="#cb75-2" tabindex="-1"></a></span>
-<span id="cb75-3"><a href="#cb75-3" tabindex="-1"></a></span>
-<span id="cb75-4"><a href="#cb75-4" tabindex="-1"></a><span class="co"># 問2：2の10乗を求めなさい</span></span>
-<span id="cb75-5"><a href="#cb75-5" tabindex="-1"></a></span>
-<span id="cb75-6"><a href="#cb75-6" tabindex="-1"></a></span>
-<span id="cb75-7"><a href="#cb75-7" tabindex="-1"></a><span class="co"># 問3：(3 + 4) * (10 - 6) を計算しなさい</span></span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" tabindex="-1"></a><span class="co"># 問1：100を7で割った余りを求めなさい</span></span>
+<span id="cb76-2"><a href="#cb76-2" tabindex="-1"></a></span>
+<span id="cb76-3"><a href="#cb76-3" tabindex="-1"></a></span>
+<span id="cb76-4"><a href="#cb76-4" tabindex="-1"></a><span class="co"># 問2：2の10乗を求めなさい</span></span>
+<span id="cb76-5"><a href="#cb76-5" tabindex="-1"></a></span>
+<span id="cb76-6"><a href="#cb76-6" tabindex="-1"></a></span>
+<span id="cb76-7"><a href="#cb76-7" tabindex="-1"></a><span class="co"># 問3：(3 + 4) * (10 - 6) を計算しなさい</span></span></code></pre></div>
 </div>
 <div id="演習2変数を使った計算" class="section level3">
 <h3>演習2：変数を使った計算</h3>
@@ -3887,13 +3955,13 @@ RStudioを閉じるときに出る「<strong>Save workspace image to
 は数値を入れるための空欄です。そのまま実行するとエラーになります。</strong></p>
 <p><span class="math display">\[\text{BMI} =
 \frac{\text{体重(kg)}}{\left(\text{身長(m)}\right)^2}\]</span></p>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" tabindex="-1"></a><span class="co"># 架空の人物A：身長 160 cm，体重 60 kg</span></span>
-<span id="cb76-2"><a href="#cb76-2" tabindex="-1"></a>height_cm <span class="ot">&lt;-</span> ___   <span class="co"># 160 を入れる</span></span>
-<span id="cb76-3"><a href="#cb76-3" tabindex="-1"></a>weight_kg <span class="ot">&lt;-</span> ___   <span class="co"># 60 を入れる</span></span>
-<span id="cb76-4"><a href="#cb76-4" tabindex="-1"></a></span>
-<span id="cb76-5"><a href="#cb76-5" tabindex="-1"></a>height_m <span class="ot">&lt;-</span> height_cm <span class="sc">/</span> <span class="dv">100</span></span>
-<span id="cb76-6"><a href="#cb76-6" tabindex="-1"></a>bmi <span class="ot">&lt;-</span> weight_kg <span class="sc">/</span> height_m<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb76-7"><a href="#cb76-7" tabindex="-1"></a>bmi</span></code></pre></div>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" tabindex="-1"></a><span class="co"># 架空の人物A：身長 160 cm，体重 60 kg</span></span>
+<span id="cb77-2"><a href="#cb77-2" tabindex="-1"></a>height_cm <span class="ot">&lt;-</span> ___   <span class="co"># 160 を入れる</span></span>
+<span id="cb77-3"><a href="#cb77-3" tabindex="-1"></a>weight_kg <span class="ot">&lt;-</span> ___   <span class="co"># 60 を入れる</span></span>
+<span id="cb77-4"><a href="#cb77-4" tabindex="-1"></a></span>
+<span id="cb77-5"><a href="#cb77-5" tabindex="-1"></a>height_m <span class="ot">&lt;-</span> height_cm <span class="sc">/</span> <span class="dv">100</span></span>
+<span id="cb77-6"><a href="#cb77-6" tabindex="-1"></a>bmi <span class="ot">&lt;-</span> weight_kg <span class="sc">/</span> height_m<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb77-7"><a href="#cb77-7" tabindex="-1"></a>bmi</span></code></pre></div>
 <p><strong>追加問題</strong>：体重だけを 65 kg
 に変えて，BMIを計算し直してください。</p>
 <blockquote>
@@ -3904,13 +3972,13 @@ RStudioを閉じるときに出る「<strong>Save workspace image to
 </div>
 <div id="演習3ベクトルと基本統計" class="section level3">
 <h3>演習3：ベクトルと基本統計</h3>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" tabindex="-1"></a><span class="co"># ある授業の小テストの点数（架空データ）</span></span>
-<span id="cb77-2"><a href="#cb77-2" tabindex="-1"></a>quiz_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">65</span>, <span class="dv">78</span>, <span class="dv">82</span>, <span class="dv">55</span>, <span class="dv">90</span>, <span class="dv">71</span>, <span class="dv">68</span>, <span class="dv">85</span>, <span class="dv">77</span>, <span class="dv">60</span>)</span>
-<span id="cb77-3"><a href="#cb77-3" tabindex="-1"></a></span>
-<span id="cb77-4"><a href="#cb77-4" tabindex="-1"></a><span class="co"># 以下を計算してください</span></span>
-<span id="cb77-5"><a href="#cb77-5" tabindex="-1"></a><span class="co"># 1. 平均点            → mean()</span></span>
-<span id="cb77-6"><a href="#cb77-6" tabindex="-1"></a><span class="co"># 2. 最高点と最低点     → max(), min()</span></span>
-<span id="cb77-7"><a href="#cb77-7" tabindex="-1"></a><span class="co"># 3. 標準偏差          → sd() を使うこと</span></span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" tabindex="-1"></a><span class="co"># ある授業の小テストの点数（架空データ）</span></span>
+<span id="cb78-2"><a href="#cb78-2" tabindex="-1"></a>quiz_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">65</span>, <span class="dv">78</span>, <span class="dv">82</span>, <span class="dv">55</span>, <span class="dv">90</span>, <span class="dv">71</span>, <span class="dv">68</span>, <span class="dv">85</span>, <span class="dv">77</span>, <span class="dv">60</span>)</span>
+<span id="cb78-3"><a href="#cb78-3" tabindex="-1"></a></span>
+<span id="cb78-4"><a href="#cb78-4" tabindex="-1"></a><span class="co"># 以下を計算してください</span></span>
+<span id="cb78-5"><a href="#cb78-5" tabindex="-1"></a><span class="co"># 1. 平均点            → mean()</span></span>
+<span id="cb78-6"><a href="#cb78-6" tabindex="-1"></a><span class="co"># 2. 最高点と最低点     → max(), min()</span></span>
+<span id="cb78-7"><a href="#cb78-7" tabindex="-1"></a><span class="co"># 3. 標準偏差          → sd() を使うこと</span></span></code></pre></div>
 <blockquote>
 <p>標準偏差は <strong><code>sd()</code></strong>
 で求めてください（分母は <span class="math inline">\(n-1\)</span>）。
@@ -3929,11 +3997,11 @@ RStudioを閉じるときに出る「<strong>Save workspace image to
 <p><strong>回答は，各行の先頭に <code>#</code>
 を付けて，同じスクリプトに書いてください。</strong> <code>#</code>
 のない文章を書くとエラーになります。</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" tabindex="-1"></a><span class="co"># 演習4-1：</span></span>
-<span id="cb78-2"><a href="#cb78-2" tabindex="-1"></a><span class="co"># （ここに説明を書く）</span></span>
-<span id="cb78-3"><a href="#cb78-3" tabindex="-1"></a></span>
-<span id="cb78-4"><a href="#cb78-4" tabindex="-1"></a><span class="co"># 演習4-2：</span></span>
-<span id="cb78-5"><a href="#cb78-5" tabindex="-1"></a><span class="co"># （ここに説明を書く）</span></span></code></pre></div>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" tabindex="-1"></a><span class="co"># 演習4-1：</span></span>
+<span id="cb79-2"><a href="#cb79-2" tabindex="-1"></a><span class="co"># （ここに説明を書く）</span></span>
+<span id="cb79-3"><a href="#cb79-3" tabindex="-1"></a></span>
+<span id="cb79-4"><a href="#cb79-4" tabindex="-1"></a><span class="co"># 演習4-2：</span></span>
+<span id="cb79-5"><a href="#cb79-5" tabindex="-1"></a><span class="co"># （ここに説明を書く）</span></span></code></pre></div>
 <hr />
 </div>
 <div id="模範解答" class="section level3">
