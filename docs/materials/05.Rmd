@@ -45,6 +45,10 @@ if (requireNamespace("ragg", quietly = TRUE)) {
    （Mac は `Cmd + A` → `Cmd + Enter`）で，まとめて実行する
 4. 結果は**図ではなく表**で出ます。Plots タブではなく **Console** を見てください
 
+> **コンソールの表示は途中で切れます。異常ではありません。**
+> `# ℹ 21 more rows` のような行が出ますが，失敗ではなくお知らせです。
+> 読み方は「4. `filter()`」のところで説明します。
+
 > **今日は図を作りません。** Macの人が第4回で行った `ragg` / AGG の設定は，
 > そのままにしておいてください。次回以降また使います。
 >
@@ -174,6 +178,68 @@ msleep |>
 msleep |>
   filter(sleep_total >= 12)
 ```
+
+### コンソールの表示の読み方
+
+**ここはこの資料のHTML版と，みなさんの画面とで見え方が違います。**
+HTML版はページをめくれる表になっていますが，RStudioのコンソールでは，
+**すぐ上の `sleep_total >= 12` の結果**が次のように出ます。
+
+```
+# A tibble: 31 × 11
+   name   genus vore  order conservation sleep_total sleep_rem sleep_cycle awake
+   <chr>  <chr> <chr> <chr> <chr>              <dbl>     <dbl>       <dbl> <dbl>
+ 1 Cheet… Acin… carni Carn… lc                  12.1      NA        NA      11.9
+ 2 Owl m… Aotus omni  Prim… <NA>                17         1.8      NA       7
+ ……（中略）……
+10 Weste… Euta… herbi Rode… <NA>                14.9      NA        NA       9.1
+# ℹ 21 more rows
+# ℹ 2 more variables: brainwt <dbl>, bodywt <dbl>
+# ℹ Use `print(n = ...)` to see more rows
+```
+
+`#` で始まる行は**エラーではなく，お知らせ**です。
+赤い字で `Error` と出ていなければ，コードは成功しています。
+
+| 出てくる行 | 意味 |
+|---|---|
+| `# A tibble: 31 × 11` | 結果は **31行 × 11列**。つまり条件に合ったのは31件 |
+| `# ℹ 21 more rows` | 画面に出ているのは**最初の10行**だけ。あと21行ある |
+| `# ℹ 2 more variables:` | **横幅に入りきらなかった列**。続きに列名が並びます |
+| `# ℹ Use ...` | 全部見たいときの方法の案内 |
+
+> **`more variables` の数は人によって違います。**
+> Console の幅に入る分だけ表示されるので，**RStudioの窓の大きさで変わります。**
+> 2 と出る人も 4 と出る人もいます。どちらも正常です。
+
+### 全部を見たいとき
+
+> - **行を全部見る** … `print(n = Inf)` をパイプでつなぎます
+>
+>     ```r
+>     msleep |>
+>       filter(sleep_total >= 12) |>
+>       print(n = Inf)
+>     ```
+>
+>     `n = 30` のように数を指定することもできます。
+>
+> - **件数だけ知る** … `nrow()` をつなぎます（`31` とだけ出ます）
+>
+>     ```r
+>     msleep |>
+>       filter(sleep_total >= 12) |>
+>       nrow()
+>     ```
+>
+> - **表の形で開く** … `View()`（**V は大文字**）。RStudioに表計算のような画面が開きます
+>
+>     ```r
+>     View(filter(msleep, sleep_total >= 12))
+>     ```
+>
+> - **列の省略をなくす** … `select()` で列を減らすと，横の `more variables` は消えます
+
 
 ```{r}
 # 複数条件：肉食で睡眠10時間以上
@@ -392,6 +458,8 @@ msleep |>
 | `desc()` | 降順にする | 列名（`arrange()` の中だけ） |
 | `head()` | 先頭の数行だけ取り出す | データ, 行数（省略すると6行） |
 | `nrow()` | 行数を数える | データ |
+| `print()` | 結果を表示する。行数を指定できる | データ, `n = 行数`（`n = Inf` で全行） |
+| `View()` | RStudioで表として開く | データ（**V は大文字**） |
 | `is.na()` | 欠損値かどうか調べる | 列名。`!is.na()` で「欠損でない」 |
 | `starts_with()` | その文字で始まる列を選ぶ | 文字列（`select()` の中だけ） |
 
