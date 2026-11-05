@@ -3063,7 +3063,7 @@ int main(void) {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fl">1e7</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">mean</span>(x))</span></code></pre></div>
 <pre><code>##   ユーザ システム     経過 
-##    0.020    0.003    0.024</code></pre>
+##    0.019    0.002    0.022</code></pre>
 <p>一瞬で終わります。では，まったく同じ計算を<strong>Rのループで</strong>書いてみます。</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">system.time</span>({</span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="dv">0</span></span>
@@ -3071,7 +3071,7 @@ int main(void) {
 <span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  s <span class="sc">/</span> <span class="fu">length</span>(x)</span>
 <span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##   ユーザ システム     経過 
-##    0.278    0.002    0.280</code></pre>
+##    0.275    0.003    0.279</code></pre>
 <p>上の2つの「経過」を見比べてください。<strong>同じ計算でも，<code>mean()</code>
 のほうが明確に速く終わっています</strong>（実行環境によって数値は変わります）。</p>
 <p>理由は，<code>mean()</code>
@@ -3902,8 +3902,6 @@ RStudioで開いて，上から順に実行して確かめてください。</p>
 <a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">←
 授業トップへ戻る</a>
 </p>
-</div>
-
 <style>
 .copy-wrap { position: relative; }
 .copy-wrap > .copy-btn {
@@ -4014,6 +4012,8 @@ color: #fff;
   }
 })();
 </script>
+</div>
+
 
 
 </div>
