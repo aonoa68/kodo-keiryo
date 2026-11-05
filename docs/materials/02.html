@@ -3063,7 +3063,7 @@ int main(void) {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fl">1e7</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">mean</span>(x))</span></code></pre></div>
 <pre><code>##   ユーザ システム     経過 
-##    0.020    0.003    0.022</code></pre>
+##    0.020    0.003    0.024</code></pre>
 <p>一瞬で終わります。では，まったく同じ計算を<strong>Rのループで</strong>書いてみます。</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">system.time</span>({</span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="dv">0</span></span>
@@ -3071,7 +3071,7 @@ int main(void) {
 <span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  s <span class="sc">/</span> <span class="fu">length</span>(x)</span>
 <span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##   ユーザ システム     経過 
-##    0.267    0.001    0.268</code></pre>
+##    0.278    0.002    0.280</code></pre>
 <p>上の2つの「経過」を見比べてください。<strong>同じ計算でも，<code>mean()</code>
 のほうが明確に速く終わっています</strong>（実行環境によって数値は変わります）。</p>
 <p>理由は，<code>mean()</code>
@@ -3904,6 +3904,116 @@ RStudioで開いて，上から順に実行して確かめてください。</p>
 </p>
 </div>
 
+<style>
+.copy-wrap { position: relative; }
+.copy-wrap > .copy-btn {
+position: absolute;
+top: 6px;
+right: 6px;
+z-index: 5;
+font-family: inherit;
+font-size: 12px;
+line-height: 1;
+padding: 6px 10px;
+border: 1px solid #c8d1d3;
+border-radius: 4px;
+background: rgba(255, 255, 255, 0.92);
+color: #4a5d63;
+cursor: pointer;
+
+opacity: 0.55;
+transition: opacity 0.12s ease-in;
+}
+.copy-wrap:hover > .copy-btn,
+.copy-wrap > .copy-btn:focus { opacity: 1; }
+.copy-wrap > .copy-btn.is-done {
+opacity: 1;
+background: #18bc9c;
+border-color: #18bc9c;
+color: #fff;
+}
+.copy-wrap > .copy-btn.is-fail {
+opacity: 1;
+background: #e74c3c;
+border-color: #e74c3c;
+color: #fff;
+}
+
+@media (hover: none) {
+.copy-wrap > .copy-btn { opacity: 0.85; }
+}
+@media print {
+.copy-wrap > .copy-btn { display: none; }
+}
+</style>
+<script>
+(function () {
+  "use strict";
+
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    // file:// で開いた場合など、Clipboard API が使えないときの代替
+    return new Promise(function (resolve, reject) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "-1000px";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      if (ok) { resolve(); } else { reject(); }
+    });
+  }
+
+  function flash(btn, cls, label) {
+    btn.textContent = label;
+    btn.classList.add(cls);
+    window.setTimeout(function () {
+      btn.classList.remove(cls);
+      btn.textContent = "コピー";
+    }, 1600);
+  }
+
+  function addButton(pre) {
+    var wrap = document.createElement("div");
+    wrap.className = "copy-wrap";
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy-btn";
+    btn.textContent = "コピー";
+    btn.setAttribute("aria-label", "このコードをコピーする");
+    btn.addEventListener("click", function () {
+      var code = pre.querySelector("code");
+      var text = (code || pre).textContent.replace(/\s+$/, "");
+      copyText(text).then(
+        function () { flash(btn, "is-done", "コピーしました"); },
+        function () { flash(btn, "is-fail", "コピーできません"); }
+      );
+    });
+    wrap.appendChild(btn);
+  }
+
+  function init() {
+    var blocks = document.querySelectorAll("pre.sourceCode");
+    for (var i = 0; i < blocks.length; i++) { addButton(blocks[i]); }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>
 
 
 </div>

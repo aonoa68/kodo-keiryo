@@ -1,0 +1,110 @@
+<style>
+.copy-wrap { position: relative; }
+.copy-wrap > .copy-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 5;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1;
+  padding: 6px 10px;
+  border: 1px solid #c8d1d3;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #4a5d63;
+  cursor: pointer;
+  /* 気づいてもらうため常に薄く出し、ホバーではっきりさせる */
+  opacity: 0.55;
+  transition: opacity 0.12s ease-in;
+}
+.copy-wrap:hover > .copy-btn,
+.copy-wrap > .copy-btn:focus { opacity: 1; }
+.copy-wrap > .copy-btn.is-done {
+  opacity: 1;
+  background: #18bc9c;
+  border-color: #18bc9c;
+  color: #fff;
+}
+.copy-wrap > .copy-btn.is-fail {
+  opacity: 1;
+  background: #e74c3c;
+  border-color: #e74c3c;
+  color: #fff;
+}
+/* タッチ端末ではホバーがないので濃いめに出す */
+@media (hover: none) {
+  .copy-wrap > .copy-btn { opacity: 0.85; }
+}
+@media print {
+  .copy-wrap > .copy-btn { display: none; }
+}
+</style>
+<script>
+(function () {
+  "use strict";
+
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    // file:// で開いた場合など、Clipboard API が使えないときの代替
+    return new Promise(function (resolve, reject) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "-1000px";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      if (ok) { resolve(); } else { reject(); }
+    });
+  }
+
+  function flash(btn, cls, label) {
+    btn.textContent = label;
+    btn.classList.add(cls);
+    window.setTimeout(function () {
+      btn.classList.remove(cls);
+      btn.textContent = "コピー";
+    }, 1600);
+  }
+
+  function addButton(pre) {
+    var wrap = document.createElement("div");
+    wrap.className = "copy-wrap";
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy-btn";
+    btn.textContent = "コピー";
+    btn.setAttribute("aria-label", "このコードをコピーする");
+    btn.addEventListener("click", function () {
+      var code = pre.querySelector("code");
+      var text = (code || pre).textContent.replace(/\s+$/, "");
+      copyText(text).then(
+        function () { flash(btn, "is-done", "コピーしました"); },
+        function () { flash(btn, "is-fail", "コピーできません"); }
+      );
+    });
+    wrap.appendChild(btn);
+  }
+
+  function init() {
+    var blocks = document.querySelectorAll("pre.sourceCode");
+    for (var i = 0; i < blocks.length; i++) { addButton(blocks[i]); }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>

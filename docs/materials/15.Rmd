@@ -10,6 +10,8 @@ output:
     theme: flatly
     highlight: tango
     df_print: paged
+    includes:
+      after_body: ../../_includes/copy-code.html
 ---
 
 <p style="margin:0 0 1.5em 0;"><a href="../" style="display:inline-block;padding:.4em .9em;border:1px solid #18bc9c;border-radius:4px;color:#18bc9c;text-decoration:none;">&#8592; 授業トップへ戻る</a></p>
