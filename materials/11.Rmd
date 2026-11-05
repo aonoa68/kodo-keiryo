@@ -377,6 +377,12 @@ $$\mathrm{Var}[X - Y] = \mathrm{Var}[X] + \mathrm{Var}[Y] - 2\,\mathrm{Cov}[X, Y
 
 ## 7. pivot_wider：ロング → ワイドの変換
 
+> **ワイド形式とロング形式の考え方をもっと知りたい人へ**
+>
+> **講義指定図書『RユーザのためのRStudio［実践］入門』（改訂2版）**の
+> **3-1「tidy dataとは」**と **3-2「tidyrによるtidy dataへの変形」**が，ここの話の詳しい版です。
+> 教科書（柳川）には出てきません。**必須ではありません。**
+
 > **書き方**　`pivot_wider(データ, names_from = 列名, values_from = 列名)`
 >
 > - **`names_from =`** … **その列の中身が，新しい列の名前になります**
