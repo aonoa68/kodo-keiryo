@@ -2987,6 +2987,15 @@ R本体に別の
 第3・4回で使った <code>iris</code>
 はR本体に入っていたので読み込み不要でしたが，<code>msleep</code>
 は違います。</p>
+<blockquote>
+<p><strong>書き方</strong>　<code>glimpse(データ)</code></p>
+<ul>
+<li><strong>データ</strong> … 中身を見たいデータフレーム</li>
+</ul>
+<p>列名・型（<code>&lt;chr&gt;</code> は文字列，<code>&lt;dbl&gt;</code>
+は数値）・最初のいくつかの値が<strong>縦に</strong>並びます。
+列が多いデータでも横にはみ出さないので，まず中身を見るときに使います。</p>
+</blockquote>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># データの確認</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">glimpse</span>(msleep)</span></code></pre></div>
 <pre><code>## Rows: 83
@@ -3086,6 +3095,19 @@ R本体に別の
 </div>
 <div id="filter行の絞り込み" class="section level2">
 <h2>4. filter()：行の絞り込み</h2>
+<blockquote>
+<p><strong>書き方</strong>　<code>filter(データ, 残したい行の条件)</code></p>
+<ul>
+<li><strong>データ</strong> … 絞り込みたいデータフレーム。パイプ
+<code>|&gt;</code> で渡すときは<strong>書きません</strong></li>
+<li><strong>条件</strong> … 「列名 記号
+値」の形で書きます（例：<code>vore == &quot;carni&quot;</code>）</li>
+</ul>
+<p>列名に引用符は要りません（<code>&quot;vore&quot;</code> ではなく
+<code>vore</code>）。比べる相手が文字のときだけ <code>&quot;carni&quot;</code>
+のように引用符を付けます。 条件を <code>,</code>
+で区切って並べると「<strong>かつ</strong>（AND）」の意味になります。</p>
+</blockquote>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># 肉食動物だけ抽出</span></span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>msleep <span class="sc">|&gt;</span></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">filter</span>(vore <span class="sc">==</span> <span class="st">&quot;carni&quot;</span>)</span></code></pre></div>
@@ -3173,6 +3195,9 @@ R本体に別の
 <blockquote>
 <p><strong>欠損のある行を扱うには <code>is.na()</code>
 を使います。</strong></p>
+<p><strong>書き方</strong>　<code>is.na(列名)</code> … 欠損なら
+<code>TRUE</code>，そうでなければ <code>FALSE</code> を返します。 頭に
+<code>!</code> を付けると意味が逆（「欠損でない」）になります。</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>msleep <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="fu">is.na</span>(vore))    <span class="co"># 欠損している7件だけ</span></span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>msleep <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(vore))   <span class="co"># 欠損していない76件だけ</span></span></code></pre></div>
 <p>次回グループごとに集計すると，この7件が <code>NA</code>
@@ -3183,6 +3208,20 @@ R本体に別の
 </div>
 <div id="select列の選択" class="section level2">
 <h2>5. select()：列の選択</h2>
+<blockquote>
+<p><strong>書き方</strong>　<code>select(データ, 列名, 列名, …)</code></p>
+<ul>
+<li><strong>列名</strong> …
+残したい列の名前。<strong>引用符は要りません</strong>（<code>&quot;name&quot;</code>
+ではなく <code>name</code>）</li>
+<li>列名の頭に <code>-</code>
+を付けると，その列を<strong>除く</strong>という意味になります</li>
+</ul>
+<p>書いた順に列が並びます。<code>select(sleep_total, name)</code>
+と書けば <code>sleep_total</code> が左に来ます。 <code>filter()</code>
+が<strong>行</strong>を減らすのに対し，<code>select()</code>
+は<strong>列</strong>を減らします。</p>
+</blockquote>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># 動物名・食性・睡眠時間だけ選ぶ</span></span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>msleep <span class="sc">|&gt;</span></span>
 <span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="fu">select</span>(name, vore, sleep_total)</span></code></pre></div>
@@ -3205,6 +3244,16 @@ R本体に別の
 <code>filter()</code> の中では列として扱われるので問題ありませんが，
 単独で <code>order</code> と書くと関数のほうを指します。</p>
 </blockquote>
+<blockquote>
+<p><strong>書き方</strong>　<code>starts_with(&quot;文字列&quot;)</code></p>
+<p><code>select()</code>
+の<strong>中だけ</strong>で使います。その文字で<strong>始まる</strong>列をまとめて選びます。
+下の例では
+<code>sleep_total</code>・<code>sleep_rem</code>・<code>sleep_cycle</code>
+の3列がまとめて選ばれます。 似たものに
+<code>ends_with(&quot;文字列&quot;)</code>（で終わる）・<code>contains(&quot;文字列&quot;)</code>（を含む）があります。
+ここは<strong>列名そのものを文字として指定する</strong>ので，引用符が必要です。</p>
+</blockquote>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># 列名のパターンで選択</span></span>
 <span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>msleep <span class="sc">|&gt;</span></span>
 <span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="fu">select</span>(name, <span class="fu">starts_with</span>(<span class="st">&quot;sleep&quot;</span>))</span></code></pre></div>
@@ -3217,6 +3266,18 @@ R本体に別の
 </div>
 <div id="mutate新しい列の作成変換" class="section level2">
 <h2>6. mutate()：新しい列の作成・変換</h2>
+<blockquote>
+<p><strong>書き方</strong>　<code>mutate(データ, 新しい列名 = 計算式)</code></p>
+<ul>
+<li><strong>新しい列名</strong> …
+自分で決めます。<strong>引用符なし</strong>，<code>=</code>
+は1つだけ</li>
+<li><strong>計算式</strong> …
+既にある列を使った式（例：<code>sleep_total * 60</code>）</li>
+</ul>
+<p>作った列は<strong>いちばん右</strong>に追加されます。
+左辺に<strong>すでにある列名</strong>を書くと，その列が新しい値で<strong>上書き</strong>されます。</p>
+</blockquote>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># 睡眠時間を分に変換した列を追加</span></span>
 <span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>msleep <span class="sc">|&gt;</span></span>
 <span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="fu">select</span>(name, sleep_total) <span class="sc">|&gt;</span></span>
@@ -3241,6 +3302,26 @@ R本体に別の
 </div>
 <div id="arrange並び替え" class="section level2">
 <h2>7. arrange()：並び替え</h2>
+<blockquote>
+<p><strong>書き方</strong>　<code>arrange(データ, 基準にする列)</code></p>
+<ul>
+<li><strong>基準にする列</strong> …
+並び替えの基準にする列名。引用符は要りません</li>
+<li>そのまま書くと<strong>昇順</strong>（小さい順・アルファベット順）になります</li>
+<li><strong>降順</strong>にしたいときは <code>desc(列名)</code>
+で包みます</li>
+</ul>
+<p>列を <code>,</code>
+で並べると，1つめが同じ値だった行を2つめの列で並び替えます。
+<code>NA</code>
+は<strong>昇順でも降順でも，いちばん最後</strong>に置かれます。</p>
+</blockquote>
+<blockquote>
+<p><strong>書き方</strong>　<code>desc(列名)</code></p>
+<p>降順にするための関数で，<code>arrange()</code>
+の<strong>中だけ</strong>で使います。 単独で
+<code>desc(sleep_total)</code> と書いても並び替えにはなりません。</p>
+</blockquote>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># 睡眠時間の短い順（昇順）</span></span>
 <span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>msleep <span class="sc">|&gt;</span></span>
 <span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>  <span class="fu">select</span>(name, sleep_total) <span class="sc">|&gt;</span></span>
@@ -3263,6 +3344,14 @@ R本体に別の
 </div>
 <div id="複数の動詞を組み合わせる" class="section level2">
 <h2>8. 複数の動詞を組み合わせる</h2>
+<blockquote>
+<p><strong>書き方</strong>　<code>head(データ, 行数)</code></p>
+<ul>
+<li><strong>行数</strong> …
+先頭から何行取り出すか。<strong>省略すると6行</strong>です</li>
+</ul>
+<p>下の例では，並び替えたあとの上位5行だけを表示しています。</p>
+</blockquote>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co"># 草食動物の中で睡眠時間が長い上位5種を表示</span></span>
 <span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>msleep <span class="sc">|&gt;</span></span>
 <span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>  <span class="fu">filter</span>(vore <span class="sc">==</span> <span class="st">&quot;herbi&quot;</span>) <span class="sc">|&gt;</span></span>
@@ -3311,6 +3400,96 @@ R本体に別の
 気づいたことを書いてください。</p>
 <hr />
 </div>
+</div>
+<div id="この回で使った関数" class="section level2">
+<h2>この回で使った関数</h2>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>関数</th>
+<th>すること</th>
+<th>（）の中に入れるもの</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>library()</code></td>
+<td>パッケージを読み込む</td>
+<td>パッケージ名。引用符なし（<code>library(tidyverse)</code>）</td>
+</tr>
+<tr class="even">
+<td><code>glimpse()</code></td>
+<td>列名・型・中身をざっと見る</td>
+<td>データフレーム</td>
+</tr>
+<tr class="odd">
+<td><code>filter()</code></td>
+<td><strong>行</strong>を絞り込む</td>
+<td>データ, 残す行の条件。<code>,</code> で並べると「かつ」</td>
+</tr>
+<tr class="even">
+<td><code>select()</code></td>
+<td><strong>列</strong>を選ぶ</td>
+<td>データ, 残す列名。頭に <code>-</code> で除外</td>
+</tr>
+<tr class="odd">
+<td><code>mutate()</code></td>
+<td>列を作る・書き換える</td>
+<td>データ, 新しい列名 = 計算式</td>
+</tr>
+<tr class="even">
+<td><code>arrange()</code></td>
+<td>並び替える</td>
+<td>データ, 基準にする列。降順は <code>desc()</code> で包む</td>
+</tr>
+<tr class="odd">
+<td><code>desc()</code></td>
+<td>降順にする</td>
+<td>列名（<code>arrange()</code> の中だけ）</td>
+</tr>
+<tr class="even">
+<td><code>head()</code></td>
+<td>先頭の数行だけ取り出す</td>
+<td>データ, 行数（省略すると6行）</td>
+</tr>
+<tr class="odd">
+<td><code>nrow()</code></td>
+<td>行数を数える</td>
+<td>データ</td>
+</tr>
+<tr class="even">
+<td><code>is.na()</code></td>
+<td>欠損値かどうか調べる</td>
+<td>列名。<code>!is.na()</code> で「欠損でない」</td>
+</tr>
+<tr class="odd">
+<td><code>starts_with()</code></td>
+<td>その文字で始まる列を選ぶ</td>
+<td>文字列（<code>select()</code> の中だけ）</td>
+</tr>
+</tbody>
+</table>
+<p>パイプ <code>|&gt;</code>
+は関数ではなく記号です。<code>データ |&gt; 関数()</code> と書くと，
+データがその関数の<strong>1つめの（）の中身</strong>として渡されます。
+だから <code>filter(msleep, vore == &quot;carni&quot;)</code> と
+<code>msleep |&gt; filter(vore == &quot;carni&quot;)</code> は同じ意味です。</p>
+<blockquote>
+<p><strong>引用符を付けるか迷ったら</strong></p>
+<ul>
+<li><strong>列名そのもの</strong>を指すとき …
+引用符<strong>なし</strong>（<code>select(name)</code>，<code>arrange(sleep_total)</code>）</li>
+<li><strong>中身の値</strong>と比べるとき …
+文字なら引用符<strong>あり</strong>（<code>filter(vore == &quot;carni&quot;)</code>）</li>
+<li>数値と比べるときは引用符なし（<code>filter(sleep_total &gt;= 12)</code>）</li>
+</ul>
+</blockquote>
+<hr />
 </div>
 <div id="本日のまとめ" class="section level2">
 <h2>本日のまとめ</h2>
