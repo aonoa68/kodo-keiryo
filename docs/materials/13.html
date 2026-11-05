@@ -3400,6 +3400,197 @@ SEはSDを <span class="math inline">\(\sqrt{n}\)</span>
 <hr />
 </div>
 </div>
+<div id="この回で使った関数" class="section level2">
+<h2>この回で使った関数</h2>
+<p>出てきた順に並べています。<strong>（）の中に何を入れるか</strong>を確かめたいときに見てください。</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>関数</th>
+<th>すること</th>
+<th>（）の中に入れるもの</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>library()</code></td>
+<td>パッケージを読み込む</td>
+<td>パッケージ名。<strong>引用符なし</strong></td>
+</tr>
+<tr class="even">
+<td><code>set.seed()</code></td>
+<td>乱数を毎回同じにする</td>
+<td>整数（何でもよい）</td>
+</tr>
+<tr class="odd">
+<td><code>factor()</code></td>
+<td>カテゴリ（水準つき）に変える</td>
+<td>元の列, <code>levels =</code>（順序）,
+<code>labels =</code>（表示名）</td>
+</tr>
+<tr class="even">
+<td><code>rep()</code></td>
+<td>同じ値をくり返す</td>
+<td>くり返す値, <code>each =</code> または <code>times =</code></td>
+</tr>
+<tr class="odd">
+<td><code>numeric()</code></td>
+<td>数値を入れる空の入れ物を作る</td>
+<td>長さ（個数）</td>
+</tr>
+<tr class="even">
+<td><code>rnorm()</code></td>
+<td>正規分布の乱数を作る</td>
+<td>個数, <code>mean =</code>（既定0）, <code>sd =</code>（既定1）</td>
+</tr>
+<tr class="odd">
+<td><code>min()</code></td>
+<td>最小値</td>
+<td>数値の列</td>
+</tr>
+<tr class="even">
+<td><code>t.test()</code></td>
+<td>t検定</td>
+<td><code>数値 ~ グループ, data =</code>
+または2つの列。既定は<strong>ウェルチ</strong>。対応ありは
+<code>paired = TRUE</code></td>
+</tr>
+<tr class="odd">
+<td><code>anova()</code></td>
+<td>結果を分散分析表にする</td>
+<td><code>aov()</code> や <code>lm()</code> の結果</td>
+</tr>
+<tr class="even">
+<td><code>aov()</code></td>
+<td>分散分析をする</td>
+<td><code>数値 ~ グループ</code>, <code>data =</code></td>
+</tr>
+<tr class="odd">
+<td><code>c()</code></td>
+<td>複数の値を1つに束ねる</td>
+<td>束ねたい値を <code>,</code> で並べる</td>
+</tr>
+<tr class="even">
+<td><code>mean()</code></td>
+<td>平均</td>
+<td>数値の列。欠損があるときは <code>na.rm = TRUE</code></td>
+</tr>
+<tr class="odd">
+<td><code>group_by()</code></td>
+<td>グループに分ける</td>
+<td>データ, 分ける基準の列</td>
+</tr>
+<tr class="even">
+<td><code>summarise()</code></td>
+<td>グループごとに1行にまとめる</td>
+<td>データ, <code>新しい列名 = 集計の式</code></td>
+</tr>
+<tr class="odd">
+<td><code>n()</code></td>
+<td>そのグループの件数</td>
+<td><strong>何も入れません</strong>（<code>n()</code> と書く）</td>
+</tr>
+<tr class="even">
+<td><code>sd()</code></td>
+<td>標準偏差</td>
+<td>数値の列。欠損があるときは <code>na.rm = TRUE</code></td>
+</tr>
+<tr class="odd">
+<td><code>ggplot()</code></td>
+<td>グラフの土台を作る</td>
+<td><code>data =</code> データ, <code>aes()</code> で軸の割り当て</td>
+</tr>
+<tr class="even">
+<td><code>aes()</code></td>
+<td>列をグラフの要素に割り当てる</td>
+<td><code>x =</code>, <code>y =</code>, <code>color =</code>,
+<code>fill =</code> など</td>
+</tr>
+<tr class="odd">
+<td><code>geom_boxplot()</code></td>
+<td>箱ひげ図を描く</td>
+<td>見た目の指定（省略可）</td>
+</tr>
+<tr class="even">
+<td><code>geom_jitter()</code></td>
+<td>点を少しずらして描く（重なり防止）</td>
+<td><code>width =</code>, <code>height =</code></td>
+</tr>
+<tr class="odd">
+<td><code>scale_fill_brewer()</code></td>
+<td>塗りつぶしの色をColorBrewerの組にする</td>
+<td><code>palette = &quot;Set2&quot;</code> など</td>
+</tr>
+<tr class="even">
+<td><code>labs()</code></td>
+<td>タイトルや軸ラベルを付ける</td>
+<td><code>title =</code>, <code>x =</code>, <code>y =</code>,
+<code>color =</code>, <code>fill =</code></td>
+</tr>
+<tr class="odd">
+<td><code>theme_bw()</code></td>
+<td>白地に枠線の見た目にする</td>
+<td><strong>何も入れません</strong>（<code>base_family =</code>
+でフォント指定可）</td>
+</tr>
+<tr class="even">
+<td><code>theme()</code></td>
+<td>細かい見た目を個別に変える</td>
+<td><code>axis.text = element_text(...)</code> など</td>
+</tr>
+<tr class="odd">
+<td><code>summary()</code></td>
+<td>要約を表示する</td>
+<td>データフレーム，または分析結果</td>
+</tr>
+<tr class="even">
+<td><code>shapiro.test()</code></td>
+<td>正規性を検定する</td>
+<td>数値の列</td>
+</tr>
+<tr class="odd">
+<td><code>bartlett.test()</code></td>
+<td>等分散性を検定する</td>
+<td><code>数値 ~ グループ</code>, <code>data =</code></td>
+</tr>
+<tr class="even">
+<td><code>oneway.test()</code></td>
+<td>等分散を仮定しない一元配置分散分析</td>
+<td><code>数値 ~ グループ</code>, <code>data =</code>,
+<code>var.equal =</code></td>
+</tr>
+<tr class="odd">
+<td><code>round()</code></td>
+<td>四捨五入する</td>
+<td>数値, 桁数（省略すると整数）</td>
+</tr>
+<tr class="even">
+<td><code>sum()</code></td>
+<td>合計</td>
+<td>数値の列</td>
+</tr>
+<tr class="odd">
+<td><code>geom_col()</code></td>
+<td>値をそのまま棒の高さにする</td>
+<td><code>aes(y = 値)</code> が必要</td>
+</tr>
+<tr class="even">
+<td><code>geom_errorbar()</code></td>
+<td>エラーバーを描く</td>
+<td><code>aes(ymin =, ymax =)</code>, <code>width =</code></td>
+</tr>
+</tbody>
+</table>
+<p>パイプ <code>|&gt;</code>
+は関数ではなく記号です。<code>データ |&gt; 関数()</code> と書くと，
+データがその関数の<strong>1つめの（）の中身</strong>として渡されます。</p>
+<hr />
+</div>
 <div id="本日のまとめ" class="section level2">
 <h2>本日のまとめ</h2>
 <ul>
