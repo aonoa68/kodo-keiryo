@@ -142,6 +142,12 @@ p <- ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species
 p
 ```
 
+> **書き方**　`theme_bw()` / `theme_classic()` / `theme_minimal()` / `theme_dark()`
+>
+> - **（）は空で構いません。** 全体の見た目を丸ごと切り替えます
+> - `base_size = 14` で文字全体を大きく，`base_family = "Hiragino Sans"` でフォントを変えられます
+> - **1つの図に足せるテーマは1つ**です。2つ足すと，あとに書いたほうが勝ちます
+
 ### 主なテーマ一覧
 
 ```{r}
@@ -166,6 +172,15 @@ p + theme_dark()    # ダーク（プレゼン向き）
 
 ## 2. 色のカスタマイズ
 
+> **書き方**　`scale_color_manual(values = c("水準名" = "色", ...))`
+>
+> - **`values =`** … どの水準をどの色にするかの対応。`c()` で並べます
+> - 色は `"blue"` のような名前でも，`"#1B9E77"` のような**カラーコード**でも構いません
+> - **点や線の色は `scale_color_manual()`，塗りつぶしは `scale_fill_manual()`** です
+>   （`aes(color = ...)` を使ったら color，`aes(fill = ...)` を使ったら fill）
+> - 水準名を書かずに `values = c("red", "blue", "green")` と並べるだけでも動きます
+>   （`aes()` の水準の並び順に当てはまります）
+
 ### 手動で色を指定する
 
 ```{r}
@@ -177,6 +192,12 @@ ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
                                  "virginica" = "#7570B3")) +
   theme_classic()
 ```
+
+> **書き方**　`scale_color_brewer(palette = "パレット名")`
+>
+> - **`palette =`** … 用意されている色の組の名前。**引用符が必要**です
+> - 自分で色を選ばなくてよいので，こちらのほうが手軽です
+> - 塗りつぶしに使うときは **`scale_fill_brewer()`**
 
 ### 組み込みのカラーパレット
 
@@ -241,6 +262,28 @@ ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
 
 ## 3. 軸・凡例のカスタマイズ
 
+> **書き方**　`scale_x_discrete(labels = c("元の名前" = "表示したい名前", ...))`
+>
+> - 軸の**目盛りの表示だけ**を変えます。データそのものは変わりません
+> - `discrete` は「カテゴリの軸」という意味です（数値の軸なら `scale_x_continuous()`）
+
+> **書き方**　`theme(変えたい場所 = 指定)`
+>
+> - `legend.position = "bottom"` … 凡例の位置（`"top"` `"left"` `"right"` `"none"`）
+> - `plot.title = element_text(...)` … タイトルの書式
+> - `axis.title = element_text(...)` … 軸タイトルの書式
+>
+> **`theme_bw()` のような「テーマ」とは別物です。**
+> `theme_bw()` が全体をまとめて変えるのに対し，`theme()` は**一箇所だけ**を変えます。
+> 両方使うときは，**`theme_bw()` を先に，`theme()` を後に**書いてください。
+> 逆にすると `theme_bw()` が上書きしてしまいます。
+
+> **書き方**　`element_text(size = 大きさ, face = "書体")`
+>
+> - `theme()` の中で，**文字の見た目**を指定するために使います
+> - `size = 14`（文字の大きさ），`face = "bold"`（太字），`angle = 45`（傾ける）
+> - `family = "Hiragino Sans"` でフォントも変えられます
+
 ```{r}
 ggplot(data = iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
   geom_boxplot() +
@@ -269,6 +312,12 @@ ggplot(data = iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
 `facet_wrap()` で，指定した変数の**水準ごと**にグラフを分割できます。
 ここでは `Species` という1つの変数の3水準（setosa / versicolor / virginica）で分かれます。
 
+> **書き方**　`facet_wrap(~ 分ける基準の列)`
+>
+> - **`~`（チルダ）を列名の前に付けます。** これを忘れるとエラーになります
+> - 列名に引用符は要りません
+> - `ncol = 2` で横に何枚並べるかを指定できます
+
 ```{r}
 ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length)) +
   geom_point(color = "steelblue") +
@@ -282,6 +331,15 @@ ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length)) +
 ## 5. 回帰直線を追加する
 
 点の散らばりに**傾向を表す線**を重ねると，関係の向きが見やすくなります。
+
+> **書き方**　`geom_smooth(method = "lm", se = TRUE)`
+>
+> - **`method = "lm"`** … 直線（線形回帰）を当てはめます。**引用符が必要**です。
+>   省略すると，データの形に合わせた**曲線**が引かれます
+> - **`se =`** … 線のまわりの薄い帯（信頼区間）を出すかどうか。
+>   **省略すると出ます**（`TRUE`）。`se = FALSE` で消えます
+>
+> `geom_point()` より**あとに**書いてください。先に書くと，線が点の下に隠れます。
 
 ```{r}
 ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
@@ -372,6 +430,17 @@ ggplot(data = iris, aes(x = Sepal.Length, y = Petal.Length)) +
 ## 6. グラフの保存（ggsave）
 
 作成したグラフをファイルに保存するには `ggsave()` を使います。
+
+> **書き方**　`ggsave(filename = "ファイル名", plot = 図, width = 幅, height = 高さ, dpi = 解像度)`
+>
+> - **`filename =`** … 保存するファイル名。**引用符が必要**です。
+>   拡張子（`.png` `.pdf`）で形式が決まります
+> - **`plot =`** … 保存したい図。**省略すると，直前に表示した図**が保存されます
+> - **`width` / `height`** … 大きさ。**単位は既定でインチ**です
+>   （`units = "cm"` と書けばセンチになります）
+> - **`dpi =`** … 解像度。**省略しても300**です
+>
+> `filename` 以外はすべて省略できます。`ggsave("test.png")` だけでも保存されます。
 
 ```{r, eval=FALSE}
 # グラフを変数に保存しておく
