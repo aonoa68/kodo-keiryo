@@ -3415,6 +3415,133 @@ dpi）。論文に出すときは，投稿先の指定があればそちらを�
 <hr />
 </div>
 </div>
+<div id="この回で使った関数" class="section level2">
+<h2>この回で使った関数</h2>
+<p>出てきた順に並べています。<strong>（）の中に何を入れるか</strong>を確かめたいときに見てください。</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>関数</th>
+<th>すること</th>
+<th>（）の中に入れるもの</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>library()</code></td>
+<td>パッケージを読み込む</td>
+<td>パッケージ名。<strong>引用符なし</strong></td>
+</tr>
+<tr class="even">
+<td><code>ggplot()</code></td>
+<td>グラフの土台を作る</td>
+<td><code>data =</code> データ, <code>aes()</code> で軸の割り当て</td>
+</tr>
+<tr class="odd">
+<td><code>aes()</code></td>
+<td>列をグラフの要素に割り当てる</td>
+<td><code>x =</code>, <code>y =</code>, <code>color =</code>,
+<code>fill =</code> など</td>
+</tr>
+<tr class="even">
+<td><code>geom_point()</code></td>
+<td>点を描く（散布図）</td>
+<td><code>size =</code>・<code>color =</code> など見た目（省略可）</td>
+</tr>
+<tr class="odd">
+<td><code>labs()</code></td>
+<td>タイトルや軸ラベルを付ける</td>
+<td><code>title =</code>, <code>x =</code>, <code>y =</code>,
+<code>color =</code>, <code>fill =</code></td>
+</tr>
+<tr class="even">
+<td><code>theme_bw()</code></td>
+<td>白地に枠線の見た目にする</td>
+<td><strong>何も入れません</strong>（<code>base_family =</code>
+でフォント指定可）</td>
+</tr>
+<tr class="odd">
+<td><code>theme_classic()</code></td>
+<td>軸だけの見た目にする</td>
+<td><strong>何も入れません</strong></td>
+</tr>
+<tr class="even">
+<td><code>theme_minimal()</code></td>
+<td>枠線を減らした見た目にする</td>
+<td><strong>何も入れません</strong></td>
+</tr>
+<tr class="odd">
+<td><code>theme_dark()</code></td>
+<td>暗い背景の見た目にする</td>
+<td><strong>何も入れません</strong></td>
+</tr>
+<tr class="even">
+<td><code>scale_color_manual()</code></td>
+<td>点や線の色を自分で決める</td>
+<td><code>values = c(...)</code></td>
+</tr>
+<tr class="odd">
+<td><code>c()</code></td>
+<td>複数の値を1つに束ねる</td>
+<td>束ねたい値を <code>,</code> で並べる</td>
+</tr>
+<tr class="even">
+<td><code>scale_color_brewer()</code></td>
+<td>点や線の色をColorBrewerの組にする</td>
+<td><code>palette = &quot;Dark2&quot;</code> など</td>
+</tr>
+<tr class="odd">
+<td><code>geom_boxplot()</code></td>
+<td>箱ひげ図を描く</td>
+<td>見た目の指定（省略可）</td>
+</tr>
+<tr class="even">
+<td><code>scale_x_discrete()</code></td>
+<td>x軸の目盛りの表示を変える</td>
+<td><code>labels = c(...)</code></td>
+</tr>
+<tr class="odd">
+<td><code>scale_fill_brewer()</code></td>
+<td>塗りつぶしの色をColorBrewerの組にする</td>
+<td><code>palette = &quot;Set2&quot;</code> など</td>
+</tr>
+<tr class="even">
+<td><code>theme()</code></td>
+<td>細かい見た目を個別に変える</td>
+<td><code>axis.text = element_text(...)</code> など</td>
+</tr>
+<tr class="odd">
+<td><code>element_text()</code></td>
+<td>文字の設定</td>
+<td><code>size =</code>, <code>family =</code>,
+<code>angle =</code></td>
+</tr>
+<tr class="even">
+<td><code>facet_wrap()</code></td>
+<td>グループごとに図を分ける</td>
+<td><code>~ 列名</code></td>
+</tr>
+<tr class="odd">
+<td><code>geom_smooth()</code></td>
+<td>回帰直線・曲線を重ねる</td>
+<td><code>method = &quot;lm&quot;</code> で直線。<code>se = FALSE</code>
+で帯を消す（既定は出る）</td>
+</tr>
+<tr class="even">
+<td><code>ggsave()</code></td>
+<td>図をファイルに保存する</td>
+<td>ファイル名, <code>width =</code>, <code>height =</code>,
+<code>dpi =</code>（既定300）。図を省くと直前の図</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
 <div id="本日のまとめ" class="section level2">
 <h2>本日のまとめ</h2>
 <ul>

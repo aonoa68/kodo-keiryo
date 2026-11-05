@@ -3006,6 +3006,70 @@ border-radius: 0px;
 <hr />
 </div>
 </div>
+<div id="この回で使った関数" class="section level2">
+<h2>この回で使った関数</h2>
+<p>出てきた順に並べています。<strong>（）の中に何を入れるか</strong>を確かめたいときに見てください。</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>関数</th>
+<th>すること</th>
+<th>（）の中に入れるもの</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>library()</code></td>
+<td>パッケージを読み込む</td>
+<td>パッケージ名。<strong>引用符なし</strong></td>
+</tr>
+<tr class="even">
+<td><code>cor.test()</code></td>
+<td>相関係数の検定</td>
+<td>2つの数値の列</td>
+</tr>
+<tr class="odd">
+<td><code>table()</code></td>
+<td>度数を数えてクロス表を作る</td>
+<td>1つまたは2つの列</td>
+</tr>
+<tr class="even">
+<td><code>chisq.test()</code></td>
+<td>カイ二乗検定</td>
+<td>クロス表。2×2では既定で連続性の補正が入る（<code>correct = FALSE</code>
+で外す）</td>
+</tr>
+<tr class="odd">
+<td><code>t.test()</code></td>
+<td>t検定</td>
+<td><code>数値 ~ グループ, data =</code>
+または2つの列。既定は<strong>ウェルチ</strong>。対応ありは
+<code>paired = TRUE</code></td>
+</tr>
+<tr class="even">
+<td><code>set.seed()</code></td>
+<td>乱数を毎回同じにする</td>
+<td>整数（何でもよい）</td>
+</tr>
+<tr class="odd">
+<td><code>round()</code></td>
+<td>四捨五入する</td>
+<td>数値, 桁数（省略すると整数）</td>
+</tr>
+<tr class="even">
+<td><code>rnorm()</code></td>
+<td>正規分布の乱数を作る</td>
+<td>個数, <code>mean =</code>（既定0）, <code>sd =</code>（既定1）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
 <div id="本日のまとめ" class="section level2">
 <h2>本日のまとめ</h2>
 <ul>

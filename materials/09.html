@@ -3542,6 +3542,186 @@ m\,\chi^2\]</span></p>
 <hr />
 </div>
 </div>
+<div id="この回で使った関数" class="section level2">
+<h2>この回で使った関数</h2>
+<p>出てきた順に並べています。<strong>（）の中に何を入れるか</strong>を確かめたいときに見てください。</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>関数</th>
+<th>すること</th>
+<th>（）の中に入れるもの</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>library()</code></td>
+<td>パッケージを読み込む</td>
+<td>パッケージ名。<strong>引用符なし</strong></td>
+</tr>
+<tr class="even">
+<td><code>as.data.frame()</code></td>
+<td>データフレームに変換する</td>
+<td>表や行列</td>
+</tr>
+<tr class="odd">
+<td><code>head()</code></td>
+<td>先頭の数行を取り出す</td>
+<td>データ, 行数（省略すると6行）</td>
+</tr>
+<tr class="even">
+<td><code>group_by()</code></td>
+<td>グループに分ける</td>
+<td>データ, 分ける基準の列</td>
+</tr>
+<tr class="odd">
+<td><code>summarise()</code></td>
+<td>グループごとに1行にまとめる</td>
+<td>データ, <code>新しい列名 = 集計の式</code></td>
+</tr>
+<tr class="even">
+<td><code>sum()</code></td>
+<td>合計</td>
+<td>数値の列</td>
+</tr>
+<tr class="odd">
+<td><code>xtabs()</code></td>
+<td>式でクロス表を作る</td>
+<td><code>~ 列 + 列</code>, <code>data =</code></td>
+</tr>
+<tr class="even">
+<td><code>matrix()</code></td>
+<td>数値を行列の形に並べる</td>
+<td>値, <code>nrow =</code>,
+<code>byrow = TRUE</code>（横に詰める）</td>
+</tr>
+<tr class="odd">
+<td><code>c()</code></td>
+<td>複数の値を1つに束ねる</td>
+<td>束ねたい値を <code>,</code> で並べる</td>
+</tr>
+<tr class="even">
+<td><code>list()</code></td>
+<td>複数のものをまとめて1つにする</td>
+<td>まとめたいもの</td>
+</tr>
+<tr class="odd">
+<td><code>round()</code></td>
+<td>四捨五入する</td>
+<td>数値, 桁数（省略すると整数）</td>
+</tr>
+<tr class="even">
+<td><code>prop.table()</code></td>
+<td>度数を割合に直す</td>
+<td>表, <code>1</code>（行ごと）か <code>2</code>（列ごと）</td>
+</tr>
+<tr class="odd">
+<td><code>chisq.test()</code></td>
+<td>カイ二乗検定</td>
+<td>クロス表。2×2では既定で連続性の補正が入る（<code>correct = FALSE</code>
+で外す）</td>
+</tr>
+<tr class="even">
+<td><code>fisher.test()</code></td>
+<td>フィッシャーの正確確率検定</td>
+<td>クロス表</td>
+</tr>
+<tr class="odd">
+<td><code>unname()</code></td>
+<td>名前（ラベル）を外す</td>
+<td>名前の付いた値</td>
+</tr>
+<tr class="even">
+<td><code>min()</code></td>
+<td>最小値</td>
+<td>数値の列</td>
+</tr>
+<tr class="odd">
+<td><code>nrow()</code></td>
+<td>行数を数える</td>
+<td>データ</td>
+</tr>
+<tr class="even">
+<td><code>ncol()</code></td>
+<td>列数を数える</td>
+<td>データ</td>
+</tr>
+<tr class="odd">
+<td><code>sqrt()</code></td>
+<td>平方根</td>
+<td>数値</td>
+</tr>
+<tr class="even">
+<td><code>mutate()</code></td>
+<td>列を作る・書き換える</td>
+<td>データ, <code>新しい列名 = 計算式</code></td>
+</tr>
+<tr class="odd">
+<td><code>ggplot()</code></td>
+<td>グラフの土台を作る</td>
+<td><code>data =</code> データ, <code>aes()</code> で軸の割り当て</td>
+</tr>
+<tr class="even">
+<td><code>aes()</code></td>
+<td>列をグラフの要素に割り当てる</td>
+<td><code>x =</code>, <code>y =</code>, <code>color =</code>,
+<code>fill =</code> など</td>
+</tr>
+<tr class="odd">
+<td><code>geom_col()</code></td>
+<td>値をそのまま棒の高さにする</td>
+<td><code>aes(y = 値)</code> が必要</td>
+</tr>
+<tr class="even">
+<td><code>scale_fill_manual()</code></td>
+<td>塗りつぶしの色を自分で決める</td>
+<td><code>values = c(...)</code></td>
+</tr>
+<tr class="odd">
+<td><code>labs()</code></td>
+<td>タイトルや軸ラベルを付ける</td>
+<td><code>title =</code>, <code>x =</code>, <code>y =</code>,
+<code>color =</code>, <code>fill =</code></td>
+</tr>
+<tr class="even">
+<td><code>theme_bw()</code></td>
+<td>白地に枠線の見た目にする</td>
+<td><strong>何も入れません</strong>（<code>base_family =</code>
+でフォント指定可）</td>
+</tr>
+<tr class="odd">
+<td><code>table()</code></td>
+<td>度数を数えてクロス表を作る</td>
+<td>1つまたは2つの列</td>
+</tr>
+<tr class="even">
+<td><code>factor()</code></td>
+<td>カテゴリ（水準つき）に変える</td>
+<td>元の列, <code>levels =</code>（順序）,
+<code>labels =</code>（表示名）</td>
+</tr>
+<tr class="odd">
+<td><code>n()</code></td>
+<td>そのグループの件数</td>
+<td><strong>何も入れません</strong>（<code>n()</code> と書く）</td>
+</tr>
+<tr class="even">
+<td><code>scale_fill_brewer()</code></td>
+<td>塗りつぶしの色をColorBrewerの組にする</td>
+<td><code>palette = &quot;Set2&quot;</code> など</td>
+</tr>
+</tbody>
+</table>
+<p>パイプ <code>|&gt;</code>
+は関数ではなく記号です。<code>データ |&gt; 関数()</code> と書くと，
+データがその関数の<strong>1つめの（）の中身</strong>として渡されます。</p>
+<hr />
+</div>
 <div id="本日のまとめ" class="section level2">
 <h2>本日のまとめ</h2>
 <ul>

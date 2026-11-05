@@ -484,6 +484,35 @@ ggplot(data = iris, aes(x = ___, y = ___, fill = ___)) +
 
 ---
 
+## この回で使った関数
+
+出てきた順に並べています。**（）の中に何を入れるか**を確かめたいときに見てください。
+
+| 関数 | すること | （）の中に入れるもの |
+|---|---|---|
+| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** |
+| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て |
+| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など |
+| `geom_point()` | 点を描く（散布図） | `size =`・`color =` など見た目（省略可） |
+| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` |
+| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） |
+| `theme_classic()` | 軸だけの見た目にする | **何も入れません** |
+| `theme_minimal()` | 枠線を減らした見た目にする | **何も入れません** |
+| `theme_dark()` | 暗い背景の見た目にする | **何も入れません** |
+| `scale_color_manual()` | 点や線の色を自分で決める | `values = c(...)` |
+| `c()` | 複数の値を1つに束ねる | 束ねたい値を `,` で並べる |
+| `scale_color_brewer()` | 点や線の色をColorBrewerの組にする | `palette = "Dark2"` など |
+| `geom_boxplot()` | 箱ひげ図を描く | 見た目の指定（省略可） |
+| `scale_x_discrete()` | x軸の目盛りの表示を変える | `labels = c(...)` |
+| `scale_fill_brewer()` | 塗りつぶしの色をColorBrewerの組にする | `palette = "Set2"` など |
+| `theme()` | 細かい見た目を個別に変える | `axis.text = element_text(...)` など |
+| `element_text()` | 文字の設定 | `size =`, `family =`, `angle =` |
+| `facet_wrap()` | グループごとに図を分ける | `~ 列名` |
+| `geom_smooth()` | 回帰直線・曲線を重ねる | `method = "lm"` で直線。`se = FALSE` で帯を消す（既定は出る） |
+| `ggsave()` | 図をファイルに保存する | ファイル名, `width =`, `height =`, `dpi =`（既定300）。図を省くと直前の図 |
+
+---
+
 ## 本日のまとめ
 
 - `theme_bw()` / `theme_classic()` で論文向きのデザインにできる
