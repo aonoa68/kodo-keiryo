@@ -447,31 +447,40 @@ msleep |>
 
 ## この回で使った関数
 
-| 関数 | すること | （）の中に入れるもの |
-|---|---|---|
-| `library()` | パッケージを読み込む | パッケージ名。引用符なし（`library(tidyverse)`） |
-| `glimpse()` | 列名・型・中身をざっと見る | データフレーム |
-| `filter()` | **行**を絞り込む | データ, 残す行の条件。`,` で並べると「かつ」 |
-| `select()` | **列**を選ぶ | データ, 残す列名。頭に `-` で除外 |
-| `mutate()` | 列を作る・書き換える | データ, 新しい列名 = 計算式 |
-| `arrange()` | 並び替える | データ, 基準にする列。降順は `desc()` で包む |
-| `desc()` | 降順にする | 列名（`arrange()` の中だけ） |
-| `head()` | 先頭の数行だけ取り出す | データ, 行数（省略すると6行） |
-| `nrow()` | 行数を数える | データ |
-| `print()` | 結果を表示する。行数を指定できる | データ, `n = 行数`（`n = Inf` で全行） |
-| `View()` | RStudioで表として開く | データ（**V は大文字**） |
-| `is.na()` | 欠損値かどうか調べる | 列名。`!is.na()` で「欠損でない」 |
-| `starts_with()` | その文字で始まる列を選ぶ | 文字列（`select()` の中だけ） |
+出てきた順に並べています。**（）の中に何を入れるか**を確かめたいときに見てください。
+
+::: {.fn-table}
+
+| 関数 | すること | （）の中に入れるもの | 例 |
+|---|---|---|---|
+| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** | `library(tidyverse)` |
+| `glimpse()` | 列名・型・中身をざっと見る | データフレーム | `glimpse(msleep)` |
+| `arrange()` | 並び替える | データ, 基準にする列。降順は `desc()` で包む | `arrange(msleep, desc(sleep_total))` |
+| `filter()` | **行**を絞り込む | データ, 残す行の条件。`,` で並べると「かつ」 | `filter(msleep, sleep_total >= 12)` |
+| `nrow()` | 行数を数える | データ | `nrow(msleep)` |
+| `select()` | **列**を選ぶ | データ, 残す列名。頭に `-` で除外 | `select(msleep, name, vore)` |
+| `starts_with()` | その文字で始まる列を選ぶ | 文字列（`select()` の中だけ） | `select(msleep, starts_with("sleep"))` |
+| `mutate()` | 列を作る・書き換える | データ, `新しい列名 = 計算式` | `mutate(msleep, sleep_min = sleep_total * 60)` |
+| `is.na()` | 欠損値かどうか調べる | 列。`!is.na()` で「欠損でない」 | `filter(msleep, is.na(vore))` |
+| `desc()` | 降順にする | 列名（`arrange()` の中だけ） | `arrange(msleep, desc(bodywt))` |
+| `head()` | 先頭の数行を取り出す | データ, 行数（省略すると6行） | `head(iris, 3)` |
+| `print()` | 結果を表示する。行数を指定できる | データ, `n = 行数`（`n = Inf` で全行） | `print(msleep, n = Inf)` |
+| `View()` | RStudioで表として開く | データ（**V は大文字**） | `View(msleep)` |
+
+:::
 
 パイプ `|>` は関数ではなく記号です。`データ |> 関数()` と書くと，
 データがその関数の**1つめの（）の中身**として渡されます。
-だから `filter(msleep, vore == "carni")` と `msleep |> filter(vore == "carni")` は同じ意味です。
 
 > **引用符を付けるか迷ったら**
 >
 > - **列名そのもの**を指すとき … 引用符**なし**（`select(name)`，`arrange(sleep_total)`）
 > - **中身の値**と比べるとき … 文字なら引用符**あり**（`filter(vore == "carni")`）
 > - 数値と比べるときは引用符なし（`filter(sleep_total >= 12)`）
+
+> **もっと詳しく知りたいときは** `?関数名` と実行してください（例：`?glimpse`）。
+> 右下の **Help** タブに，その関数の説明と，（）に書ける項目が全部出ます。
+> 読み方は **[第2回「ヘルプの読み方」](02.html#help)** にまとめてあります。
 
 ---
 
@@ -501,6 +510,6 @@ msleep |>
 # 授業サイト用：コードブロックに「コピー」ボタンを付ける。
 # この .Rmd だけをダウンロードして Knit したときは，
 # ファイルが無いので何も起きない（エラーにはならない）。
-.btn <- "../../_includes/copy-code.html"
+.btn <- "../../_includes/site-extras.html"
 if (file.exists(.btn)) cat(readLines(.btn, warn = FALSE), sep = "\n")
 ```

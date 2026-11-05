@@ -488,28 +488,38 @@ ggplot(data = iris, aes(x = ___, y = ___, fill = ___)) +
 
 出てきた順に並べています。**（）の中に何を入れるか**を確かめたいときに見てください。
 
-| 関数 | すること | （）の中に入れるもの |
-|---|---|---|
-| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** |
-| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て |
-| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など |
-| `geom_point()` | 点を描く（散布図） | `size =`・`color =` など見た目（省略可） |
-| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` |
-| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） |
-| `theme_classic()` | 軸だけの見た目にする | **何も入れません** |
-| `theme_minimal()` | 枠線を減らした見た目にする | **何も入れません** |
-| `theme_dark()` | 暗い背景の見た目にする | **何も入れません** |
-| `scale_color_manual()` | 点や線の色を自分で決める | `values = c(...)` |
-| `c()` | 複数の値を1つに束ねる | 束ねたい値を `,` で並べる |
-| `scale_color_brewer()` | 点や線の色をColorBrewerの組にする | `palette = "Dark2"` など |
-| `geom_boxplot()` | 箱ひげ図を描く | 見た目の指定（省略可） |
-| `scale_x_discrete()` | x軸の目盛りの表示を変える | `labels = c(...)` |
-| `scale_fill_brewer()` | 塗りつぶしの色をColorBrewerの組にする | `palette = "Set2"` など |
-| `theme()` | 細かい見た目を個別に変える | `axis.text = element_text(...)` など |
-| `element_text()` | 文字の設定 | `size =`, `family =`, `angle =` |
-| `facet_wrap()` | グループごとに図を分ける | `~ 列名` |
-| `geom_smooth()` | 回帰直線・曲線を重ねる | `method = "lm"` で直線。`se = FALSE` で帯を消す（既定は出る） |
-| `ggsave()` | 図をファイルに保存する | ファイル名, `width =`, `height =`, `dpi =`（既定300）。図を省くと直前の図 |
+::: {.fn-table}
+
+| 関数 | すること | （）の中に入れるもの | 例 |
+|---|---|---|---|
+| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** | `library(tidyverse)` |
+| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て | `ggplot(iris, aes(x = Sepal.Length, y = Petal.Length))` |
+| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など | `aes(x = Species, y = Petal.Length)` |
+| `geom_point()` | 点を描く（散布図） | `size =`・`color =` など見た目（省略可） | `geom_point(size = 2)` |
+| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` | `labs(title = "花びらの長さ", x = "種", y = "長さ (cm)")` |
+| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） | `theme_bw()` |
+| `theme_classic()` | 軸だけの見た目にする | **何も入れません** | `theme_classic()` |
+| `theme_minimal()` | 枠線を減らした見た目にする | **何も入れません** | `theme_minimal()` |
+| `theme_dark()` | 暗い背景の見た目にする | **何も入れません** | `theme_dark()` |
+| `scale_color_manual()` | 点や線の色を自分で決める | `values = c(...)` | `scale_color_manual(values = c("#1B9E77", "#D95F02", "#7570B3"))` |
+| `c()` | 複数の値を1つに束ねる | 束ねたい値を `,` で並べる | `c(85, 72, 91)` |
+| `scale_color_brewer()` | 点や線の色をColorBrewerの組にする | `palette = "Dark2"` など | `scale_color_brewer(palette = "Dark2")` |
+| `geom_boxplot()` | 箱ひげ図を描く | 見た目の指定（省略可） | `geom_boxplot()` |
+| `scale_x_discrete()` | x軸の目盛りの表示を変える | `labels = c(...)` | `scale_x_discrete(labels = c("セトサ", "バーシ", "バージ"))` |
+| `scale_fill_brewer()` | 塗りつぶしの色をColorBrewerの組にする | `palette = "Set2"` など | `scale_fill_brewer(palette = "Set2")` |
+| `theme()` | 細かい見た目を個別に変える | `axis.text = element_text(...)` など | `theme(axis.text = element_text(size = 12))` |
+| `element_text()` | 文字の設定 | `size =`, `family =`, `angle =` | `element_text(size = 12, angle = 45)` |
+| `facet_wrap()` | グループごとに図を分ける | `~ 列名` | `facet_wrap(~ Species)` |
+| `geom_smooth()` | 回帰直線・曲線を重ねる | `method = "lm"` で直線。`se = FALSE` で帯を消す（既定は出る） | `geom_smooth(method = "lm", se = FALSE)` |
+| `ggsave()` | 図をファイルに保存する | ファイル名, `width =`, `height =`, `dpi =`（既定300）。図を省くと直前の図 | `ggsave("plot.png", width = 6, height = 4)` |
+| `install.packages()` | パッケージを入れる（最初の1回だけ） | パッケージ名。**引用符あり**（`library()` と逆） | `install.packages("tidyverse")` |
+| `display.brewer.all()` | ColorBrewerの色の組を一覧表示する | **何も入れません** | `display.brewer.all()` |
+
+:::
+
+> **もっと詳しく知りたいときは** `?関数名` と実行してください（例：`?ggplot`）。
+> 右下の **Help** タブに，その関数の説明と，（）に書ける項目が全部出ます。
+> 読み方は **[第2回「ヘルプの読み方」](02.html#help)** にまとめてあります。
 
 ---
 
@@ -543,6 +553,6 @@ ggplot(data = iris, aes(x = ___, y = ___, fill = ___)) +
 # 授業サイト用：コードブロックに「コピー」ボタンを付ける。
 # この .Rmd だけをダウンロードして Knit したときは，
 # ファイルが無いので何も起きない（エラーにはならない）。
-.btn <- "../../_includes/copy-code.html"
+.btn <- "../../_includes/site-extras.html"
 if (file.exists(.btn)) cat(readLines(.btn, warn = FALSE), sep = "\n")
 ```

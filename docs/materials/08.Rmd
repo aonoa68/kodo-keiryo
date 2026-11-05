@@ -369,23 +369,31 @@ cor.test(mtcars$___, mtcars$___)
 
 出てきた順に並べています。**（）の中に何を入れるか**を確かめたいときに見てください。
 
-| 関数 | すること | （）の中に入れるもの |
-|---|---|---|
-| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** |
-| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て |
-| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など |
-| `geom_point()` | 点を描く（散布図） | `size =`・`color =` など見た目（省略可） |
-| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` |
-| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） |
-| `geom_smooth()` | 回帰直線・曲線を重ねる | `method = "lm"` で直線。`se = FALSE` で帯を消す（既定は出る） |
-| `scale_color_brewer()` | 点や線の色をColorBrewerの組にする | `palette = "Dark2"` など |
-| `cor()` | 相関係数を計算する | 2つの数値の列。欠損は `use = "complete.obs"` |
-| `select()` | **列**を選ぶ | データ, 残す列名。頭に `-` で除外 |
-| `round()` | 四捨五入する | 数値, 桁数（省略すると整数） |
-| `cor.test()` | 相関係数の検定 | 2つの数値の列 |
+::: {.fn-table}
+
+| 関数 | すること | （）の中に入れるもの | 例 |
+|---|---|---|---|
+| `library()` | パッケージを読み込む | パッケージ名。**引用符なし** | `library(tidyverse)` |
+| `ggplot()` | グラフの土台を作る | `data =` データ, `aes()` で軸の割り当て | `ggplot(iris, aes(x = Sepal.Length, y = Petal.Length))` |
+| `aes()` | 列をグラフの要素に割り当てる | `x =`, `y =`, `color =`, `fill =` など | `aes(x = Species, y = Petal.Length)` |
+| `geom_point()` | 点を描く（散布図） | `size =`・`color =` など見た目（省略可） | `geom_point(size = 2)` |
+| `labs()` | タイトルや軸ラベルを付ける | `title =`, `x =`, `y =`, `color =`, `fill =` | `labs(title = "花びらの長さ", x = "種", y = "長さ (cm)")` |
+| `theme_bw()` | 白地に枠線の見た目にする | **何も入れません**（`base_family =` でフォント指定可） | `theme_bw()` |
+| `geom_smooth()` | 回帰直線・曲線を重ねる | `method = "lm"` で直線。`se = FALSE` で帯を消す（既定は出る） | `geom_smooth(method = "lm", se = FALSE)` |
+| `scale_color_brewer()` | 点や線の色をColorBrewerの組にする | `palette = "Dark2"` など | `scale_color_brewer(palette = "Dark2")` |
+| `cor()` | 相関係数を計算する | 2つの数値の列。欠損は `use = "complete.obs"` | `cor(iris$Sepal.Length, iris$Petal.Length)` |
+| `select()` | **列**を選ぶ | データ, 残す列名。頭に `-` で除外 | `select(msleep, name, vore)` |
+| `round()` | 四捨五入する | 数値, 桁数（省略すると整数） | `round(3.14159, 2)` |
+| `cor.test()` | 相関係数の検定 | 2つの数値の列 | `cor.test(iris$Sepal.Length, iris$Petal.Length)` |
+
+:::
 
 パイプ `|>` は関数ではなく記号です。`データ |> 関数()` と書くと，
 データがその関数の**1つめの（）の中身**として渡されます。
+
+> **もっと詳しく知りたいときは** `?関数名` と実行してください（例：`?ggplot`）。
+> 右下の **Help** タブに，その関数の説明と，（）に書ける項目が全部出ます。
+> 読み方は **[第2回「ヘルプの読み方」](02.html#help)** にまとめてあります。
 
 ---
 
@@ -413,6 +421,6 @@ cor.test(mtcars$___, mtcars$___)
 # 授業サイト用：コードブロックに「コピー」ボタンを付ける。
 # この .Rmd だけをダウンロードして Knit したときは，
 # ファイルが無いので何も起きない（エラーにはならない）。
-.btn <- "../../_includes/copy-code.html"
+.btn <- "../../_includes/site-extras.html"
 if (file.exists(.btn)) cat(readLines(.btn, warn = FALSE), sep = "\n")
 ```

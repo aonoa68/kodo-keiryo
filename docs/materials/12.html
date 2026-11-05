@@ -3009,17 +3009,20 @@ border-radius: 0px;
 <div id="この回で使った関数" class="section level2">
 <h2>この回で使った関数</h2>
 <p>出てきた順に並べています。<strong>（）の中に何を入れるか</strong>を確かめたいときに見てください。</p>
+<div class="fn-table">
 <table>
 <colgroup>
-<col width="33%" />
-<col width="33%" />
-<col width="33%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>関数</th>
 <th>すること</th>
 <th>（）の中に入れるもの</th>
+<th>例</th>
 </tr>
 </thead>
 <tbody>
@@ -3027,22 +3030,26 @@ border-radius: 0px;
 <td><code>library()</code></td>
 <td>パッケージを読み込む</td>
 <td>パッケージ名。<strong>引用符なし</strong></td>
+<td><code>library(tidyverse)</code></td>
 </tr>
 <tr class="even">
 <td><code>cor.test()</code></td>
 <td>相関係数の検定</td>
 <td>2つの数値の列</td>
+<td><code>cor.test(iris$Sepal.Length, iris$Petal.Length)</code></td>
 </tr>
 <tr class="odd">
 <td><code>table()</code></td>
 <td>度数を数えてクロス表を作る</td>
 <td>1つまたは2つの列</td>
+<td><code>table(mtcars$cyl, mtcars$am)</code></td>
 </tr>
 <tr class="even">
 <td><code>chisq.test()</code></td>
 <td>カイ二乗検定</td>
 <td>クロス表。2×2では既定で連続性の補正が入る（<code>correct = FALSE</code>
 で外す）</td>
+<td><code>chisq.test(tab)</code></td>
 </tr>
 <tr class="odd">
 <td><code>t.test()</code></td>
@@ -3050,24 +3057,37 @@ border-radius: 0px;
 <td><code>数値 ~ グループ, data =</code>
 または2つの列。既定は<strong>ウェルチ</strong>。対応ありは
 <code>paired = TRUE</code></td>
+<td><code>t.test(mpg ~ am, data = mtcars)</code></td>
 </tr>
 <tr class="even">
 <td><code>set.seed()</code></td>
 <td>乱数を毎回同じにする</td>
 <td>整数（何でもよい）</td>
+<td><code>set.seed(123)</code></td>
 </tr>
 <tr class="odd">
 <td><code>round()</code></td>
 <td>四捨五入する</td>
 <td>数値, 桁数（省略すると整数）</td>
+<td><code>round(3.14159, 2)</code></td>
 </tr>
 <tr class="even">
 <td><code>rnorm()</code></td>
 <td>正規分布の乱数を作る</td>
 <td>個数, <code>mean =</code>（既定0）, <code>sd =</code>（既定1）</td>
+<td><code>rnorm(50, mean = 10, sd = 2)</code></td>
 </tr>
 </tbody>
 </table>
+</div>
+<blockquote>
+<p><strong>もっと詳しく知りたいときは</strong> <code>?関数名</code>
+と実行してください（例：<code>?cor.test</code>）。 右下の
+<strong>Help</strong>
+タブに，その関数の説明と，（）に書ける項目が全部出ます。 読み方は
+<strong><a href="02.html#help">第2回「ヘルプの読み方」</a></strong>
+にまとめてあります。</p>
+</blockquote>
 <hr />
 </div>
 <div id="本日のまとめ" class="section level2">
@@ -3092,6 +3112,26 @@ border-radius: 0px;
 授業トップへ戻る</a>
 </p>
 <style>
+
+.fn-table table {
+table-layout: fixed;
+width: 100%;
+font-size: 0.85em;
+}
+.fn-table table th,
+.fn-table table td { vertical-align: top; }
+.fn-table table th:nth-child(1), .fn-table table td:nth-child(1) { width: 18%; }
+.fn-table table th:nth-child(2), .fn-table table td:nth-child(2) { width: 19%; }
+.fn-table table th:nth-child(3), .fn-table table td:nth-child(3) { width: 31%; }
+.fn-table table th:nth-child(4), .fn-table table td:nth-child(4) { width: 32%; }
+.fn-table table code {
+white-space: normal;
+word-break: normal;
+overflow-wrap: anywhere;
+padding: 0;
+background: transparent;
+}
+
 .copy-wrap { position: relative; }
 .copy-wrap > .copy-btn {
 position: absolute;
