@@ -96,6 +96,23 @@ library(tidyverse)
 
 `dplyr` は，データフレームを操作するための強力なパッケージです。
 
+> **読み方**
+>
+> 「**ディープライヤー**」と読まれることが多いです（dee-ply-er）。
+>
+> 名前は **d**（data frame）＋ **plyr** でできています。
+> `plyr` は作者が以前に作ったパッケージで，**pliers（ペンチ）**を思わせる綴りです。
+> 「データフレームをつかんで加工する道具」というわけです。
+>
+> ただし，**決まった読み方はありません。**
+> 作者の Hadley Wickham 自身が，由来を説明したうえで
+> 「好きなように読んでください」と答えています。
+> 「ディーピーエルワイアール」でも通じます。
+> **読み方が分からないせいで口に出さなくなるより，声に出して質問するほうが大事です。**
+>
+> 出典：[tidyverse/dplyr issue #1857](https://github.com/tidyverse/dplyr/issues/1857)
+> ／ [Posit Community の発音スレッド](https://forum.posit.co/t/pronunciations-of-common-r-terms/1810)
+
 ### dplyrの6つの基本動詞
 
 | 動詞 | 意味 | Excelで例えると |
