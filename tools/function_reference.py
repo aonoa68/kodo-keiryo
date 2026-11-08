@@ -235,6 +235,11 @@ FUNCTIONS = {
         '判定する関数（`is.numeric` など）',
         'across(where(is.numeric), mean)',
         'mtcars |> summarise(across(where(is.numeric), mean))'),
+    'read.csv': (
+        'CSVファイルを読み込む（R本体の関数）',
+        'ファイルのパス。`read_csv()` と違い，空欄は欠損にならない',
+        'read.csv("msleep.csv")',
+        '{f <- file.path(tempdir(), "t.csv"); write.csv(head(iris), f, row.names = FALSE); read.csv(f)}'),
     'read_csv': (
         'CSVファイルを読み込む',
         'ファイルのパス（引用符あり）。文字化けには `locale =`',

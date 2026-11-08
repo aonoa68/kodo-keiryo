@@ -84,3 +84,90 @@ msleep |>
 
 # sort = TRUE は「n の多い順に並べる」指定です。付けないと vore の順（アルファベット順）
 # になります。count() は group_by() + summarise(n = n()) の近道です。
+
+
+# ------------------------------------------------------------
+# 演習4（発展）：penguins で同じことをやってみる
+# ------------------------------------------------------------
+
+# penguins は R 4.5 以降に標準で入っているデータです（読み込み不要）。
+# msleep と違い「ふつうのデータフレーム」なので、そのまま打つと344行流れます。
+glimpse(penguins)
+
+
+# 1. 種ごとに body_mass の件数・平均・標準偏差
+penguins |>
+  group_by(species) |>
+  summarise(
+    n    = n(),
+    mean = mean(body_mass, na.rm = TRUE),
+    sd   = sd(body_mass,   na.rm = TRUE)
+  )
+
+# 結果（四捨五入）
+#   Adelie    152  3700.7  458.6
+#   Chinstrap  68  3733.1  384.3
+#   Gentoo    124  5076.0  504.1
+#
+# msleep のときと書き方は変わりません。列名とデータ名を入れ替えただけです。
+
+
+# 2. エラーバー付きの棒グラフ
+mass_summary <- penguins |>
+  group_by(species) |>
+  summarise(
+    mean_mass = mean(body_mass, na.rm = TRUE),
+    sd_mass   = sd(body_mass,   na.rm = TRUE)
+  )
+
+ggplot(mass_summary, aes(x = species, y = mean_mass, fill = species)) +
+  geom_col() +
+  geom_errorbar(aes(ymin = mean_mass - sd_mass, ymax = mean_mass + sd_mass),
+                width = 0.2) +
+  scale_fill_brewer(palette = "Set2") +
+  labs(title = "ペンギンの種ごとの体重（平均±SD）",
+       x = "種", y = "体重 (g)") +
+  theme_bw()
+
+# Gentoo だけ平均が 1.4kg ほど重く（5076g vs 3701g）、
+# 平均±SD の範囲が Adelie・Chinstrap と重なりません。
+
+
+# 3. 島ごとの件数を多い順に
+penguins |>
+  count(island, sort = TRUE)
+
+# 結果   Biscoe 168 ／ Dream 124 ／ Torgersen 52
+
+
+# 問1：na.rm = TRUE なしだと、なぜ Chinstrap だけ数値が出るのか
+#      body_mass の欠損が2件あり、その2件がどちらも Chinstrap 以外の種だからです。
+#      平均は、欠損が1つでも混ざると NA になります。裏を返すと、
+#      欠損が1つも無いグループだけは数値が出ます。
+#      確かめ方：
+penguins |>
+  group_by(species) |>
+  summarise(欠損の数 = sum(is.na(body_mass)))
+#      Adelie 1 ／ Chinstrap 0 ／ Gentoo 1
+#
+#      「一部のグループだけ NA」という出方をしたら、
+#      そのグループに欠損が入っていると考えてください。
+
+
+# 問2：sex ごとに集計すると現れる行
+penguins |>
+  group_by(sex) |>
+  summarise(n = n(), mean = mean(body_mass, na.rm = TRUE))
+
+#      female 165 ／ male 168 ／ <NA> 11 の3行が出ます。
+#      <NA> の11件は「性別が記録されていない個体」で、第2節の msleep の
+#      vore と同じです。group_by() は欠損を黙って捨てず、1つのグループとして見せます。
+#      iris では全部の列が埋まっているので、この行は出ませんでした。
+
+
+# 問3：「Biscoe島がいちばんペンギンの多い島」と言えるか
+#      言えません。この168という数は「Biscoe島で調査された個体の数」であって、
+#      島にいるペンギンの数ではありません。島ごとに何羽捕まえて測ったかは
+#      調査する側の都合で決まります。
+#      第3回で iris の3種がどれも50本ずつだったのと同じで、
+#      件数は「自然界の割合」ではなく「データの取り方」を表しています。

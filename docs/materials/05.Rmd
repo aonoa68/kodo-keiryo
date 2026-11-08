@@ -597,6 +597,7 @@ msleep |>
 | `is.na()` | 欠損値かどうか調べる | 列。`!is.na()` で「欠損でない」 | `filter(msleep, is.na(vore))` |
 | `arrange()` | 並び替える | データ, 基準にする列。降順は `desc()` で包む | `arrange(msleep, desc(sleep_total))` |
 | `desc()` | 降順にする | 列名（`arrange()` の中だけ） | `arrange(msleep, desc(bodywt))` |
+| `read.csv()` | CSVファイルを読み込む（R本体の関数） | ファイルのパス。`read_csv()` と違い，空欄は欠損にならない | `read.csv("msleep.csv")` |
 | `print()` | 結果を表示する。行数を指定できる | データ, `n = 行数`（`n = Inf` で全行） | `print(msleep, n = Inf)` |
 | `View()` | RStudioで表として開く | データ（**V は大文字**） | `View(msleep)` |
 
