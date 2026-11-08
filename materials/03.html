@@ -3599,9 +3599,127 @@ IQR\,]\]</span>
 </blockquote>
 <hr />
 </div>
+<div id="演習4発展自分の関心のあるデータで同じ3つの図を描く" class="section level3">
+<h3>演習4（発展）：自分の関心のあるデータで，同じ3つの図を描く</h3>
+<p>今日の3つの図は，<code>iris</code> 以外のデータでもそのまま描けます。
+<strong>自分が気になるデータを1つ選んで</strong>，同じことをやってみてください。</p>
+<div id="finddata" class="section level4">
+<h4>自分でデータを探す</h4>
+<p>Rには，最初から<strong>108個のデータ</strong>が入っています。一覧はこれで出ます。</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">data</span>()</span></code></pre></div>
+<p>気になる名前を見つけたら，<strong><code>?データ名</code></strong>
+でそのデータの説明が読めます （→ <a href="02.html#help">第2回「ヘルプの読み方」</a>）。 中身は
+<code>str(データ名)</code> で見られます。</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>?ToothGrowth          <span class="co"># 何のデータかを読む</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="fu">str</span>(ToothGrowth)      <span class="co"># 列と中身を見る</span></span></code></pre></div>
+<p><strong>選ぶときの条件は2つです。</strong></p>
+<ol style="list-style-type: decimal">
+<li><strong>データフレームであること</strong> …
+<code>is.data.frame(データ名)</code> が <code>TRUE</code>
+になるもの</li>
+<li><strong>数値の列が2つ以上</strong>と，<strong>グループを表す列が1つ</strong>あること</li>
+</ol>
+<blockquote>
+<p><strong><code>Titanic</code> や <code>HairEyeColor</code>
+は，この回では選べません。</strong>
+これらは<strong>表（<code>table</code>）</strong>であってデータフレームではありません。
+108個のうち，データフレームは46個です。
+（表の形のデータは第9回で扱います。）</p>
+</blockquote>
+</div>
+<div id="見つからないときはこの中から選んでください" class="section level4">
+<h4>見つからないときは，この中から選んでください</h4>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>データ</th>
+<th>中身</th>
+<th>数値の列</th>
+<th>グループの列</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>penguins</code></td>
+<td>南極のペンギン344羽</td>
+<td><code>bill_len</code>・<code>flipper_len</code>・<code>body_mass</code></td>
+<td><code>species</code>・<code>island</code>・<code>sex</code></td>
+</tr>
+<tr class="even">
+<td><code>ToothGrowth</code></td>
+<td>モルモット60匹のビタミンC実験</td>
+<td><code>len</code>（歯の伸び）</td>
+<td><code>supp</code>・<code>dose</code></td>
+</tr>
+<tr class="odd">
+<td><code>chickwts</code></td>
+<td>ヒヨコ71羽と餌の種類</td>
+<td><code>weight</code></td>
+<td><code>feed</code>（6種類）</td>
+</tr>
+<tr class="even">
+<td><code>airquality</code></td>
+<td>ニューヨークの大気153日分</td>
+<td><code>Ozone</code>（<strong>欠損37件</strong>）・<code>Temp</code>・<code>Wind</code></td>
+<td><code>Month</code></td>
+</tr>
+<tr class="odd">
+<td><code>faithful</code></td>
+<td>間欠泉272回の噴出</td>
+<td><code>eruptions</code>・<code>waiting</code></td>
+<td>（無し。<strong>山が2つある</strong>ヒストグラムになります）</td>
+</tr>
+<tr class="even">
+<td><code>mtcars</code></td>
+<td>自動車32台</td>
+<td><code>mpg</code>・<code>wt</code>・<code>hp</code></td>
+<td><code>cyl</code>・<code>am</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="やること" class="section level4">
+<h4>やること</h4>
+<ol style="list-style-type: decimal">
+<li>数値の列2つで<strong>散布図</strong>を描き，グループの列で<strong>色分け</strong>する</li>
+<li>数値の列1つで<strong>ヒストグラム</strong>を描く。<code>binwidth</code>
+を<strong>2通り</strong>試して見比べる</li>
+<li>グループごとに<strong>箱ひげ図</strong>を描く</li>
+<li>3つとも，<code>labs()</code>
+で日本語のタイトルと軸ラベルを付ける</li>
+</ol>
+<p><strong>穴埋めはありません。</strong>
+今日のコードの，データ名と列名を置き換えれば動きます。</p>
+</div>
+<div id="問" class="section level4">
+<h4>問</h4>
+<p><strong>問1</strong>：なぜそのデータを選びましたか。1〜2行で書いてください。</p>
+<p><strong>問2</strong>：欠損のあるデータ（<code>penguins</code>・<code>airquality</code>）を選ぶと，図を描いたときに
+こんな警告が出ます。</p>
+<pre><code>Removed 2 rows containing missing values or values outside the scale range (`geom_point()`).</code></pre>
+<p>これは<strong>エラーではありません</strong>。何が起きたのか，自分の言葉で説明してください。
+欠損の無いデータを選んだ人は，上の表から欠損のあるものを1つ選んで試してください。</p>
+<p><strong>問3</strong>：2 で <code>binwidth</code>
+を変えると，分布の印象はどう変わりましたか。 <strong>どちらの
+<code>binwidth</code>
+を論文に載せるかを，どうやって決めますか。</strong></p>
+<hr />
+</div>
+</div>
 <div id="模範解答" class="section level3">
 <h3>模範解答</h3>
 <p>演習1〜3の解答例を置いてあります。自分で解いたあとに見てください。</p>
+<blockquote>
+<p><strong>演習4には解答例がありません。</strong>
+選んだデータによって答えが変わるためです。
+書いたコードが動けば，それが正解です。</p>
+</blockquote>
 <p><strong>→ <a href="03_model_answer.R">第3回
 演習の模範解答（<code>.R</code> ファイル）</a></strong></p>
 <blockquote>
@@ -3712,6 +3830,13 @@ IQR\,]\]</span>
 <td>保存した結果を読み込む</td>
 <td>ファイル名</td>
 <td><code>readRDS(&quot;result.rds&quot;)</code></td>
+</tr>
+<tr class="even">
+<td><code>data()</code></td>
+<td>Rに入っているデータの一覧を出す</td>
+<td><strong>何も入れません</strong>。<code>data(パッケージ名)</code>
+で絞ることもできる</td>
+<td><code>data()</code></td>
 </tr>
 </tbody>
 </table>

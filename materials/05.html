@@ -3633,9 +3633,92 @@ HTML版はページをめくれる表になっていますが，RStudioのコン
 <p><strong>問</strong>：上位に並ぶのはどんな動物ですか。<code>sleep_total</code>（総睡眠時間）と見比べて，
 気づいたことを書いてください。</p>
 </div>
+<div id="演習4発展自分の関心のあるデータを加工する" class="section level3">
+<h3>演習4（発展）：自分の関心のあるデータを加工する</h3>
+<p>今日の4つの動詞は，<code>msleep</code>
+以外のデータでもそのまま使えます。</p>
+<blockquote>
+<p><strong>データの探し方</strong>は<a href="03.html#finddata">第3回「自分でデータを探す」</a>にまとめてあります。
+<code>data()</code> で一覧，<code>?データ名</code>
+で説明，<code>glimpse(データ名)</code> で中身が見られます。</p>
+</blockquote>
+<p><strong>欠損のある列を含むデータ</strong>を選んでください。今日の「欠損のある行は落ちる」が再現します。</p>
+<div id="見つからないときはこの中から" class="section level4">
+<h4>見つからないときは，この中から</h4>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>データ</th>
+<th>中身</th>
+<th>欠損のある列</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>penguins</code></td>
+<td>南極のペンギン344羽</td>
+<td><code>body_mass</code>（2件）・<code>sex</code>（11件）</td>
+</tr>
+<tr class="even">
+<td><code>starwars</code></td>
+<td>登場人物87人</td>
+<td><code>height</code>（6件）・<code>mass</code>（<strong>28件</strong>）</td>
+</tr>
+<tr class="odd">
+<td><code>airquality</code></td>
+<td>ニューヨークの大気153日分</td>
+<td><code>Ozone</code>（<strong>37件</strong>）・<code>Solar.R</code>（7件）</td>
+</tr>
+<tr class="even">
+<td><code>ChickWeight</code></td>
+<td>ヒヨコの成長578件</td>
+<td>なし（<code>Diet</code> で絞る練習に）</td>
+</tr>
+<tr class="odd">
+<td><code>quakes</code></td>
+<td>フィジー近海の地震1000件</td>
+<td>なし（件数が多いので <code>head()</code> が要ります）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="やること" class="section level4">
+<h4>やること</h4>
+<ol style="list-style-type: decimal">
+<li><code>filter()</code> で条件に合う行を絞る</li>
+<li><code>select()</code> で必要な列だけにする</li>
+<li><code>mutate()</code> で新しい列を作る（割合・単位換算など）</li>
+<li><code>arrange()</code> で並べ替え，<code>head()</code>
+で上位だけ表示する</li>
+<li>1〜4 を<strong>パイプでつないで1つの流れにする</strong></li>
+</ol>
+</div>
+<div id="問" class="section level4">
+<h4>問</h4>
+<p><strong>問1</strong>：なぜそのデータを選びましたか。作った新しい列は何を表していますか。</p>
+<p><strong>問2</strong>：欠損のある列で
+<code>filter(列名 != &quot;ある値&quot;)</code>
+と書くと，<strong>何行残りましたか</strong>。
+元の行数から「その値の行数」を引いた数と一致しましたか。一致しない場合，その差は何行で，なぜですか。</p>
+<p><strong>問3</strong>：<code>arrange()</code>
+で並べ替えたとき，<strong>欠損のある行はどこに来ましたか</strong>。
+昇順と降順の両方で確かめてください。</p>
+<hr />
+</div>
+</div>
 <div id="模範解答" class="section level3">
 <h3>模範解答</h3>
 <p>演習1〜3の解答例を置いてあります。自分で解いたあとに見てください。</p>
+<blockquote>
+<p><strong>演習4には解答例がありません。</strong>
+選んだデータによって答えが変わるためです。
+書いたコードが動けば，それが正解です。</p>
+</blockquote>
 <p><strong>→ <a href="05_model_answer.R">第5回
 演習の模範解答（<code>.R</code> ファイル）</a></strong></p>
 <blockquote>

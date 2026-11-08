@@ -3435,6 +3435,80 @@ dataへの変形」</strong>が，ここの話の詳しい版です。
 <p>演習3の結果を1〜2文でまとめてください。</p>
 <hr />
 </div>
+<div id="演習5発展対応のあるデータを自分で探す" class="section level3">
+<h3>演習5（発展）：対応のあるデータを自分で探す</h3>
+<blockquote>
+<p><strong>データの探し方</strong>は<a href="03.html#finddata">第3回「自分でデータを探す」</a>にまとめてあります。
+<code>data()</code> で一覧，<code>?データ名</code>
+で説明，<code>glimpse(データ名)</code> で中身が見られます。</p>
+</blockquote>
+<blockquote>
+<p><strong>対応のあるデータは，そう多くありません。</strong>
+必要なのは「<strong>同じ個体を2回以上測っている</strong>」データです。
+探すときは「同じIDが複数回出てくる列があるか」を見てください。</p>
+</blockquote>
+<table>
+<thead>
+<tr class="header">
+<th>データ</th>
+<th>構造</th>
+<th>対応の単位</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sleep</code></td>
+<td>10人 × 2種類の薬</td>
+<td><code>ID</code>（同じ人が2回出てくる）</td>
+</tr>
+<tr class="even">
+<td><code>ChickWeight</code></td>
+<td>ヒヨコ50羽 × 12時点</td>
+<td><code>Chick</code></td>
+</tr>
+<tr class="odd">
+<td><code>CO2</code></td>
+<td>植物12個体 × 7濃度</td>
+<td><code>Plant</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>sleep</code>
+はR本体に入っている有名なデータで，<strong>t検定が生まれたときに使われたもの</strong>です
+（<code>msleep</code> とは別物なので注意してください）。</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>?sleep</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a><span class="fu">head</span>(sleep, <span class="dv">12</span>)   <span class="co"># ID 1〜10 が group 1 と group 2 で2回ずつ出てきます</span></span></code></pre></div>
+<div id="やることsleep-を選んだ場合" class="section level4">
+<h4>やること（<code>sleep</code> を選んだ場合）</h4>
+<ol style="list-style-type: decimal">
+<li><code>ID</code> ごとに線でつないだ図を描く（今日の5節と同じ形）</li>
+<li><strong>対応のある</strong>t検定を実行する</li>
+<li>同じデータで，<strong>対応を無視した</strong>（<code>paired</code>
+を付けない）t検定も実行する</li>
+<li>2 と 3 の結果を並べて見比べる</li>
+</ol>
+<blockquote>
+<p><strong>ヒント</strong>：<code>sleep</code>
+はロング形式です。2つのベクトルに分けるには，
+<code>sleep$extra[sleep$group == 1]</code> のように取り出すか，
+<code>pivot_wider()</code> でワイド形式に直します。
+<code>t.test(extra ~ group, data = sleep, paired = TRUE)</code>
+は<strong>エラーになります</strong>（4節の注意を見てください）。</p>
+</blockquote>
+</div>
+<div id="問" class="section level4">
+<h4>問</h4>
+<p><strong>問1</strong>：<code>sleep</code> では，<strong>対応あり p =
+0.0028，対応なし p = 0.079</strong> になります。
+<strong>同じ20個の数値なのに結論が変わります。</strong> なぜですか。</p>
+<p><strong>問2</strong>：自由度は，対応ありで 9，対応なしで約 17.8
+でした。この差は何から来ていますか。</p>
+<p><strong>問3</strong>：もし実験の記録に <code>ID</code>
+が残っていなかったら，このデータをどう分析するしかありませんか。
+そのとき何を失いますか。</p>
+<hr />
+</div>
+</div>
 </div>
 <div id="この回で使った関数" class="section level2">
 <h2>この回で使った関数</h2>
@@ -3600,6 +3674,12 @@ dataへの変形」</strong>が，ここの話の詳しい版です。
 <td>縦長の表を横長にする</td>
 <td>データ, <code>names_from =</code>, <code>values_from =</code></td>
 <td><code>pivot_wider(dl, names_from = 時点, values_from = 値)</code></td>
+</tr>
+<tr class="even">
+<td><code>head()</code></td>
+<td>先頭の数行を取り出す</td>
+<td>データ, 行数（省略すると6行）</td>
+<td><code>head(iris, 3)</code></td>
 </tr>
 </tbody>
 </table>
