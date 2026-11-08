@@ -3378,6 +3378,87 @@ sample estimates:
 </blockquote>
 <hr />
 </div>
+<div id="演習5発展自分の関心のあるデータで相関を見る" class="section level3">
+<h3>演習5（発展）：自分の関心のあるデータで相関を見る</h3>
+<blockquote>
+<p><strong>データの探し方</strong>は<a href="03.html#finddata">第3回「自分でデータを探す」</a>にまとめてあります。
+<code>data()</code> で一覧，<code>?データ名</code>
+で説明，<code>glimpse(データ名)</code> で中身が見られます。</p>
+</blockquote>
+<p><strong>数値の列が2つ以上</strong>あるデータを選んでください。</p>
+<table>
+<thead>
+<tr class="header">
+<th>データ</th>
+<th>2つの数値</th>
+<th>相関係数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>faithful</code></td>
+<td><code>eruptions</code> × <code>waiting</code></td>
+<td>r = 0.90（強い正）</td>
+</tr>
+<tr class="even">
+<td><code>cars</code></td>
+<td><code>speed</code> × <code>dist</code></td>
+<td>r = 0.81</td>
+</tr>
+<tr class="odd">
+<td><code>mtcars</code></td>
+<td><code>wt</code> × <code>mpg</code></td>
+<td>r = <strong>−0.87</strong>（強い負）</td>
+</tr>
+<tr class="even">
+<td><code>airquality</code></td>
+<td><code>Ozone</code> × <code>Temp</code></td>
+<td>r = 0.70（<strong>欠損37件</strong>）</td>
+</tr>
+<tr class="odd">
+<td><code>penguins</code></td>
+<td><code>bill_len</code> × <code>flipper_len</code></td>
+<td>r = 0.66（欠損2件）</td>
+</tr>
+<tr class="even">
+<td><code>swiss</code></td>
+<td>州ごとの6つの指標</td>
+<td>自分で選んでください</td>
+</tr>
+<tr class="odd">
+<td><code>USArrests</code></td>
+<td>州ごとの犯罪率と都市人口率</td>
+<td>自分で選んでください</td>
+</tr>
+</tbody>
+</table>
+<div id="やること" class="section level4">
+<h4>やること</h4>
+<ol style="list-style-type: decimal">
+<li>2つの数値で<strong>散布図</strong>を描き，<code>geom_smooth(method = &quot;lm&quot;)</code>
+で直線を重ねる</li>
+<li><code>cor()</code> で相関係数を出す</li>
+<li><code>cor.test()</code>
+で検定し，<strong>r・n・t・df・p・95%信頼区間</strong>を読み取る</li>
+<li>数値の列が3つ以上あるなら，<code>cor()</code>
+で<strong>相関行列</strong>も出す</li>
+</ol>
+</div>
+<div id="問" class="section level4">
+<h4>問</h4>
+<p><strong>問1</strong>：<code>cor()</code>
+をそのまま使うと，欠損のあるデータでは何が返りましたか。
+<code>use = &quot;complete.obs&quot;</code> を付けるとどうなりましたか。
+<strong>そのとき，実際に計算に使われた件数は何件ですか。</strong></p>
+<p><strong>問2</strong>：出た相関について，<strong>「Aが原因でBが起きている」と言えますか。</strong>
+言えないとすれば，ほかにどんな説明がありえますか。</p>
+<p><strong>問3</strong>：<code>cor.test()</code> の結果で，<strong>r
+の大きさ</strong>と <strong>p
+の小ささ</strong>は別のことを言っています。
+自分の結果について，その2つを混ぜずに1文ずつで書いてください。</p>
+<hr />
+</div>
+</div>
 </div>
 <div id="この回で使った関数" class="section level2">
 <h2>この回で使った関数</h2>

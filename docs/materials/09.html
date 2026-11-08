@@ -3597,6 +3597,88 @@ m\,\chi^2\]</span></p>
 <span id="cb40-15"><a href="#cb40-15" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
 <hr />
 </div>
+<div id="演習4発展自分の関心のあるデータでクロス集計と検定" class="section level3">
+<h3>演習4（発展）：自分の関心のあるデータでクロス集計と検定</h3>
+<blockquote>
+<p><strong>データの探し方</strong>は<a href="03.html#finddata">第3回「自分でデータを探す」</a>にまとめてあります。
+<code>data()</code> で一覧，<code>?データ名</code>
+で説明，<code>glimpse(データ名)</code> で中身が見られます。</p>
+</blockquote>
+<blockquote>
+<p><strong>この回だけは，表（<code>table</code>）の形のデータも使えます。</strong>
+今日 <code>Titanic</code> でやったように，<code>as.data.frame()</code>
+や <code>margin.table()</code> で扱えます。</p>
+</blockquote>
+<div id="見つからないときはこの中から" class="section level4">
+<h4>見つからないときは，この中から</h4>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>データ</th>
+<th>クロスする2つ</th>
+<th>特徴</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>HairEyeColor</code></td>
+<td>髪の色 × 目の色（4×4）</td>
+<td>592人。<strong>期待度数に問題なし</strong>。まずはこれ</td>
+</tr>
+<tr class="even">
+<td><code>UCBAdmissions</code></td>
+<td>合否 × 性別（2×2）</td>
+<td>大学院入試4526人。<strong>2×2なので連続性の補正が入ります</strong></td>
+</tr>
+<tr class="odd">
+<td><code>mtcars</code></td>
+<td><code>cyl</code> × <code>am</code>（3×2）</td>
+<td>32台。<strong>期待度数5未満のセルが3つ出ます</strong></td>
+</tr>
+<tr class="even">
+<td><code>penguins</code></td>
+<td><code>species</code> × <code>sex</code>（3×2）</td>
+<td>関連が<strong>無い</strong>例（p = 0.98）</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="co"># 表の形のデータは、まず2つの軸にまとめます</span></span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a><span class="fu">margin.table</span>(HairEyeColor, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))     <span class="co"># 男女を合算して 髪 × 目 の表に</span></span>
+<span id="cb41-3"><a href="#cb41-3" tabindex="-1"></a><span class="fu">margin.table</span>(UCBAdmissions, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))    <span class="co"># 学科を合算して 合否 × 性別 の表に</span></span></code></pre></div>
+</div>
+<div id="やること" class="section level4">
+<h4>やること</h4>
+<ol style="list-style-type: decimal">
+<li>クロス集計表を作る</li>
+<li><code>prop.table(表, 1)</code>
+で<strong>行ごとの割合</strong>を出し，見比べる</li>
+<li><code>chisq.test()</code> で検定する</li>
+<li><strong>期待度数</strong>（<code>chisq.test(表)$expected</code>）を必ず確かめる</li>
+<li>積み上げ棒グラフで可視化する</li>
+</ol>
+</div>
+<div id="問" class="section level4">
+<h4>問</h4>
+<p><strong>問1</strong>：期待度数が5未満のセルはありましたか。
+あった場合，どう対処しましたか（<code>fisher.test()</code>
+に切り替えたか，など）。</p>
+<p><strong>問2</strong>：2×2の表を選んだ人は，出力に
+<code>Yates&#39; continuity correction</code> と出たはずです。
+<code>correct = FALSE</code> を付けると χ² と p
+はどう変わりましたか。<strong>結論は変わりましたか。</strong></p>
+<p><strong>問3</strong>：<code>UCBAdmissions</code> を選んだ人へ。
+合算した表では「男性のほうが合格しやすい」と出ます。 ところが
+<code>UCBAdmissions[, , 1]</code>
+のように<strong>学科ごと</strong>に見ると，印象が変わります。
+いくつかの学科で確かめ，<strong>なぜそうなるのか</strong>を考えて書いてください。</p>
+<hr />
+</div>
+</div>
 </div>
 <div id="この回で使った関数" class="section level2">
 <h2>この回で使った関数</h2>
@@ -3803,6 +3885,13 @@ m\,\chi^2\]</span></p>
 <td>塗りつぶしの色をColorBrewerの組にする</td>
 <td><code>palette = &quot;Set2&quot;</code> など</td>
 <td><code>scale_fill_brewer(palette = &quot;Set2&quot;)</code></td>
+</tr>
+<tr class="odd">
+<td><code>margin.table()</code></td>
+<td>多次元の表を，指定した軸だけにまとめ直す</td>
+<td>表, まとめたあとに残す軸の番号（<code>c(1, 2)</code>
+で1番目と2番目）</td>
+<td><code>margin.table(HairEyeColor, c(1, 2))</code></td>
 </tr>
 </tbody>
 </table>

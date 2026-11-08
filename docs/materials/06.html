@@ -3326,27 +3326,15 @@ Shift_JIS（CP932）になります。</strong>
 <strong>自分が気になるデータを1つ選んで</strong>，同じことをやってみてください。</p>
 <div id="データの探し方" class="section level4">
 <h4>データの探し方</h4>
-<p>Rには，最初から<strong>108個のデータ</strong>が入っています。一覧はこれで出ます。</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">data</span>()</span></code></pre></div>
-<p>気になる名前を見つけたら，<strong><code>?データ名</code></strong>
-でそのデータの説明が読めます （→ <a href="02.html#help">第2回「ヘルプの読み方」</a>）。 中身は
-<code>glimpse(データ名)</code> で見られます。</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>?ToothGrowth          <span class="co"># 何のデータかを読む</span></span>
-<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="fu">glimpse</span>(ToothGrowth)  <span class="co"># 列と中身を見る</span></span></code></pre></div>
-<p><strong>選ぶときの条件は2つだけです。</strong></p>
-<ol style="list-style-type: decimal">
-<li><strong>データフレームであること</strong> …
-<code>is.data.frame(データ名)</code> が <code>TRUE</code>
-になるもの</li>
-<li><strong>「グループを表す列」と「数値の列」が1つずつ以上あること</strong></li>
-</ol>
 <blockquote>
-<p><strong><code>Titanic</code> や <code>HairEyeColor</code>
-は選べません。</strong>
-これらは<strong>表（<code>table</code>）</strong>であってデータフレームではないので，
-<code>group_by()</code>
-がそのまま使えません（第9回で扱い方を学びます）。
-108個のうち，データフレームは46個です。</p>
+<p><strong>探し方の詳しい手順</strong>は<a href="03.html#finddata">第3回「自分でデータを探す」</a>にまとめてあります。
+<code>data()</code> で一覧，<code>?データ名</code>
+で説明，<code>glimpse(データ名)</code> で中身が見られます。</p>
+<p>選ぶ条件は，<strong>データフレームであること</strong>（<code>is.data.frame()</code>
+が <code>TRUE</code>）と，
+<strong>グループを表す列と数値の列が1つずつ以上あること</strong>の2つです。
+<code>Titanic</code> や <code>HairEyeColor</code>
+は表（<code>table</code>）なので，この回では選べません。</p>
 </blockquote>
 </div>
 <div id="見つからないときはこの中から選んでください" class="section level4">
@@ -3616,19 +3604,6 @@ Shift_JIS（CP932）になります。</strong>
 <td>Excelファイルを読み込む</td>
 <td>ファイルのパス, <code>sheet =</code>（シート名か番号）</td>
 <td><code>read_excel(&quot;data/my_data.xlsx&quot;, sheet = 1)</code></td>
-</tr>
-<tr class="even">
-<td><code>data()</code></td>
-<td>Rに入っているデータの一覧を出す</td>
-<td><strong>何も入れません</strong>。<code>data(パッケージ名)</code>
-で絞ることもできる</td>
-<td><code>data()</code></td>
-</tr>
-<tr class="odd">
-<td><code>glimpse()</code></td>
-<td>列名・型・中身をざっと見る</td>
-<td>データフレーム</td>
-<td><code>glimpse(msleep)</code></td>
 </tr>
 </tbody>
 </table>

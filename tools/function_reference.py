@@ -490,6 +490,11 @@ FUNCTIONS = {
         '`~ 列 + 列`, `data =`',
         'xtabs(~ cyl + am, data = mtcars)',
         None),
+    'margin.table': (
+        '多次元の表を，指定した軸だけにまとめ直す',
+        '表, まとめたあとに残す軸の番号（`c(1, 2)` で1番目と2番目）',
+        'margin.table(HairEyeColor, c(1, 2))',
+        None),
     'prop.table': (
         '度数を割合に直す',
         '表, `1`（行ごと）か `2`（列ごと）',

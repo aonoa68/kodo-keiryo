@@ -3516,9 +3516,54 @@ dpi）。論文に出すときは，投稿先の指定があればそちらを�
 <p>演習2で作ったグラフを <code>kadai_02.png</code>（dpi = 300，幅 =
 7インチ，高さ = 5インチ）で保存してください。</p>
 </div>
+<div id="演習4発展自分のデータの図を人に見せられる形に仕上げる" class="section level3">
+<h3>演習4（発展）：自分のデータの図を，人に見せられる形に仕上げる</h3>
+<p>第3回の演習4で選んだデータ（別のものでも構いません）を使います。</p>
+<blockquote>
+<p><strong>データの探し方</strong>は<a href="03.html#finddata">第3回「自分でデータを探す」</a>にまとめてあります。
+<code>data()</code> で一覧，<code>?データ名</code>
+で説明，<code>glimpse(データ名)</code> で中身が見られます。</p>
+</blockquote>
+<div id="やること" class="section level4">
+<h4>やること</h4>
+<ol style="list-style-type: decimal">
+<li>散布図か箱ひげ図を1つ作る</li>
+<li><strong>テーマ</strong>を <code>theme_bw()</code> か
+<code>theme_classic()</code> にする</li>
+<li><strong>配色</strong>を <code>scale_color_brewer()</code> か
+<code>scale_fill_brewer()</code> で整える</li>
+<li><code>labs()</code>
+で<strong>日本語のタイトル・軸ラベル・凡例名</strong>を付ける</li>
+<li>グループが3つ以上あるなら <code>facet_wrap()</code>
+で分けた版も作る</li>
+<li><code>ggsave()</code> で <strong>PNG</strong>
+に保存し，<strong>実際にファイルを開いて確かめる</strong></li>
+</ol>
+</div>
+<div id="問" class="section level4">
+<h4>問</h4>
+<p><strong>問1</strong>：使ったパレットは，グループの数に対して<strong>色が足りましたか</strong>。
+足りなかった場合は何色必要で，どうしましたか。 （<code>Set2</code>
+は8色まで。<code>chickwts</code> の <code>feed</code>
+は6種類，<code>OrchardSprays</code> の <code>treatment</code>
+は8種類です。）</p>
+<p><strong>問2</strong>：保存した画像の大きさは何ピクセルでしたか。
+<code>width</code>・<code>height</code>・<code>dpi</code>
+の指定と，どういう関係になっていますか。</p>
+<p><strong>問3</strong>：同じデータで <code>theme_bw()</code> と
+<code>theme_dark()</code> の両方を作り，
+<strong>どちらをレポートに載せるか</strong>と，その理由を書いてください。</p>
+<hr />
+</div>
+</div>
 <div id="模範解答" class="section level3">
 <h3>模範解答</h3>
 <p>演習1〜3の解答例を置いてあります。自分で解いたあとに見てください。</p>
+<blockquote>
+<p><strong>演習4には解答例がありません。</strong>
+選んだデータによって答えが変わるためです。
+書いたコードが動けば，それが正解です。</p>
+</blockquote>
 <p><strong>→ <a href="04_model_answer.R">第4回
 演習の模範解答（<code>.R</code> ファイル）</a></strong></p>
 <blockquote>

@@ -3444,6 +3444,93 @@ SEはSDを <span class="math inline">\(\sqrt{n}\)</span>
 </blockquote>
 <hr />
 </div>
+<div id="演習5発展自分の関心のあるデータで分散分析" class="section level3">
+<h3>演習5（発展）：自分の関心のあるデータで分散分析</h3>
+<blockquote>
+<p><strong>データの探し方</strong>は<a href="03.html#finddata">第3回「自分でデータを探す」</a>にまとめてあります。
+<code>data()</code> で一覧，<code>?データ名</code>
+で説明，<code>glimpse(データ名)</code> で中身が見られます。</p>
+</blockquote>
+<p><strong>3水準以上のカテゴリ列</strong>と<strong>数値の列</strong>があるデータを選んでください。</p>
+<table>
+<thead>
+<tr class="header">
+<th>データ</th>
+<th>グループ（水準数）</th>
+<th>数値</th>
+<th>比較の組数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>InsectSprays</code></td>
+<td><code>spray</code>（<strong>6種類</strong>の殺虫剤）</td>
+<td><code>count</code></td>
+<td>15組</td>
+</tr>
+<tr class="even">
+<td><code>chickwts</code></td>
+<td><code>feed</code>（<strong>6種類</strong>の餌）</td>
+<td><code>weight</code></td>
+<td>15組</td>
+</tr>
+<tr class="odd">
+<td><code>OrchardSprays</code></td>
+<td><code>treatment</code>（<strong>8種類</strong>）</td>
+<td><code>decrease</code></td>
+<td>28組</td>
+</tr>
+<tr class="even">
+<td><code>PlantGrowth</code></td>
+<td><code>group</code>（3条件）</td>
+<td><code>weight</code></td>
+<td>3組</td>
+</tr>
+<tr class="odd">
+<td><code>penguins</code></td>
+<td><code>species</code>（3種）</td>
+<td><code>body_mass</code></td>
+<td>3組</td>
+</tr>
+<tr class="even">
+<td><code>warpbreaks</code></td>
+<td><code>tension</code>（3水準）</td>
+<td><code>breaks</code></td>
+<td>3組</td>
+</tr>
+</tbody>
+</table>
+<p><strong>群の数が多いものを選ぶと，次回の多重比較で効いてきます。</strong></p>
+<div id="やること" class="section level4">
+<h4>やること</h4>
+<ol style="list-style-type: decimal">
+<li>群ごとの<strong>件数・平均・標準偏差</strong>を出す</li>
+<li><strong>箱ひげ図</strong>を描く</li>
+<li><code>aov()</code> で分散分析を実行し，<code>summary()</code>
+で結果を見る</li>
+<li><strong>前提条件</strong>を確かめる（<code>shapiro.test()</code>
+で正規性，<code>bartlett.test()</code> で等分散性）</li>
+<li>効果量 η² を計算する</li>
+</ol>
+</div>
+<div id="問" class="section level4">
+<h4>問</h4>
+<p><strong>問1</strong>：前提条件は満たされましたか。
+<code>bartlett.test()</code> の p が小さかった場合，どうしますか。
+<code>oneway.test()</code>
+も実行して，結果が変わるか確かめてください。</p>
+<p><strong>問2</strong>：<code>shapiro.test()</code> と
+<code>bartlett.test()</code> は，<strong>p
+が小さいと「前提が崩れている」</strong>という
+向きの検定です。ふつうの検定と逆です。自分の結果を，この向きに注意して1文で書いてください。</p>
+<p><strong>問3</strong>：選んだデータは何群でしたか。
+<strong>その群すべてをt検定で総当たりすると，何回の検定になりますか。</strong>
+3群なら3回，6群なら15回です。そのとき，どれか1つでも間違って有意になる確率は
+およそ <span class="math inline">\(1-0.95^{回数}\)</span>
+です。計算してみてください（6群なら約54%になります）。</p>
+<hr />
+</div>
+</div>
 </div>
 <div id="この回で使った関数" class="section level2">
 <h2>この回で使った関数</h2>
