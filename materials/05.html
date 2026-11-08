@@ -3733,12 +3733,19 @@ HTML版はページをめくれる表になっていますが，RStudioのコン
 <td><code>arrange(msleep, desc(bodywt))</code></td>
 </tr>
 <tr class="even">
+<td><code>read.csv()</code></td>
+<td>CSVファイルを読み込む（R本体の関数）</td>
+<td>ファイルのパス。<code>read_csv()</code>
+と違い，空欄は欠損にならない</td>
+<td><code>read.csv(&quot;msleep.csv&quot;)</code></td>
+</tr>
+<tr class="odd">
 <td><code>print()</code></td>
 <td>結果を表示する。行数を指定できる</td>
 <td>データ, <code>n = 行数</code>（<code>n = Inf</code> で全行）</td>
 <td><code>print(msleep, n = Inf)</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>View()</code></td>
 <td>RStudioで表として開く</td>
 <td>データ（<strong>V は大文字</strong>）</td>
