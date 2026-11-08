@@ -235,6 +235,16 @@ FUNCTIONS = {
         '判定する関数（`is.numeric` など）',
         'across(where(is.numeric), mean)',
         'mtcars |> summarise(across(where(is.numeric), mean))'),
+    'data': (
+        'Rに入っているデータの一覧を出す',
+        '**何も入れません**。`data(パッケージ名)` で絞ることもできる',
+        'data()',
+        'data(package = "datasets")$results[1:2, "Item"]'),
+    'is.data.frame': (
+        'データフレームかどうか調べる',
+        'データの名前。表（table）や行列は `FALSE` になる',
+        'is.data.frame(iris)',
+        None),
     'read.csv': (
         'CSVファイルを読み込む（R本体の関数）',
         'ファイルのパス。`read_csv()` と違い，空欄は欠損にならない',

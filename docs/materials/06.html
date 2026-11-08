@@ -3319,100 +3319,128 @@ Shift_JIS（CP932）になります。</strong>
 を除いて集計してください。</strong></p>
 </blockquote>
 </div>
-<div id="演習4発展別のデータで同じことをやってみる" class="section level3">
-<h3>演習4（発展）：別のデータで，同じことをやってみる</h3>
-<p>ここまでは <code>iris</code> と <code>msleep</code>
-を使ってきました。
-<strong>同じ手順が別のデータでもそのまま通じるか</strong>を，自分で確かめてみてください。</p>
-<p>使うのは
-<code>penguins</code>（南極のペンギン344羽の体の測定データ）です。
-<strong>R
-4.5以降のRには最初から入っている</strong>ので，ダウンロードも読み込みも要りません。</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">glimpse</span>(penguins)</span></code></pre></div>
-<pre><code>## Rows: 344
-## Columns: 8
-## $ species     &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Ad…
-## $ island      &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torgersen, Torgersen, Tor…
-## $ bill_len    &lt;dbl&gt; 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, 42.0, …
-## $ bill_dep    &lt;dbl&gt; 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, 20.2, …
-## $ flipper_len &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186, 180,…
-## $ body_mass   &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, 4250, …
-## $ sex         &lt;fct&gt; male, female, female, NA, female, male, female, male, NA, …
-## $ year        &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…</code></pre>
+<div id="演習4発展自分の関心のあるデータで同じことをやってみる" class="section level3">
+<h3>演習4（発展）：自分の関心のあるデータで，同じことをやってみる</h3>
+<p>今日の手順は，<code>iris</code> と <code>msleep</code>
+以外のデータでもそのまま通じます。
+<strong>自分が気になるデータを1つ選んで</strong>，同じことをやってみてください。</p>
+<div id="データの探し方" class="section level4">
+<h4>データの探し方</h4>
+<p>Rには，最初から<strong>108個のデータ</strong>が入っています。一覧はこれで出ます。</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">data</span>()</span></code></pre></div>
+<p>気になる名前を見つけたら，<strong><code>?データ名</code></strong>
+でそのデータの説明が読めます （→ <a href="02.html#help">第2回「ヘルプの読み方」</a>）。 中身は
+<code>glimpse(データ名)</code> で見られます。</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>?ToothGrowth          <span class="co"># 何のデータかを読む</span></span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="fu">glimpse</span>(ToothGrowth)  <span class="co"># 列と中身を見る</span></span></code></pre></div>
+<p><strong>選ぶときの条件は2つだけです。</strong></p>
+<ol style="list-style-type: decimal">
+<li><strong>データフレームであること</strong> …
+<code>is.data.frame(データ名)</code> が <code>TRUE</code>
+になるもの</li>
+<li><strong>「グループを表す列」と「数値の列」が1つずつ以上あること</strong></li>
+</ol>
+<blockquote>
+<p><strong><code>Titanic</code> や <code>HairEyeColor</code>
+は選べません。</strong>
+これらは<strong>表（<code>table</code>）</strong>であってデータフレームではないので，
+<code>group_by()</code>
+がそのまま使えません（第9回で扱い方を学びます）。
+108個のうち，データフレームは46個です。</p>
+</blockquote>
+</div>
+<div id="見つからないときはこの中から選んでください" class="section level4">
+<h4>見つからないときは，この中から選んでください</h4>
 <table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
 <thead>
 <tr class="header">
-<th>列名</th>
-<th>説明</th>
+<th>データ</th>
+<th>中身</th>
+<th>グループの列</th>
+<th>数値の列</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>species</code></td>
-<td>種（Adelie / Chinstrap / Gentoo）</td>
+<td><code>penguins</code></td>
+<td>南極のペンギン344羽の測定</td>
+<td><code>species</code>・<code>island</code>・<code>sex</code></td>
+<td><code>body_mass</code>・<code>flipper_len</code></td>
 </tr>
 <tr class="even">
-<td><code>island</code></td>
-<td>調査した島（Biscoe / Dream / Torgersen）</td>
+<td><code>ToothGrowth</code></td>
+<td>モルモット60匹のビタミンC実験</td>
+<td><code>supp</code>・<code>dose</code></td>
+<td><code>len</code>（歯の伸び）</td>
 </tr>
 <tr class="odd">
-<td><code>bill_len</code></td>
-<td>くちばしの長さ (mm)</td>
+<td><code>ChickWeight</code></td>
+<td>ヒヨコの成長578件</td>
+<td><code>Diet</code>（4種類の餌）</td>
+<td><code>weight</code>・<code>Time</code></td>
 </tr>
 <tr class="even">
-<td><code>bill_dep</code></td>
-<td>くちばしの高さ (mm)</td>
+<td><code>InsectSprays</code></td>
+<td>殺虫剤6種の効き目72件</td>
+<td><code>spray</code></td>
+<td><code>count</code>（残った虫の数）</td>
 </tr>
 <tr class="odd">
-<td><code>flipper_len</code></td>
-<td>ひれの長さ (mm)</td>
+<td><code>warpbreaks</code></td>
+<td>織機の糸切れ54件</td>
+<td><code>wool</code>・<code>tension</code></td>
+<td><code>breaks</code>（切れた回数）</td>
 </tr>
 <tr class="even">
-<td><code>body_mass</code></td>
-<td>体重 (g)</td>
+<td><code>airquality</code></td>
+<td>ニューヨークの大気153日分</td>
+<td><code>Month</code></td>
+<td><code>Ozone</code>（<strong>欠損37件</strong>）・<code>Temp</code></td>
 </tr>
 <tr class="odd">
+<td><code>starwars</code></td>
+<td>登場人物87人</td>
 <td><code>sex</code></td>
-<td>性別（<strong>11件が欠損</strong>）</td>
-</tr>
-<tr class="even">
-<td><code>year</code></td>
-<td>調査年</td>
+<td><code>height</code>・<code>mass</code>（<strong>欠損28件</strong>）</td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p><strong><code>penguins</code> は <code>msleep</code>
-と違って，ふつうのデータフレームです。</strong> そのまま
-<code>penguins</code> と打つと，<strong>344行が全部流れます。</strong>
-第5回で見た <code># ℹ 21 more rows</code> は，<code>msleep</code>
-のような <strong>tibble のときだけ</strong>出る表示でした。
-中身を見るときは <code>glimpse(penguins)</code> か
-<code>head(penguins)</code> を使ってください。</p>
-</blockquote>
-<p><strong>穴埋めはありません。</strong>
-今日のコードを見ながら，自分で書いてみてください。</p>
+<p><strong>欠損のあるデータ</strong>（<code>penguins</code>・<code>airquality</code>・<code>starwars</code>）を選ぶと，
+今日の5節でやった <code>na.rm</code>
+の話がそのまま出てきます。おすすめです。</p>
+</div>
+<div id="やること" class="section level4">
+<h4>やること</h4>
 <ol style="list-style-type: decimal">
-<li><strong>種（<code>species</code>）ごと</strong>に，<code>body_mass</code>
-の件数・平均・標準偏差を求める</li>
+<li>選んだデータで，<strong>グループごと</strong>に，数値の列の<strong>件数・平均・標準偏差</strong>を求める</li>
 <li>1
 の結果を使って，<strong>エラーバー付きの棒グラフ</strong>を描く</li>
-<li><strong>島（<code>island</code>）ごとの件数</strong>を
-<code>count()</code> で数え，多い順に並べる</li>
+<li><code>count()</code>
+で<strong>グループごとの件数</strong>を数え，多い順に並べる</li>
 </ol>
-<p><strong>問1</strong>：1 を <code>na.rm = TRUE</code>
-なしで実行すると，<strong>3種のうち2種だけが <code>NA</code></strong>
-になります。 <code>Chinstrap</code>
-だけ数値が出るのはなぜですか。確かめ方も一緒に書いてください。</p>
-<p><strong>問2</strong>：<code>species</code> ではなく
-<strong><code>sex</code> ごと</strong>に集計すると，<code>iris</code>
-のときには出てこなかった行が現れます。
-何件の行で，それはどういう意味ですか。今日の2節で <code>msleep</code>
-を使ったときと同じことが起きています。</p>
+<p><strong>穴埋めはありません。</strong>
+今日のコードの，データ名と列名を置き換えれば動きます。</p>
+</div>
+<div id="問" class="section level4">
+<h4>問</h4>
+<p><strong>問1</strong>：なぜそのデータを選びましたか。1〜2行で書いてください。</p>
+<p><strong>問2</strong>：選んだデータに欠損はありましたか。
+あった場合，<code>na.rm = TRUE</code>
+を<strong>付ける前と後</strong>で結果はどう変わりましたか。
+なかった場合は，上の表から<strong>欠損のあるデータ</strong>を1つ選んで試してみてください。</p>
 <p><strong>問3</strong>：3
-の結果は「Biscoe島がいちばんペンギンの多い島だ」ということを意味しますか。
-意味しないとすれば，この数は何を表していますか。</p>
+で出たグループごとの件数の差は，何を表していますか。
+<strong>「世の中の割合」ですか，それとも「データの集め方」ですか。</strong>
+第3回で <code>iris</code>
+がどの種も50本ずつだったことを思い出してください。</p>
 <hr />
+</div>
 </div>
 </div>
 <div id="この回で使った関数" class="section level2">
@@ -3590,6 +3618,13 @@ Shift_JIS（CP932）になります。</strong>
 <td><code>read_excel(&quot;data/my_data.xlsx&quot;, sheet = 1)</code></td>
 </tr>
 <tr class="even">
+<td><code>data()</code></td>
+<td>Rに入っているデータの一覧を出す</td>
+<td><strong>何も入れません</strong>。<code>data(パッケージ名)</code>
+で絞ることもできる</td>
+<td><code>data()</code></td>
+</tr>
+<tr class="odd">
 <td><code>glimpse()</code></td>
 <td>列名・型・中身をざっと見る</td>
 <td>データフレーム</td>
