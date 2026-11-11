@@ -3335,6 +3335,8 @@ Shift_JIS（CP932）になります。</strong>
 <strong>グループを表す列と数値の列が1つずつ以上あること</strong>の2つです。
 <code>Titanic</code> や <code>HairEyeColor</code>
 は表（<code>table</code>）なので，この回では選べません。</p>
+<p>第3回では「数値の列が2つ以上」としていましたが，あれは散布図を描くためです。
+<strong>今日はグループごとの平均を出すだけなので，数値の列は1つあれば足ります。</strong></p>
 </blockquote>
 </div>
 <div id="見つからないときはこの中から選んでください" class="section level4">
@@ -3364,7 +3366,8 @@ Shift_JIS（CP932）になります。</strong>
 <tr class="even">
 <td><code>ToothGrowth</code></td>
 <td>モルモット60匹のビタミンC実験</td>
-<td><code>supp</code>・<code>dose</code></td>
+<td><code>supp</code>・<code>dose</code>（<code>dose</code>
+は数値）</td>
 <td><code>len</code>（歯の伸び）</td>
 </tr>
 <tr class="odd">
@@ -3388,7 +3391,7 @@ Shift_JIS（CP932）になります。</strong>
 <tr class="even">
 <td><code>airquality</code></td>
 <td>ニューヨークの大気153日分</td>
-<td><code>Month</code></td>
+<td><code>Month</code>（数値）</td>
 <td><code>Ozone</code>（<strong>欠損37件</strong>）・<code>Temp</code></td>
 </tr>
 <tr class="odd">
@@ -3402,6 +3405,43 @@ Shift_JIS（CP932）になります。</strong>
 <p><strong>欠損のあるデータ</strong>（<code>penguins</code>・<code>airquality</code>・<code>starwars</code>）を選ぶと，
 今日の5節でやった <code>na.rm</code>
 の話がそのまま出てきます。おすすめです。</p>
+<blockquote>
+<p><strong>グループの列が「数値」のときは，<code>factor()</code>
+で囲んでください。</strong></p>
+<p><code>airquality</code> の <code>Month</code>（5〜9）や
+<code>ToothGrowth</code> の <code>dose</code>（0.5・1・2）は，
+カテゴリのように見えますが，<strong>Rから見ると数値</strong>です。
+そのまま <code>fill =</code>
+に渡すと，棒に色を塗る段階で止まります。</p>
+<pre><code>Error: Continuous value supplied to a discrete scale.
+ℹ Example values: 5, 6, 7, 8, and 9.</code></pre>
+<p>「段階ごとに色を塗る指定（<code>scale_fill_brewer()</code>）に，連続した数値が来ました」という意味です。
+<code>factor()</code>
+で囲むと，「この列はカテゴリです」とRに伝えられます。</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>airquality <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="at">month =</span> <span class="fu">factor</span>(Month)) <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>    <span class="at">n    =</span> <span class="fu">n</span>(),</span>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(Ozone, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a>    <span class="at">sd   =</span> <span class="fu">sd</span>(Ozone, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a>  )</span></code></pre></div>
+<p><code>group_by(month = factor(Month))</code> は，「<code>Month</code>
+をカテゴリに変えたものを <code>month</code> と呼んで，
+それで分ける」という書き方です。
+文字の列（<code>species</code>・<code>spray</code>・<code>supp</code>
+など）は最初からカテゴリなので，何もしなくて大丈夫です。</p>
+</blockquote>
+<blockquote>
+<p><strong><code>starwars</code>
+を選ぶ人は，ここだけ先に知っておいてください。</strong></p>
+<p><code>sex</code>
+で分けると，<strong>1件しかないグループ</strong>が出ます（<code>hermaphroditic</code>，ジャバ・ザ・ハット1人）。
+1件では標準偏差が計算できないので <code>sd</code> が <code>NA</code>
+になり，<strong>その棒だけエラーバーが描かれません。</strong>
+しかもその1人の体重が1358kgなので，棒グラフの縦軸がその1本に引っ張られて，
+他のグループの差が見えなくなります。</p>
+<p>除いても，残したままでも構いません。<strong>どちらにしたかを問1に書いてください。</strong></p>
+</blockquote>
 </div>
 <div id="やること" class="section level4">
 <h4>やること</h4>
@@ -3604,6 +3644,13 @@ Shift_JIS（CP932）になります。</strong>
 <td>Excelファイルを読み込む</td>
 <td>ファイルのパス, <code>sheet =</code>（シート名か番号）</td>
 <td><code>read_excel(&quot;data/my_data.xlsx&quot;, sheet = 1)</code></td>
+</tr>
+<tr class="even">
+<td><code>factor()</code></td>
+<td>カテゴリ（水準つき）に変える</td>
+<td>元の列, <code>levels =</code>（順序）,
+<code>labels =</code>（表示名）</td>
+<td><code>factor(mtcars$am, labels = c(&quot;AT&quot;, &quot;MT&quot;))</code></td>
 </tr>
 </tbody>
 </table>

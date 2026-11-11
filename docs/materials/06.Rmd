@@ -436,21 +436,61 @@ ggplot(petal_summary, aes(x = ___, y = ___, fill = ___)) +
 > 選ぶ条件は，**データフレームであること**（`is.data.frame()` が `TRUE`）と，
 > **グループを表す列と数値の列が1つずつ以上あること**の2つです。
 > `Titanic` や `HairEyeColor` は表（`table`）なので，この回では選べません。
+>
+> 第3回では「数値の列が2つ以上」としていましたが，あれは散布図を描くためです。
+> **今日はグループごとの平均を出すだけなので，数値の列は1つあれば足ります。**
 
 #### 見つからないときは，この中から選んでください
 
 | データ | 中身 | グループの列 | 数値の列 |
 |---|---|---|---|
 | `penguins` | 南極のペンギン344羽の測定 | `species`・`island`・`sex` | `body_mass`・`flipper_len` |
-| `ToothGrowth` | モルモット60匹のビタミンC実験 | `supp`・`dose` | `len`（歯の伸び） |
+| `ToothGrowth` | モルモット60匹のビタミンC実験 | `supp`・`dose`（`dose` は数値） | `len`（歯の伸び） |
 | `ChickWeight` | ヒヨコの成長578件 | `Diet`（4種類の餌） | `weight`・`Time` |
 | `InsectSprays` | 殺虫剤6種の効き目72件 | `spray` | `count`（残った虫の数） |
 | `warpbreaks` | 織機の糸切れ54件 | `wool`・`tension` | `breaks`（切れた回数） |
-| `airquality` | ニューヨークの大気153日分 | `Month` | `Ozone`（**欠損37件**）・`Temp` |
+| `airquality` | ニューヨークの大気153日分 | `Month`（数値） | `Ozone`（**欠損37件**）・`Temp` |
 | `starwars` | 登場人物87人 | `sex` | `height`・`mass`（**欠損28件**） |
 
 **欠損のあるデータ**（`penguins`・`airquality`・`starwars`）を選ぶと，
 今日の5節でやった `na.rm` の話がそのまま出てきます。おすすめです。
+
+> **グループの列が「数値」のときは，`factor()` で囲んでください。**
+>
+> `airquality` の `Month`（5〜9）や `ToothGrowth` の `dose`（0.5・1・2）は，
+> カテゴリのように見えますが，**Rから見ると数値**です。
+> そのまま `fill =` に渡すと，棒に色を塗る段階で止まります。
+>
+> ```
+> Error: Continuous value supplied to a discrete scale.
+> ℹ Example values: 5, 6, 7, 8, and 9.
+> ```
+>
+> 「段階ごとに色を塗る指定（`scale_fill_brewer()`）に，連続した数値が来ました」という意味です。
+> `factor()` で囲むと，「この列はカテゴリです」とRに伝えられます。
+>
+> ```r
+> airquality |>
+>   group_by(month = factor(Month)) |>
+>   summarise(
+>     n    = n(),
+>     mean = mean(Ozone, na.rm = TRUE),
+>     sd   = sd(Ozone, na.rm = TRUE)
+>   )
+> ```
+>
+> `group_by(month = factor(Month))` は，「`Month` をカテゴリに変えたものを `month` と呼んで，
+> それで分ける」という書き方です。
+> 文字の列（`species`・`spray`・`supp` など）は最初からカテゴリなので，何もしなくて大丈夫です。
+
+> **`starwars` を選ぶ人は，ここだけ先に知っておいてください。**
+>
+> `sex` で分けると，**1件しかないグループ**が出ます（`hermaphroditic`，ジャバ・ザ・ハット1人）。
+> 1件では標準偏差が計算できないので `sd` が `NA` になり，**その棒だけエラーバーが描かれません。**
+> しかもその1人の体重が1358kgなので，棒グラフの縦軸がその1本に引っ張られて，
+> 他のグループの差が見えなくなります。
+>
+> 除いても，残したままでも構いません。**どちらにしたかを問1に書いてください。**
 
 #### やること
 
@@ -507,6 +547,7 @@ ggplot(petal_summary, aes(x = ___, y = ___, fill = ___)) +
 | `read_csv()` | CSVファイルを読み込む | ファイルのパス（引用符あり）。文字化けには `locale =` | `read_csv("data/my_data.csv")` |
 | `locale()` | 文字コードなどの読み取り設定 | `encoding = "CP932"` など | `locale(encoding = "CP932")` |
 | `read_excel()` | Excelファイルを読み込む | ファイルのパス, `sheet =`（シート名か番号） | `read_excel("data/my_data.xlsx", sheet = 1)` |
+| `factor()` | カテゴリ（水準つき）に変える | 元の列, `levels =`（順序）, `labels =`（表示名） | `factor(mtcars$am, labels = c("AT", "MT"))` |
 
 :::
 
