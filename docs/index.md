@@ -82,7 +82,7 @@ ISBN 978-4-297-12170-9
 | — | **10/23** | **休講**（担当教員の研究出張のため。第4回以降を1週ずつ繰り下げます） | — | — |
 | 4 | 10/30 | データの可視化(2)：グラフのカスタマイズと保存 | [HTML](materials/04.html) ・ [Rmd](materials/04.Rmd)<br>[演習の模範解答](materials/04_model_answer.R) | [グラフで見る](https://aonoa68.github.io/teaching/guide/visualize/) |
 | 5 | 11/6 | データの加工(1)：dplyrによるデータ整形 | [HTML](materials/05.html) ・ [Rmd](materials/05.Rmd)<br>[演習の模範解答](materials/05_model_answer.R)<br>[データ msleep.csv](materials/msleep.csv) | — |
-| 6 | 11/13 | データの加工(2)：データの集計と要約統計量の算出 | [HTML](materials/06.html) ・ [Rmd](materials/06.Rmd) | — |
+| 6 | 11/13 | データの加工(2)：データの集計と要約統計量の算出 | [HTML](materials/06.html) ・ [Rmd](materials/06.Rmd)<br>データ [msleep_ja_utf8.csv](materials/msleep_ja_utf8.csv) ・ [msleep_ja_cp932.csv](materials/msleep_ja_cp932.csv) | — |
 | **7** | 11/20 | **習熟度確認と復習(1)**：可視化・整形までの操作確認 | [HTML](materials/07.html) ・ [Rmd](materials/07.Rmd) | — |
 | 8 | 11/27 | データを分析する(1)：相関分析と散布図 | [HTML](materials/08.html) ・ [Rmd](materials/08.Rmd) | [相関と因果](https://aonoa68.github.io/teaching/guide/correlation/) |
 | 9 | 12/4 | データを分析する(2)：カテゴリデータの分析（カイ二乗検定） | [HTML](materials/09.html) ・ [Rmd](materials/09.Rmd) | [仮説検定とp値](https://aonoa68.github.io/teaching/guide/testing/) |
