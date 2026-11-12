@@ -383,6 +383,8 @@ my_data <- read_csv("data/my_data.csv")
 >
 > **→ [msleep_ja_cp932.csv をダウンロード](msleep_ja_cp932.csv)**（CP932・83行6列）
 >
+> **→ [msleep_ja.xlsx をダウンロード](msleep_ja.xlsx)**（Excel形式・83行6列。後半で使います）
+>
 > 列は `動物名`・`食性`・`睡眠時間`・`REM睡眠`・`体重`・`脳重量` の6つです。
 > 欠損もそのまま入っています（`REM睡眠` 22件，`脳重量` 27件，`食性` 7件）。
 >
@@ -508,19 +510,42 @@ Excelの「名前を付けて保存」で，ファイルの種類を **`CSV UTF-
 
 `.xlsx` のまま読めば，**文字コードの問題は起きません。**
 
+さきほどダウンロードした `msleep_ja.xlsx` で試してください。
+**CSVの2つとまったく同じ中身**を，Excel形式にしたものです。
+
 ```{r, eval=FALSE}
 # install.packages("readxl")   # 最初の1回だけ
 library(readxl)
 
-my_data <- read_excel("data/my_data.xlsx")
+my_data <- read_excel("data/msleep_ja.xlsx")
+my_data
+```
 
-# シートを指定する場合
-my_data <- read_excel("data/my_data.xlsx", sheet = "データ")
+```text
+# A tibble: 83 × 6
+  動物名          食性  睡眠時間 REM睡眠  体重  脳重量
+  <chr>           <chr>    <dbl>   <dbl> <dbl>   <dbl>
+1 Cheetah         carni     12.1    NA   50    NA     
+2 Owl monkey      omni      17       1.8  0.48  0.0155
+3 Mountain beaver herbi     14.4     2.4  1.35 NA     
+# ℹ 80 more rows
+```
+
+**`locale =` は要りません。** `.xlsx` の中では文字コードが決まっているので，
+食い違いが起きる余地がありません。
+
+シートが複数あるときは，名前か番号で指定します。
+このファイルのシート名は `データ` です。
+
+```{r, eval=FALSE}
+my_data <- read_excel("data/msleep_ja.xlsx", sheet = "データ")
+my_data <- read_excel("data/msleep_ja.xlsx", sheet = 1)        # 番号でも同じ
 ```
 
 Excelで管理しているデータなら，CSVに変換せずこちらのほうが確実です。
 
 > `readxl` は tidyverse に含まれていないので，`install.packages("readxl")` が別に必要です。
+> `library(tidyverse)` だけでは使えません。
 
 ---
 

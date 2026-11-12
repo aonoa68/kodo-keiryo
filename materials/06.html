@@ -3277,6 +3277,8 @@ Rは「黙って答えない」側に倒してあります。</p>
 をダウンロード</a></strong>（UTF-8・83行6列）</p>
 <p><strong>→ <a href="msleep_ja_cp932.csv">msleep_ja_cp932.csv
 をダウンロード</a></strong>（CP932・83行6列）</p>
+<p><strong>→ <a href="msleep_ja.xlsx">msleep_ja.xlsx
+をダウンロード</a></strong>（Excel形式・83行6列。後半で使います）</p>
 <p>列は
 <code>動物名</code>・<code>食性</code>・<code>睡眠時間</code>・<code>REM睡眠</code>・<code>体重</code>・<code>脳重量</code>
 の6つです。 欠損もそのまま入っています（<code>REM睡眠</code>
@@ -3379,18 +3381,34 @@ Shift_JIS（CP932）になります。</strong>
 <h3>Excelファイルを直接読む方法もあります</h3>
 <p><code>.xlsx</code>
 のまま読めば，<strong>文字コードの問題は起きません。</strong></p>
+<p>さきほどダウンロードした <code>msleep_ja.xlsx</code>
+で試してください。
+<strong>CSVの2つとまったく同じ中身</strong>を，Excel形式にしたものです。</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="co"># install.packages(&quot;readxl&quot;)   # 最初の1回だけ</span></span>
 <span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
 <span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/my_data.xlsx&quot;</span>)</span>
-<span id="cb30-5"><a href="#cb30-5" tabindex="-1"></a></span>
-<span id="cb30-6"><a href="#cb30-6" tabindex="-1"></a><span class="co"># シートを指定する場合</span></span>
-<span id="cb30-7"><a href="#cb30-7" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/my_data.xlsx&quot;</span>, <span class="at">sheet =</span> <span class="st">&quot;データ&quot;</span>)</span></code></pre></div>
+<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/msleep_ja.xlsx&quot;</span>)</span>
+<span id="cb30-5"><a href="#cb30-5" tabindex="-1"></a>my_data</span></code></pre></div>
+<pre class="text"><code># A tibble: 83 × 6
+  動物名          食性  睡眠時間 REM睡眠  体重  脳重量
+  &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+1 Cheetah         carni     12.1    NA   50    NA     
+2 Owl monkey      omni      17       1.8  0.48  0.0155
+3 Mountain beaver herbi     14.4     2.4  1.35 NA     
+# ℹ 80 more rows</code></pre>
+<p><strong><code>locale =</code> は要りません。</strong>
+<code>.xlsx</code> の中では文字コードが決まっているので，
+食い違いが起きる余地がありません。</p>
+<p>シートが複数あるときは，名前か番号で指定します。
+このファイルのシート名は <code>データ</code> です。</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/msleep_ja.xlsx&quot;</span>, <span class="at">sheet =</span> <span class="st">&quot;データ&quot;</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/msleep_ja.xlsx&quot;</span>, <span class="at">sheet =</span> <span class="dv">1</span>)        <span class="co"># 番号でも同じ</span></span></code></pre></div>
 <p>Excelで管理しているデータなら，CSVに変換せずこちらのほうが確実です。</p>
 <blockquote>
 <p><code>readxl</code> は tidyverse
 に含まれていないので，<code>install.packages(&quot;readxl&quot;)</code>
-が別に必要です。</p>
+が別に必要です。 <code>library(tidyverse)</code>
+だけでは使えません。</p>
 </blockquote>
 <hr />
 </div>
@@ -3404,33 +3422,33 @@ Shift_JIS（CP932）になります。</strong>
 <ul>
 <li><code>Petal.Length</code> の平均・標準偏差・サンプルサイズ</li>
 </ul>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>iris <span class="sc">|&gt;</span></span>
-<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a>  <span class="fu">group_by</span>(___) <span class="sc">|&gt;</span></span>
-<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a>    <span class="at">n    =</span> <span class="fu">n</span>(),</span>
-<span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(___),</span>
-<span id="cb31-6"><a href="#cb31-6" tabindex="-1"></a>    <span class="at">sd   =</span> <span class="fu">sd</span>(___)</span>
-<span id="cb31-7"><a href="#cb31-7" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>iris <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>  <span class="fu">group_by</span>(___) <span class="sc">|&gt;</span></span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a>    <span class="at">n    =</span> <span class="fu">n</span>(),</span>
+<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(___),</span>
+<span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a>    <span class="at">sd   =</span> <span class="fu">sd</span>(___)</span>
+<span id="cb33-7"><a href="#cb33-7" tabindex="-1"></a>  )</span></code></pre></div>
 </div>
 <div id="演習2集計結果のグラフ化" class="section level3">
 <h3>演習2：集計結果のグラフ化</h3>
 <p>演習1で作った集計結果を使って，エラーバー付きの棒グラフを作成してください。</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="co"># まず集計</span></span>
-<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a>petal_summary <span class="ot">&lt;-</span> iris <span class="sc">|&gt;</span></span>
-<span id="cb32-3"><a href="#cb32-3" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">|&gt;</span></span>
-<span id="cb32-4"><a href="#cb32-4" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb32-5"><a href="#cb32-5" tabindex="-1"></a>    <span class="at">mean_petal =</span> <span class="fu">mean</span>(Petal.Length),</span>
-<span id="cb32-6"><a href="#cb32-6" tabindex="-1"></a>    <span class="at">sd_petal   =</span> <span class="fu">sd</span>(Petal.Length)</span>
-<span id="cb32-7"><a href="#cb32-7" tabindex="-1"></a>  )</span>
-<span id="cb32-8"><a href="#cb32-8" tabindex="-1"></a></span>
-<span id="cb32-9"><a href="#cb32-9" tabindex="-1"></a><span class="co"># グラフ</span></span>
-<span id="cb32-10"><a href="#cb32-10" tabindex="-1"></a><span class="fu">ggplot</span>(petal_summary, <span class="fu">aes</span>(<span class="at">x =</span> ___, <span class="at">y =</span> ___, <span class="at">fill =</span> ___)) <span class="sc">+</span></span>
-<span id="cb32-11"><a href="#cb32-11" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb32-12"><a href="#cb32-12" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> ___ <span class="sc">-</span> ___, <span class="at">ymax =</span> ___ <span class="sc">+</span> ___), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb32-13"><a href="#cb32-13" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span></span>
-<span id="cb32-14"><a href="#cb32-14" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;種ごとの花びらの長さ（平均±SD）&quot;</span>,</span>
-<span id="cb32-15"><a href="#cb32-15" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;___&quot;</span>, <span class="at">y =</span> <span class="st">&quot;___&quot;</span>) <span class="sc">+</span></span>
-<span id="cb32-16"><a href="#cb32-16" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="co"># まず集計</span></span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a>petal_summary <span class="ot">&lt;-</span> iris <span class="sc">|&gt;</span></span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">|&gt;</span></span>
+<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a>    <span class="at">mean_petal =</span> <span class="fu">mean</span>(Petal.Length),</span>
+<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a>    <span class="at">sd_petal   =</span> <span class="fu">sd</span>(Petal.Length)</span>
+<span id="cb34-7"><a href="#cb34-7" tabindex="-1"></a>  )</span>
+<span id="cb34-8"><a href="#cb34-8" tabindex="-1"></a></span>
+<span id="cb34-9"><a href="#cb34-9" tabindex="-1"></a><span class="co"># グラフ</span></span>
+<span id="cb34-10"><a href="#cb34-10" tabindex="-1"></a><span class="fu">ggplot</span>(petal_summary, <span class="fu">aes</span>(<span class="at">x =</span> ___, <span class="at">y =</span> ___, <span class="at">fill =</span> ___)) <span class="sc">+</span></span>
+<span id="cb34-11"><a href="#cb34-11" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb34-12"><a href="#cb34-12" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> ___ <span class="sc">-</span> ___, <span class="at">ymax =</span> ___ <span class="sc">+</span> ___), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb34-13"><a href="#cb34-13" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span></span>
+<span id="cb34-14"><a href="#cb34-14" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;種ごとの花びらの長さ（平均±SD）&quot;</span>,</span>
+<span id="cb34-15"><a href="#cb34-15" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;___&quot;</span>, <span class="at">y =</span> <span class="st">&quot;___&quot;</span>) <span class="sc">+</span></span>
+<span id="cb34-16"><a href="#cb34-16" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
 </div>
 <div id="演習3countの応用" class="section level3">
 <h3>演習3：count()の応用</h3>
@@ -3543,13 +3561,13 @@ Shift_JIS（CP932）になります。</strong>
 <p>「段階ごとに色を塗る指定（<code>scale_fill_brewer()</code>）に，連続した数値が来ました」という意味です。
 <code>factor()</code>
 で囲むと，「この列はカテゴリです」とRに伝えられます。</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a>airquality <span class="sc">|&gt;</span></span>
-<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="at">month =</span> <span class="fu">factor</span>(Month)) <span class="sc">|&gt;</span></span>
-<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a>    <span class="at">n    =</span> <span class="fu">n</span>(),</span>
-<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(Ozone, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a>    <span class="at">sd   =</span> <span class="fu">sd</span>(Ozone, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb34-7"><a href="#cb34-7" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a>airquality <span class="sc">|&gt;</span></span>
+<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="at">month =</span> <span class="fu">factor</span>(Month)) <span class="sc">|&gt;</span></span>
+<span id="cb36-3"><a href="#cb36-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb36-4"><a href="#cb36-4" tabindex="-1"></a>    <span class="at">n    =</span> <span class="fu">n</span>(),</span>
+<span id="cb36-5"><a href="#cb36-5" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(Ozone, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb36-6"><a href="#cb36-6" tabindex="-1"></a>    <span class="at">sd   =</span> <span class="fu">sd</span>(Ozone, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb36-7"><a href="#cb36-7" tabindex="-1"></a>  )</span></code></pre></div>
 <p><code>group_by(month = factor(Month))</code> は，「<code>Month</code>
 をカテゴリに変えたものを <code>month</code> と呼んで，
 それで分ける」という書き方です。
