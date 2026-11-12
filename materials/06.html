@@ -3256,6 +3256,14 @@ Rは「黙って答えない」側に倒してあります。</p>
 ここに <code>data</code>
 フォルダがあるか，その中にそのファイル名があるかを確かめてください。
 いまどこにいるかは <code>getwd()</code> で確認できます（<a href="03.html#%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E4%BF%9D%E5%AD%98%E5%85%88%E3%81%A8%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88">第3回の0-1</a>）。</p>
+<p>プロジェクトを開いていれば，<strong>コンソールと <code>.R</code>
+ファイルでは，作業フォルダ＝プロジェクトフォルダ</strong>です。 ただし
+<strong><code>.Rmd</code> の中のコードだけは違います。</strong> その
+<code>.Rmd</code> が置かれているフォルダが作業フォルダになります。
+この資料の <code>.Rmd</code>
+をダウンロードして動かす人は，<strong>プロジェクトフォルダに直接置いてください。</strong>
+サブフォルダに入れると，<code>data</code>
+フォルダはその隣ではなく<strong>ひとつ上</strong>になるので，見つかりません。</p>
 <p>フォルダを作るのが面倒なら，<strong>プロジェクトフォルダに直接置いて
 <code>read_csv(&quot;my_data.csv&quot;)</code></strong>
 でも構いません。<code>data/</code>
