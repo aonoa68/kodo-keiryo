@@ -83,8 +83,8 @@ ISBN 978-4-297-12170-9
 | 4 | 10/30 | データの可視化(2)：グラフのカスタマイズと保存 | [HTML](materials/04.html) ・ [Rmd](materials/04.Rmd)<br>[演習の模範解答](materials/04_model_answer.R) | [グラフで見る](https://aonoa68.github.io/teaching/guide/visualize/) |
 | 5 | 11/6 | データの加工(1)：dplyrによるデータ整形 | [HTML](materials/05.html) ・ [Rmd](materials/05.Rmd)<br>[演習の模範解答](materials/05_model_answer.R)<br>[データ msleep.csv](materials/msleep.csv) | — |
 | 6 | 11/13 | データの加工(2)：データの集計と要約統計量の算出 | [HTML](materials/06.html) ・ [Rmd](materials/06.Rmd)<br>[演習の模範解答](materials/06_model_answer.R)<br>データ [msleep_ja_utf8.csv](materials/msleep_ja_utf8.csv) ・ [msleep_ja_cp932.csv](materials/msleep_ja_cp932.csv) ・ [msleep_ja.xlsx](materials/msleep_ja.xlsx) | — |
-| **7** | 11/20 | **習熟度確認と復習(1)**：可視化・整形までの操作確認 | [HTML](materials/07.html) ・ [Rmd](materials/07.Rmd) | — |
-| 8 | 11/27 | データを分析する(1)：相関分析と散布図 | [HTML](materials/08.html) ・ [Rmd](materials/08.Rmd) | [相関と因果](https://aonoa68.github.io/teaching/guide/correlation/) |
+| 8 | **11/20** | データを分析する(1)：相関分析と散布図　**【遠隔オンデマンド】** | [HTML](materials/08.html) ・ [Rmd](materials/08.Rmd) | [相関と因果](https://aonoa68.github.io/teaching/guide/correlation/) |
+| **7** | **11/27** | **習熟度確認と復習(1)**：可視化・整形までの操作確認（**習熟度確認テスト1**を実施） | [HTML](materials/07.html) ・ [Rmd](materials/07.Rmd) | — |
 | 9 | 12/4 | データを分析する(2)：カテゴリデータの分析（カイ二乗検定） | [HTML](materials/09.html) ・ [Rmd](materials/09.Rmd) | [仮説検定とp値](https://aonoa68.github.io/teaching/guide/testing/) |
 | 10 | 12/11 | データを分析する(3)：2群の平均値の比較（t検定） | [HTML](materials/10.html) ・ [Rmd](materials/10.Rmd) | [仮説検定とp値](https://aonoa68.github.io/teaching/guide/testing/) |
 | 11 | 12/18 | データを分析する(4)：対応のあるt検定とデータ構造 | [HTML](materials/11.html) ・ [Rmd](materials/11.Rmd) | [仮説検定とp値](https://aonoa68.github.io/teaching/guide/testing/) |
@@ -92,6 +92,16 @@ ISBN 978-4-297-12170-9
 | 13 | 1/8 | 分散分析(1)：一元配置分散分析の考え方 | [HTML](materials/13.html) ・ [Rmd](materials/13.Rmd) | [仮説検定とp値](https://aonoa68.github.io/teaching/guide/testing/) |
 | 14 | 1/22 | 分散分析(2)：多重比較と分析結果のまとめ方 | [HTML](materials/14.html) ・ [Rmd](materials/14.Rmd) | [仮説検定とp値](https://aonoa68.github.io/teaching/guide/testing/) |
 | **15** | 1/29 | **まとめと習熟度確認(3)**：これまでの学習内容の統合 | [HTML](materials/15.html) ・ [Rmd](materials/15.Rmd) | — |
+
+!!! danger "11月20日・27日の変更（11月17日）"
+    担当教員がインフルエンザで出勤停止となったため、**第7回と第8回を入れ替えます。**
+
+    - **11月20日（金）** … 第8回「相関分析と散布図」を**遠隔オンデマンド**で行います。**教室には集まりません。**
+      ELMSの指示に従って各自で進めてください。**課題の提出をもって、この回に参加したものとして扱います。**
+    - **11月27日（金）** … 第7回「習熟度確認と復習(1)」を**対面**（W201）で行います。**習熟度確認テスト1はこの日です。**
+
+    出題範囲・持ち物・参照してよいもの・AIの扱いは、先にお知らせしたとおりで変更ありません。
+    全15回は確保されます。
 
 !!! warning "休講日"
     - **10月23日（金）** … 担当教員の研究出張のため休講。**第4回以降を1週ずつ繰り下げます**
